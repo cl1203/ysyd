@@ -23,7 +23,7 @@ public interface TsRoleMapper extends IBaseMapper<TsRoleEntity, TsRoleEntityExam
     /**
      * 根据角色id列表获取角色名称字符串
      *
-     * @param roleIds
+     * @param roleIds 角色ID集合
      * @return 角色名称字符串
      */
     default List<TsRoleEntity> getRolesTextLine(List<String> roleIds) {
@@ -35,8 +35,7 @@ public interface TsRoleMapper extends IBaseMapper<TsRoleEntity, TsRoleEntityExam
         TsRoleEntityExample.Criteria criteria = roleExample.createCriteria();
         criteria.andPkIdIn(roleIds);
         criteria.andStatusEqualTo(IsValidEnum.VALID.getCode().byteValue());
-        List<TsRoleEntity> roleEntityList = selectByExample(roleExample);
-        return roleEntityList;
+        return this.selectByExample(roleExample);
     }
 
     default long countByRoleName(String roleName){
@@ -45,7 +44,6 @@ public interface TsRoleMapper extends IBaseMapper<TsRoleEntity, TsRoleEntityExam
         TsRoleEntityExample.Criteria criteria = roleEntityExample.createCriteria();
         //criteria.andStatusEqualTo(IsValidEnum.VALID.getCode().byteValue());
         criteria.andRoleNameEqualTo(roleName);
-        long l = this.countByExample(roleEntityExample);
-        return l;
+        return this.countByExample(roleEntityExample);
     }
 }

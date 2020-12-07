@@ -75,8 +75,6 @@ public class UserServiceImpl implements IUserService {
      */
     private static final String INIT_PASSWORD = "12345678";
 
-    private static final String salt="!QAZ@WSX#EDC$RFV";
-
     @Override
     public int deleteByPrimaryKey(String pkId) {
         log.info("Service deleteByPrimaryKey start. primaryKey=【{}】", pkId);

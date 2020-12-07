@@ -90,7 +90,7 @@ public class LoginServiceImpl implements ILoginService {
         String pwdInDb = userEntity.getPassword();
         password = MD5Util.getInstance().encryptBySalt(password);
         boolean flag = password.equals(pwdInDb);
-        //Assert.isTrue(flag , "用户名和密码不匹配!");
+        Assert.isTrue(flag , "用户名和密码不匹配!");
         return userEntity;
     }
 }

@@ -53,11 +53,8 @@ public interface IRoleService {
     PageInfo<TsRoleResDto> queryRoleByPage(Integer pageNum, Integer pageSize, String roleName, String isAll, String status);
 
     /**
-     * @Author 陈龙
-     * @Description 绑定菜单按钮
-     * @Date 14:50 2019/8/16
-     * @Param [reqBeanModel]
-     * @return void
-     **/
+     *  角色绑定菜单和按钮
+     * @param reqDto 请求对象
+     */
     void bindingMenu(BindingRoleAndMenuReqDto reqDto);
 }

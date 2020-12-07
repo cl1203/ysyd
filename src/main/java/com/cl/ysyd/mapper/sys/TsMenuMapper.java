@@ -23,7 +23,6 @@ public interface TsMenuMapper extends IBaseMapper<TsMenuEntity, TsMenuEntityExam
      * 根据角色ID获取对应的所有一级菜单级别的权限
      * 根据角色ID和一级菜单ID获取所有的二级菜单
      * 根据角色ID和菜单ID查询所有按钮权限
-     * @return
      */
     List<TsMenuEntity> queryMenuListByRoleIdAndMenuId(@Param("roleId") String roleId, @Param("parentId") String parentId, @Param("type") String type);
 

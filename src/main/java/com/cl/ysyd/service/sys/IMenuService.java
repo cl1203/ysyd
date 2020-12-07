@@ -47,7 +47,7 @@ public interface IMenuService {
 
     /**
      * 获取所有菜单和按钮
-     * @return
+     * @return 结果集
      */
     List<TsMenuResDto> queryMenuAndButton();
 }

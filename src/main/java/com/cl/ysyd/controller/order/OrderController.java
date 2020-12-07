@@ -1,9 +1,3 @@
-/**
- * OrderController.java
- * Created at 2020-11-24
- * Created by chenlong
- * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
- **/
 package com.cl.ysyd.controller.order;
 
 import com.cl.ysyd.common.constants.ResponseData;
@@ -89,4 +83,9 @@ public class OrderController {
         log.info("Controller updateByPrimaryKey end.");
         return new ResponseData<>(result);
     }
+
+
+    /*public ResponseData<PageInfo<TmOrderResDto>> queryOrderList(){
+        return null;
+    }*/
 }

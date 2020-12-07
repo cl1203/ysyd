@@ -134,7 +134,7 @@ public class UserController {
      *
      */
     @ApiOperation(value = "修改密码")
-    @PutMapping(path = "/{pkId}/password")
+    @PutMapping(path = "/password")
     @LoggerManage(description = "修改密码")
     public ResponseData<String> updatePassword(@RequestBody TsUserReqDto reqDto) {
         log.info("Controller updatePassword start.");

@@ -21,8 +21,8 @@ public interface TsUserMapper extends IBaseMapper<TsUserEntity, TsUserEntityExam
 
     /**
      * 根据用户名查询用户信息数量
-     * @param userName
-     * @return
+     * @param userName 用户名
+     * @return 数量
      */
     default long countByUserName(String userName){
         TsUserEntityExample tsUserEntityExample = new TsUserEntityExample();
@@ -35,8 +35,8 @@ public interface TsUserMapper extends IBaseMapper<TsUserEntity, TsUserEntityExam
 
     /**
      * 根据用户名查询用户信息
-     * @param userName
-     * @return
+     * @param userName 用户名
+     * @return 用户结果集
      */
     default List<TsUserEntity> queyByUserName(String userName){
         TsUserEntityExample tsUserEntityExample = new TsUserEntityExample();

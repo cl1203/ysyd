@@ -56,25 +56,18 @@ public interface IUserService {
      * 重置密码
      *
      * @param userId 用户id
-     * @return true: 成功 false: 失败
      */
     void resetPassword(String userId);
 
     /**
-     * @Author 陈龙
-     * @Description 修改密码
-     * @Date 14:50 2019/8/16
-     * @Param [reqBeanModel]
-     * @return void
-     **/
+     * 修改密码
+     * @param reqDto 用户对象
+     */
     void updatePassword(TsUserReqDto reqDto);
 
     /**
-     * @Author 陈龙
-     * @Description 绑定角色
-     * @Date 14:50 2019/8/16
-     * @Param [reqBeanModel]
-     * @return void
-     **/
+     * 绑定角色
+     * @param reqDto 请求对象
+     */
     void bindingRole(BindingUserAndRoleReqDto reqDto);
 }
