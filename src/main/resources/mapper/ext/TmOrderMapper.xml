@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cl.ysyd.mapper.order.TmOrderMapper" >
+
+
+    <select id="querySerialNumber" resultType="string" parameterType="string">
+        SELECT
+            t.order_no
+        FROM
+            tm_order t
+        WHERE
+            t.establish_date = #{date}
+        ORDER BY
+            t.order_no DESC
+        limit 1
+    </select>
+
+
+</mapper>

@@ -1,0 +1,61 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /ysyd
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      filters: stat,config
+      driver-class-name: com.mysql.jdbc.Driver
+      #基本属性
+      url: jdbc:mysql://localhost:3306/ysyd?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: Xyz999...
+      #password: PJx2BCdESmZf09+L5T7np0L60LH9GQEs4F/1u2urW59DBj2EgswECP+eutszY+rXDmoihSkJ8FUSbJ2mRw6gzw==
+      #配置初始化大小/最小/最大
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      #获取连接等待超时时间
+      max-wait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      #一个连接在池中最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+
+#--------------------
+#httpclient config
+#--------------------
+#\u8fde\u63a5\u6c60\u6700\u5927\u8fde\u63a5\u6570
+httpclient.max_total_connections: 4000
+#\u8bbe\u7f6e\u6bcf\u4e2a\u8def\u7531\u4e0a\u7684\u9ed8\u8ba4\u8fde\u63a5\u4e2a\u6570
+httpclient.default_max_per_route: 200
+#\u8bf7\u6c42\u7684\u8bf7\u6c42\u8d85\u65f6\u65f6\u95f4 \u5355\u4f4d\uff1a\u6beb\u79d2
+httpclient.request_connection_timeout :  600000
+#\u8bf7\u6c42\u7684\u7b49\u5f85\u6570\u636e\u8d85\u65f6\u65f6\u95f4 \u5355\u4f4d\uff1a\u6beb\u79d2
+httpclient.request_socket_timeout :  600000
+#\u8bf7\u6c42\u7684\u8fde\u63a5\u8d85\u65f6\u65f6\u95f4 \u5355\u4f4d\uff1a\u6beb\u79d2
+httpclient.request_connection_request_timeout :  6000
+# \u8fde\u63a5\u95f2\u7f6e\u591a\u4e45\u540e\u9700\u8981\u91cd\u65b0\u68c0\u6d4b \u5355\u4f4d\uff1a\u6beb\u79d2
+httpclient.validate_after_in_activity :  2000
+#\u5173\u95edSocket\u65f6\uff0c\u8981\u4e48\u53d1\u9001\u5b8c\u6240\u6709\u6570\u636e\uff0c\u8981\u4e48\u7b49\u5f85\u591a\u5c11\u79d2\u540e\uff0c\u5c31\u5173\u95ed\u8fde\u63a5\uff0c\u6b64\u65f6socket.close()\u662f\u963b\u585e\u7684\u3000\u5355\u4f4d\u79d2
+httpclient.socket_config_so_linger :  60
+#\u63a5\u6536\u6570\u636e\u7684\u7b49\u5f85\u8d85\u65f6\u65f6\u95f4,\u5373\u8bfb\u8d85\u65f6\u65f6\u95f4\uff0c\u5355\u4f4d\u6beb\u79d2
+httpclient.socket_config_so_timeout :  5000
+#\u91cd\u8bd5\u6b21\u6570
+httpclient.retry_count :  5
+

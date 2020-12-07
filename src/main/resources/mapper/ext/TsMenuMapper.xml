@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cl.ysyd.mapper.sys.TsMenuMapper" >
+    <resultMap id="ResultMap" type="com.cl.ysyd.entity.sys.TsMenuEntity">
+        <id column="pk_id" jdbcType="VARCHAR" property="pkId" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sort" jdbcType="INTEGER" property="sort" />
+        <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="target_page" jdbcType="VARCHAR" property="targetPage" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+        <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser" />
+    </resultMap>
+
+
+    <select id="queryMenuListByRoleIdAndMenuId" resultMap="ResultMap">
+        SELECT
+            tm.*
+        FROM
+            ts_role tr
+            LEFT JOIN tr_user_role tur ON tr.pk_id = tur.role_id
+            LEFT JOIN tr_role_menu trm ON tur.role_id = trm.role_id
+            LEFT JOIN ts_menu tm ON trm.menu_id = tm.pk_id
+        WHERE
+            tr.pk_id = #{roleId}
+            AND tm.parent_id = #{parentId}
+            AND tm.type = #{type}
+            order by tm.sort
+    </select>
+
+    <select id="queryMenuListAll" resultMap="ResultMap">
+        SELECT
+           tm.*
+        FROM
+            ts_menu tm
+        WHERE
+            tm.parent_id = #{parentId}
+            AND tm.type = #{type}
+            order by tm.sort
+    </select>
+</mapper>

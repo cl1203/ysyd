@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: uat
+  messages:
+    basename: i18n/messages
+    
+logging:
+  config: classpath:logback-spring.xml
+#  path: c:/temp/tms
+
+mybatis:
+  mapperLocations: classpath:mapper/**/*.xml
+#  config-location: classpath:mybatis-config.xml
+  typeAliasesPackage: com.cl.ysyd.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

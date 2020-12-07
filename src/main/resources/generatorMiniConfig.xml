@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- 添加外部运行类jar包，如jdbc一类的，非必须选项，可不选，可以是文件，也可以是目录 -->
+	<!-- <classPathEntry	location="/Program Files/IBM/SQLLIB/java/db2java.zip" /> -->
+	<properties resource="generatorConfig.properties" />
+	<context id="mycontext" targetRuntime="MyBatis3" defaultModelType="conditional">
+		
+		<!-- (一) MBG提供的内置插件 -->
+		<!-- 为生成的Java模型创建一个toString方法 -->
+
+		<!-- 为生成的Java模型类添加序列化接口 -->
+		<plugin type="com.cl.ysyd.common.plugin.SerializablePluginNew" />
+
+		<!-- (二) 自定义插件 -->
+	
+		<!-- 扩展xml生成插件 -->
+		<plugin type="com.cl.ysyd.common.plugin.XmlExtendGeneratorPlugin">
+			<!-- 在原有xml目录下增加extendTargetPackage目录 -->
+			<property name="extendTargetPackage" value="${xml.extendTargetPackage}" />
+			<property name="isOverride" value="${xml.isOverride}"/>
+			<!-- <property name="supperFace" value="com.anji.common.transform.AbstractObjectTransformer" /> -->
+		</plugin>
+		
+		<!-- 扩展mapper生成插件 -->
+		<plugin type="com.cl.ysyd.common.plugin.MapperExtendGeneratorPlugin">
+			<!-- 在原有mapper目录下增加extendTargetPackage目录 -->
+            <property name="extendTargetPackage" value="${mapper.extendTargetPackage}" />
+            <property name="mapperTargetPackage" value="${mapperTargetPackage}" />
+            <property name="mapperTargetDir" value="${mapperTargetDir}" />
+			<property name="isOverride" value="${mapper.isOverride}"/>
+			<property name="tableDataState" value="${tableDataState}"/>
+			<property name="tableDataUnique" value="${tableDataUnique}"/>
+			<property name="daoSuperClass" value="${daoSuperClass}"/>
+			<!-- <property name="supperFace" value="com.anji.common.transform.AbstractObjectTransformer" /> -->
+		</plugin>
+		
+		<plugin type="com.cl.ysyd.common.plugin.EntityModifyPlugin">
+		</plugin>
+		
+		<!-- 注释生成器,type是自定义的生成器,不指定默认,一般继承org.mybatis.generator.api.CommentGenerator -->
+		<commentGenerator  type="com.cl.ysyd.common.plugin.SelfCommentGenerator">
+			<!-- 设置时间格式 -->
+			<property name="dateFormat" value="yyyy-MM-dd"/>
+		</commentGenerator>
+		
+		<!-- 使用jdbcconnect连接数据库或者使用connectionFactory连接数据库 -->
+		<connectionFactory>
+			<property name="driverClass" value="${jdbc.driverClassName}" />
+			<property name="connectionURL" value="${jdbc.url}" />
+			<property name="userId" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}"/>
+			<!-- 针对mysql数据库，设置为true可以获取到表注释 -->
+			<property name="useInformationSchema" value="true" />
+			<!-- 针对oracle数据库，设置为true可以获取到表注释 -->
+			<property name="remarksReporting" value="true"/> 
+			<property name="nullCatalogMeansCurrent" value="true"/>
+		</connectionFactory>
+		
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<javaModelGenerator targetPackage="${entityTargetPackage}"	targetProject="${entityTargetDir}">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+			<!-- isLombok:若为true，不生成get/set方法，使用lombok注解，false，生成get/set方法 -->
+			<property name="isLombok" value="true"/>
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="${xmlTargetPackage}" targetProject="${xmlTargetDir}">
+			<property name="enableSubPackages" value="true" />
+			
+		</sqlMapGenerator>
+		
+		<!-- Mapper interface生成，type分为生成xml和没有的，XMLMAPPER是有xml的 
+		<javaClientGenerator type="XMLMAPPER" targetPackage="${mapperTargetPackage}" targetProject="${mapperTargetDir}">
+			<property name="enableSubPackages" value="true" />
+			
+		</javaClientGenerator>
+		-->
+		
+		<table tableName="ts_role" />
+        <table tableName="ts_permission" />
+	
+	</context>
+</generatorConfiguration>

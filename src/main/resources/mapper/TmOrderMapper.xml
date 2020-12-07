@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cl.ysyd.mapper.order.TmOrderMapper">
+  <resultMap id="BaseResultMap" type="com.cl.ysyd.entity.order.TmOrderEntity">
+    <id column="pk_id" jdbcType="VARCHAR" property="pkId" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate" />
+    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="establish_date" jdbcType="TIMESTAMP" property="establishDate" />
+    <result column="complete_date" jdbcType="TIMESTAMP" property="completeDate" />
+    <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
+    <result column="folder_url" jdbcType="VARCHAR" property="folderUrl" />
+    <result column="sku" jdbcType="VARCHAR" property="sku" />
+    <result column="order_people" jdbcType="VARCHAR" property="orderPeople" />
+    <result column="order_size" jdbcType="VARCHAR" property="orderSize" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="examine_status" jdbcType="VARCHAR" property="examineStatus" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+    <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    pk_id, order_no, img_url, delivery_date, unit_price, establish_date, complete_date, 
+    order_status, folder_url, sku, order_people, order_size, order_type, examine_status, 
+    status, remarks, create_time, create_user, last_update_time, last_update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.cl.ysyd.entity.order.TmOrderEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tm_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tm_order
+    where pk_id = #{pkId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tm_order
+    where pk_id = #{pkId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.cl.ysyd.entity.order.TmOrderEntityExample">
+    delete from tm_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
+    insert into tm_order (pk_id, order_no, img_url, 
+      delivery_date, unit_price, establish_date, 
+      complete_date, order_status, folder_url, 
+      sku, order_people, order_size, 
+      order_type, examine_status, status, 
+      remarks, create_time, create_user, 
+      last_update_time, last_update_user)
+    values (#{pkId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{deliveryDate,jdbcType=TIMESTAMP}, #{unitPrice,jdbcType=DECIMAL}, #{establishDate,jdbcType=TIMESTAMP}, 
+      #{completeDate,jdbcType=TIMESTAMP}, #{orderStatus,jdbcType=VARCHAR}, #{folderUrl,jdbcType=VARCHAR}, 
+      #{sku,jdbcType=VARCHAR}, #{orderPeople,jdbcType=VARCHAR}, #{orderSize,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{examineStatus,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{lastUpdateTime,jdbcType=TIMESTAMP}, #{lastUpdateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
+    insert into tm_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pkId != null">
+        pk_id,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="imgUrl != null">
+        img_url,
+      </if>
+      <if test="deliveryDate != null">
+        delivery_date,
+      </if>
+      <if test="unitPrice != null">
+        unit_price,
+      </if>
+      <if test="establishDate != null">
+        establish_date,
+      </if>
+      <if test="completeDate != null">
+        complete_date,
+      </if>
+      <if test="orderStatus != null">
+        order_status,
+      </if>
+      <if test="folderUrl != null">
+        folder_url,
+      </if>
+      <if test="sku != null">
+        sku,
+      </if>
+      <if test="orderPeople != null">
+        order_people,
+      </if>
+      <if test="orderSize != null">
+        order_size,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="examineStatus != null">
+        examine_status,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="lastUpdateTime != null">
+        last_update_time,
+      </if>
+      <if test="lastUpdateUser != null">
+        last_update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pkId != null">
+        #{pkId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null">
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null">
+        #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unitPrice != null">
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="establishDate != null">
+        #{establishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completeDate != null">
+        #{completeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderStatus != null">
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="folderUrl != null">
+        #{folderUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPeople != null">
+        #{orderPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSize != null">
+        #{orderSize,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="examineStatus != null">
+        #{examineStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateTime != null">
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateUser != null">
+        #{lastUpdateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.cl.ysyd.entity.order.TmOrderEntityExample" resultType="java.lang.Long">
+    select count(*) from tm_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tm_order
+    <set>
+      <if test="record.pkId != null">
+        pk_id = #{record.pkId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNo != null">
+        order_no = #{record.orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgUrl != null">
+        img_url = #{record.imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deliveryDate != null">
+        delivery_date = #{record.deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.unitPrice != null">
+        unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.establishDate != null">
+        establish_date = #{record.establishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.completeDate != null">
+        complete_date = #{record.completeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orderStatus != null">
+        order_status = #{record.orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.folderUrl != null">
+        folder_url = #{record.folderUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sku != null">
+        sku = #{record.sku,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderPeople != null">
+        order_people = #{record.orderPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderSize != null">
+        order_size = #{record.orderSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderType != null">
+        order_type = #{record.orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.examineStatus != null">
+        examine_status = #{record.examineStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.remarks != null">
+        remarks = #{record.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastUpdateTime != null">
+        last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastUpdateUser != null">
+        last_update_user = #{record.lastUpdateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tm_order
+    set pk_id = #{record.pkId,jdbcType=VARCHAR},
+      order_no = #{record.orderNo,jdbcType=VARCHAR},
+      img_url = #{record.imgUrl,jdbcType=VARCHAR},
+      delivery_date = #{record.deliveryDate,jdbcType=TIMESTAMP},
+      unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      establish_date = #{record.establishDate,jdbcType=TIMESTAMP},
+      complete_date = #{record.completeDate,jdbcType=TIMESTAMP},
+      order_status = #{record.orderStatus,jdbcType=VARCHAR},
+      folder_url = #{record.folderUrl,jdbcType=VARCHAR},
+      sku = #{record.sku,jdbcType=VARCHAR},
+      order_people = #{record.orderPeople,jdbcType=VARCHAR},
+      order_size = #{record.orderSize,jdbcType=VARCHAR},
+      order_type = #{record.orderType,jdbcType=VARCHAR},
+      examine_status = #{record.examineStatus,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      remarks = #{record.remarks,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      last_update_time = #{record.lastUpdateTime,jdbcType=TIMESTAMP},
+      last_update_user = #{record.lastUpdateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
+    update tm_order
+    <set>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null">
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDate != null">
+        delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="unitPrice != null">
+        unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="establishDate != null">
+        establish_date = #{establishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completeDate != null">
+        complete_date = #{completeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderStatus != null">
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="folderUrl != null">
+        folder_url = #{folderUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        sku = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPeople != null">
+        order_people = #{orderPeople,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSize != null">
+        order_size = #{orderSize,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="examineStatus != null">
+        examine_status = #{examineStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateTime != null">
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateUser != null">
+        last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pk_id = #{pkId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
+    update tm_order
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      unit_price = #{unitPrice,jdbcType=DECIMAL},
+      establish_date = #{establishDate,jdbcType=TIMESTAMP},
+      complete_date = #{completeDate,jdbcType=TIMESTAMP},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      folder_url = #{folderUrl,jdbcType=VARCHAR},
+      sku = #{sku,jdbcType=VARCHAR},
+      order_people = #{orderPeople,jdbcType=VARCHAR},
+      order_size = #{orderSize,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      examine_status = #{examineStatus,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      last_update_user = #{lastUpdateUser,jdbcType=VARCHAR}
+    where pk_id = #{pkId,jdbcType=VARCHAR}
+  </update>
+</mapper>
