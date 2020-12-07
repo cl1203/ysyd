@@ -13,6 +13,8 @@ import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class OrderHelper {
 
     @Autowired
     private IBizDictionaryService iTcDictService;
+
+    @Autowired
+    private TsUserMapper userMapper;
 
     /**
      * entity转resDto
@@ -71,6 +76,11 @@ public class OrderHelper {
         resDto.setImgUrl(TmOrder.getImgUrl());
         resDto.setEstablishDate(DateUtil.getDateString(TmOrder.getEstablishDate(), DateUtil.DATESHOWFORMAT));
         resDto.setUnitPrice(String.valueOf(TmOrder.getUnitPrice()));
+        resDto.setOrderUser(TmOrder.getOrderUser());
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(TmOrder.getOrderUser());
+        if(null != userEntity){
+            resDto.setOrderUserName(userEntity.getRealName());
+        }
         return resDto;
     }
 
@@ -124,6 +134,7 @@ public class OrderHelper {
         entity.setCreateUser(LoginUtil.getUserId());
         entity.setLastUpdateTime(new Date());
         entity.setLastUpdateUser(LoginUtil.getUserId());
+        entity.setOrderUser(reqDto.getOrderUser());
         return entity;
     }
 

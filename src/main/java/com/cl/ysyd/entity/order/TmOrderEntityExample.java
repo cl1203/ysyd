@@ -1,6 +1,6 @@
 /**
  * TmOrderEntityExample.java
- * Created at 2020-11-24
+ * Created at 2020-12-07
  * Created by chenlong
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
@@ -140,7 +140,7 @@ public class TmOrderEntityExample {
      * Example标准条件内部类
      * 订单
      * table:tm_order
-     * @author chenlong  2020-11-24
+     * @author chenlong  2020-12-07
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -393,63 +393,73 @@ public class TmOrderEntityExample {
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateIsNull() {
-            addCriterion("delivery_date is null");
+        public Criteria andOrderUserIsNull() {
+            addCriterion("order_user is null");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateIsNotNull() {
-            addCriterion("delivery_date is not null");
+        public Criteria andOrderUserIsNotNull() {
+            addCriterion("order_user is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateEqualTo(Date value) {
-            addCriterion("delivery_date =", value, "deliveryDate");
+        public Criteria andOrderUserEqualTo(String value) {
+            addCriterion("order_user =", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateNotEqualTo(Date value) {
-            addCriterion("delivery_date <>", value, "deliveryDate");
+        public Criteria andOrderUserNotEqualTo(String value) {
+            addCriterion("order_user <>", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateGreaterThan(Date value) {
-            addCriterion("delivery_date >", value, "deliveryDate");
+        public Criteria andOrderUserGreaterThan(String value) {
+            addCriterion("order_user >", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateGreaterThanOrEqualTo(Date value) {
-            addCriterion("delivery_date >=", value, "deliveryDate");
+        public Criteria andOrderUserGreaterThanOrEqualTo(String value) {
+            addCriterion("order_user >=", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateLessThan(Date value) {
-            addCriterion("delivery_date <", value, "deliveryDate");
+        public Criteria andOrderUserLessThan(String value) {
+            addCriterion("order_user <", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateLessThanOrEqualTo(Date value) {
-            addCriterion("delivery_date <=", value, "deliveryDate");
+        public Criteria andOrderUserLessThanOrEqualTo(String value) {
+            addCriterion("order_user <=", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateIn(List<Date> values) {
-            addCriterion("delivery_date in", values, "deliveryDate");
+        public Criteria andOrderUserLike(String value) {
+            addCriterion("order_user like", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateNotIn(List<Date> values) {
-            addCriterion("delivery_date not in", values, "deliveryDate");
+        public Criteria andOrderUserNotLike(String value) {
+            addCriterion("order_user not like", value, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateBetween(Date value1, Date value2) {
-            addCriterion("delivery_date between", value1, value2, "deliveryDate");
+        public Criteria andOrderUserIn(List<String> values) {
+            addCriterion("order_user in", values, "orderUser");
             return (Criteria) this;
         }
 
-        public Criteria andDeliveryDateNotBetween(Date value1, Date value2) {
-            addCriterion("delivery_date not between", value1, value2, "deliveryDate");
+        public Criteria andOrderUserNotIn(List<String> values) {
+            addCriterion("order_user not in", values, "orderUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderUserBetween(String value1, String value2) {
+            addCriterion("order_user between", value1, value2, "orderUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderUserNotBetween(String value1, String value2) {
+            addCriterion("order_user not between", value1, value2, "orderUser");
             return (Criteria) this;
         }
 
@@ -510,6 +520,66 @@ public class TmOrderEntityExample {
 
         public Criteria andUnitPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("unit_price not between", value1, value2, "unitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateIsNull() {
+            addCriterion("delivery_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateIsNotNull() {
+            addCriterion("delivery_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateEqualTo(Date value) {
+            addCriterion("delivery_date =", value, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateNotEqualTo(Date value) {
+            addCriterion("delivery_date <>", value, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateGreaterThan(Date value) {
+            addCriterion("delivery_date >", value, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("delivery_date >=", value, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateLessThan(Date value) {
+            addCriterion("delivery_date <", value, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateLessThanOrEqualTo(Date value) {
+            addCriterion("delivery_date <=", value, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateIn(List<Date> values) {
+            addCriterion("delivery_date in", values, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateNotIn(List<Date> values) {
+            addCriterion("delivery_date not in", values, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateBetween(Date value1, Date value2) {
+            addCriterion("delivery_date between", value1, value2, "deliveryDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDeliveryDateNotBetween(Date value1, Date value2) {
+            addCriterion("delivery_date not between", value1, value2, "deliveryDate");
             return (Criteria) this;
         }
 
@@ -1518,7 +1588,7 @@ public class TmOrderEntityExample {
      * Example内部类Criteria
      * 订单
      * table:tm_order
-     * @author chenlong  2020-11-24
+     * @author chenlong  2020-12-07
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -1531,7 +1601,7 @@ public class TmOrderEntityExample {
      * Example标准条件内部类
      * 订单
      * table:tm_order
-     * @author chenlong  2020-11-24
+     * @author chenlong  2020-12-07
      */
     public static class Criterion {
         private String condition;

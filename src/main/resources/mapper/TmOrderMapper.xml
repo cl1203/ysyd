@@ -5,8 +5,9 @@
     <id column="pk_id" jdbcType="VARCHAR" property="pkId" />
     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate" />
+    <result column="order_user" jdbcType="VARCHAR" property="orderUser" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="delivery_date" jdbcType="TIMESTAMP" property="deliveryDate" />
     <result column="establish_date" jdbcType="TIMESTAMP" property="establishDate" />
     <result column="complete_date" jdbcType="TIMESTAMP" property="completeDate" />
     <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
@@ -82,9 +83,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    pk_id, order_no, img_url, delivery_date, unit_price, establish_date, complete_date, 
-    order_status, folder_url, sku, order_people, order_size, order_type, examine_status, 
-    status, remarks, create_time, create_user, last_update_time, last_update_user
+    pk_id, order_no, img_url, order_user, unit_price, delivery_date, establish_date, 
+    complete_date, order_status, folder_url, sku, order_people, order_size, order_type, 
+    examine_status, status, remarks, create_time, create_user, last_update_time, last_update_user
   </sql>
   <select id="selectByExample" parameterType="com.cl.ysyd.entity.order.TmOrderEntityExample" resultMap="BaseResultMap">
     select
@@ -118,19 +119,21 @@
   </delete>
   <insert id="insert" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
     insert into tm_order (pk_id, order_no, img_url, 
-      delivery_date, unit_price, establish_date, 
-      complete_date, order_status, folder_url, 
-      sku, order_people, order_size, 
-      order_type, examine_status, status, 
-      remarks, create_time, create_user, 
-      last_update_time, last_update_user)
+      order_user, unit_price, delivery_date, 
+      establish_date, complete_date, order_status, 
+      folder_url, sku, order_people, 
+      order_size, order_type, examine_status, 
+      status, remarks, create_time, 
+      create_user, last_update_time, last_update_user
+      )
     values (#{pkId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
-      #{deliveryDate,jdbcType=TIMESTAMP}, #{unitPrice,jdbcType=DECIMAL}, #{establishDate,jdbcType=TIMESTAMP}, 
-      #{completeDate,jdbcType=TIMESTAMP}, #{orderStatus,jdbcType=VARCHAR}, #{folderUrl,jdbcType=VARCHAR}, 
-      #{sku,jdbcType=VARCHAR}, #{orderPeople,jdbcType=VARCHAR}, #{orderSize,jdbcType=VARCHAR}, 
-      #{orderType,jdbcType=VARCHAR}, #{examineStatus,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
-      #{lastUpdateTime,jdbcType=TIMESTAMP}, #{lastUpdateUser,jdbcType=VARCHAR})
+      #{orderUser,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, #{deliveryDate,jdbcType=TIMESTAMP}, 
+      #{establishDate,jdbcType=TIMESTAMP}, #{completeDate,jdbcType=TIMESTAMP}, #{orderStatus,jdbcType=VARCHAR}, 
+      #{folderUrl,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{orderPeople,jdbcType=VARCHAR}, 
+      #{orderSize,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{examineStatus,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=TIMESTAMP}, #{lastUpdateUser,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
     insert into tm_order
@@ -144,11 +147,14 @@
       <if test="imgUrl != null">
         img_url,
       </if>
-      <if test="deliveryDate != null">
-        delivery_date,
+      <if test="orderUser != null">
+        order_user,
       </if>
       <if test="unitPrice != null">
         unit_price,
+      </if>
+      <if test="deliveryDate != null">
+        delivery_date,
       </if>
       <if test="establishDate != null">
         establish_date,
@@ -206,11 +212,14 @@
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="deliveryDate != null">
-        #{deliveryDate,jdbcType=TIMESTAMP},
+      <if test="orderUser != null">
+        #{orderUser,jdbcType=VARCHAR},
       </if>
       <if test="unitPrice != null">
         #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryDate != null">
+        #{deliveryDate,jdbcType=TIMESTAMP},
       </if>
       <if test="establishDate != null">
         #{establishDate,jdbcType=TIMESTAMP},
@@ -277,11 +286,14 @@
       <if test="record.imgUrl != null">
         img_url = #{record.imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="record.deliveryDate != null">
-        delivery_date = #{record.deliveryDate,jdbcType=TIMESTAMP},
+      <if test="record.orderUser != null">
+        order_user = #{record.orderUser,jdbcType=VARCHAR},
       </if>
       <if test="record.unitPrice != null">
         unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.deliveryDate != null">
+        delivery_date = #{record.deliveryDate,jdbcType=TIMESTAMP},
       </if>
       <if test="record.establishDate != null">
         establish_date = #{record.establishDate,jdbcType=TIMESTAMP},
@@ -338,8 +350,9 @@
     set pk_id = #{record.pkId,jdbcType=VARCHAR},
       order_no = #{record.orderNo,jdbcType=VARCHAR},
       img_url = #{record.imgUrl,jdbcType=VARCHAR},
-      delivery_date = #{record.deliveryDate,jdbcType=TIMESTAMP},
+      order_user = #{record.orderUser,jdbcType=VARCHAR},
       unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      delivery_date = #{record.deliveryDate,jdbcType=TIMESTAMP},
       establish_date = #{record.establishDate,jdbcType=TIMESTAMP},
       complete_date = #{record.completeDate,jdbcType=TIMESTAMP},
       order_status = #{record.orderStatus,jdbcType=VARCHAR},
@@ -368,11 +381,14 @@
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="deliveryDate != null">
-        delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      <if test="orderUser != null">
+        order_user = #{orderUser,jdbcType=VARCHAR},
       </if>
       <if test="unitPrice != null">
         unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="deliveryDate != null">
+        delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
       </if>
       <if test="establishDate != null">
         establish_date = #{establishDate,jdbcType=TIMESTAMP},
@@ -426,8 +442,9 @@
     update tm_order
     set order_no = #{orderNo,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
+      order_user = #{orderUser,jdbcType=VARCHAR},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
+      delivery_date = #{deliveryDate,jdbcType=TIMESTAMP},
       establish_date = #{establishDate,jdbcType=TIMESTAMP},
       complete_date = #{completeDate,jdbcType=TIMESTAMP},
       order_status = #{orderStatus,jdbcType=VARCHAR},

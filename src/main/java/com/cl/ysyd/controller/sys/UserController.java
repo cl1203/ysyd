@@ -157,4 +157,5 @@ public class UserController {
         log.info("Controller bindingRole end. ");
         return new ResponseData<>("分配角色成功!");
     }
+
 }

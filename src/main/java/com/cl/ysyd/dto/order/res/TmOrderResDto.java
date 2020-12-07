@@ -42,6 +42,18 @@ public class TmOrderResDto {
     private String deliveryDate;
 
     /**
+     * 订单所属用户
+     */
+    @ApiModelProperty(value="订单所属用户" )
+    private String orderUser;
+
+    /**
+     * 订单所属用户
+     */
+    @ApiModelProperty(value="订单所属用户姓名" )
+    private String orderUserName;
+
+    /**
      * 单价
      */
     @ApiModelProperty(value="单价" )

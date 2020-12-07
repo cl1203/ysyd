@@ -1,6 +1,6 @@
 /**
  * IOrderService.java
- * Created at 2020-11-24
+ * Created at 2020-12-07
  * Created by chenlong
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
@@ -8,10 +8,11 @@ package com.cl.ysyd.service.order;
 
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
+import com.github.pagehelper.PageInfo;
 
 /**
  * 订单 service接口类
- * @author chenlong  2020-11-24 23:41:31
+ * @author chenlong  2020-12-07 14:42:40
  */
 public interface IOrderService {
     /**
@@ -42,4 +43,18 @@ public interface IOrderService {
      * @return int
      */
     int updateByPrimaryKey(String pkId, TmOrderReqDto reqDto);
+
+    /**
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param orderUser 所属用户
+     * @param orderStatus 订单状态
+     * @param deliveryDate 交货日期
+     * @param establishDate 创建日期
+     * @param completeDate 完成日期
+     * @return 列表结果集
+     */
+    PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus,
+                                             String deliveryDate, String establishDate, String completeDate);
 }

@@ -70,6 +70,12 @@ public class TmOrderReqDto {
     private String orderStatus;
 
     /**
+     * 订单所属用户
+     */
+    @ApiModelProperty(value="订单所属用户" )
+    private String orderUser;
+
+    /**
      * 文件夹地址
      */
     @ApiModelProperty(value="文件夹地址" )

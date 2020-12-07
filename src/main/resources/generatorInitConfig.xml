@@ -118,7 +118,7 @@
 		</sqlMapGenerator>
 
 
-		<table tableName="ts_menu" />
+		<table tableName="tm_order" />
 
 		
 	</context>

@@ -1,6 +1,6 @@
 /**
  * TmOrderEntity.java
- * Created at 2020-11-24
+ * Created at 2020-12-07
  * Created by chenlong
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
@@ -35,14 +35,19 @@ public class TmOrderEntity implements Serializable {
     private String imgUrl;
 
     /**
-     * 交货日期
+     * 订单所属用户
      */
-    private Date deliveryDate;
+    private String orderUser;
 
     /**
      * 单价
      */
     private BigDecimal unitPrice;
+
+    /**
+     * 交货日期
+     */
+    private Date deliveryDate;
 
     /**
      * 订单创建日期
@@ -85,7 +90,7 @@ public class TmOrderEntity implements Serializable {
     private String orderType;
 
     /**
-     * 审核状态 Y: 审核通过 N:审核未通过
+     * 审核状态
      */
     private String examineStatus;
 
@@ -165,17 +170,17 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
-     * 返回字段:交货日期
+     * 返回字段:订单所属用户
      */
-    public Date getDeliveryDate() {
-        return deliveryDate;
+    public String getOrderUser() {
+        return orderUser;
     }
 
     /**
-     * 设置字段值:交货日期
+     * 设置字段值:订单所属用户
      */
-    public void setDeliveryDate(Date deliveryDate) {
-        this.deliveryDate = deliveryDate;
+    public void setOrderUser(String orderUser) {
+        this.orderUser = orderUser == null ? null : orderUser.trim();
     }
 
     /**
@@ -190,6 +195,20 @@ public class TmOrderEntity implements Serializable {
      */
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    /**
+     * 返回字段:交货日期
+     */
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    /**
+     * 设置字段值:交货日期
+     */
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
     }
 
     /**
@@ -305,14 +324,14 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
-     * 返回字段:审核状态 Y: 审核通过 N:审核未通过
+     * 返回字段:审核状态
      */
     public String getExamineStatus() {
         return examineStatus;
     }
 
     /**
-     * 设置字段值:审核状态 Y: 审核通过 N:审核未通过
+     * 设置字段值:审核状态
      */
     public void setExamineStatus(String examineStatus) {
         this.examineStatus = examineStatus == null ? null : examineStatus.trim();

@@ -16,6 +16,7 @@ import com.cl.ysyd.entity.order.TmOrderEntity;
 import com.cl.ysyd.mapper.order.TmOrderMapper;
 import com.cl.ysyd.service.order.IOrderService;
 import com.cl.ysyd.service.order.helper.OrderHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,5 +113,10 @@ public class OrderServiceImpl implements IOrderService {
         int ret = this.tmOrderMapper.updateByPrimaryKey(entity);
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
         return ret;
+    }
+
+    @Override
+    public PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus, String deliveryDate, String establishDate, String completeDate) {
+        return null;
     }
 }
