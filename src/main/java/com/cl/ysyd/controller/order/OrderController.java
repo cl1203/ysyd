@@ -28,6 +28,7 @@ import javax.validation.Valid;
 @Slf4j
 @Api(tags="订单接口")
 @RequestMapping(value = "order")
+@CrossOrigin
 public class OrderController {
     /**
      * 订单service
@@ -40,13 +41,13 @@ public class OrderController {
      * @param pkId 主键
      * @return 响应结果:ResponseData<Integer>
      */
-    @ApiOperation(value = "删除订单")
-    @DeleteMapping(value = "/{pkId}")
-    public ResponseData<Integer> deleteByPrimaryKey(@PathVariable String pkId) {
+    @ApiOperation(value = "作废订单")
+    @PutMapping(value = "/cancel/{pkId}")
+    public ResponseData<String> cancelByPrimaryKey(@PathVariable String pkId) {
         log.info("Controller deleteByPrimaryKey start.");
-        int result = this.iOrderService.deleteByPrimaryKey(pkId);
+        this.iOrderService.cancelByPrimaryKey(pkId);
         log.info("Controller deleteByPrimaryKey end.");
-        return new ResponseData<>(result);
+        return new ResponseData<>("作废成功!");
     }
 
     /**
@@ -70,11 +71,11 @@ public class OrderController {
      */
     @ApiOperation(value = "新增订单")
     @PostMapping(value = "")
-    public ResponseData<Integer> createOrder(@RequestBody @Valid TmOrderReqDto reqDto) {
+    public ResponseData<String> createOrder(@RequestBody @Valid TmOrderReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");
-        int result = this.iOrderService.createOrder(reqDto);
+        this.iOrderService.createOrder(reqDto);
         log.info("Controller queryByPrimaryKey end.");
-        return new ResponseData<>(result);
+        return new ResponseData<>("新增成功!");
     }
 
     /**
@@ -84,12 +85,12 @@ public class OrderController {
      * @return 响应结果:ResponseData<Integer>
      */
     @ApiOperation(value = "修改订单")
-    @PutMapping(value = "/{pkId}")
-    public ResponseData<Integer> updateByPrimaryKey(@PathVariable String pkId, @RequestBody @Valid TmOrderReqDto reqDto) {
+    @PutMapping(value = "/update/{pkId}")
+    public ResponseData<String> updateByPrimaryKey(@PathVariable String pkId, @RequestBody @Valid TmOrderReqDto reqDto) {
         log.info("Controller updateByPrimaryKey start.");
-        int result = this.iOrderService.updateByPrimaryKey(pkId, reqDto);
+        this.iOrderService.updateByPrimaryKey(pkId, reqDto);
         log.info("Controller updateByPrimaryKey end.");
-        return new ResponseData<>(result);
+        return new ResponseData<>("修改成功!");
     }
 
     /**
@@ -103,14 +104,47 @@ public class OrderController {
      * @param completeDate 完成日期
      * @return 列表结果集
      */
-    @ApiOperation(value = "查询用户列表")
+    @ApiOperation(value = "查询订单列表")
     @GetMapping(path = "/{pageNum}/{pageSize}")
-    @LoggerManage(description = "查询用户列表")
-    public ResponseData<PageInfo<TmOrderResDto>> queryOrderByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderUser,
-                                                                  String orderStatus, String deliveryDate, String establishDate, String completeDate){
+    @LoggerManage(description = "查询订单列表")
+    public ResponseData<PageInfo<TmOrderResDto>> queryOrderByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderUser, String orderStatus,
+                                                                  String deliveryDate, String establishDate, String completeDate, String examineStatus){
         log.info("Controller queryOrderByPage start.");
-        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate);
+        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus);
         log.info("Controller queryOrderByPage end.");
         return new ResponseData<>(resDto);
+    }
+
+
+    /**
+     * 分配订单
+     * @param orderId 订单ID
+     * @param orderUserId 用户Id
+     * @return 结果
+     */
+    @ApiOperation(value = "分配订单")
+    @PutMapping(path = "/distribution/{orderId}/{orderUserId}")
+    @LoggerManage(description = "分配订单")
+    public ResponseData<String> distributionUser(@PathVariable String orderId, @PathVariable String orderUserId){
+        log.info("Controller distributionUser start.");
+        this.iOrderService.distributionUser(orderId, orderUserId);
+        log.info("Controller distributionUser end.");
+        return new ResponseData<>("分配成功!");
+    }
+
+    /**
+     * 操作订单状态
+     * @param orderId 订单ID
+     * @param orderStatus 订单状态
+     * @return 结果
+     */
+    @ApiOperation(value = "操作订单状态")
+    @PutMapping(path = "/updateStatus/{orderId}/{orderStatus}")
+    @LoggerManage(description = "操作订单状态")
+    public ResponseData<String> updateOrderStatus(@PathVariable String orderId, @PathVariable String orderStatus){
+        log.info("Controller updateOrderStatus start.");
+        this.iOrderService.updateOrderStatus(orderId, orderStatus);
+        log.info("Controller updateOrderStatus end.");
+        return new ResponseData<>("修改订单状态成功!");
     }
 }

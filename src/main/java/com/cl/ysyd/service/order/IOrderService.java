@@ -20,7 +20,7 @@ public interface IOrderService {
      * @param pkId 主键
      * @return int
      */
-    int deleteByPrimaryKey(String pkId);
+    void cancelByPrimaryKey(String pkId);
 
     /**
      * 根据主键查询信息
@@ -34,7 +34,7 @@ public interface IOrderService {
      * @param reqDto 请求dto
      * @return int
      */
-    int createOrder(TmOrderReqDto reqDto);
+    void createOrder(TmOrderReqDto reqDto);
 
     /**
      * 根据主键更新信息
@@ -42,7 +42,7 @@ public interface IOrderService {
      * @param reqDto 请求dto
      * @return int
      */
-    int updateByPrimaryKey(String pkId, TmOrderReqDto reqDto);
+    void updateByPrimaryKey(String pkId, TmOrderReqDto reqDto);
 
     /**
      *
@@ -56,5 +56,21 @@ public interface IOrderService {
      * @return 列表结果集
      */
     PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus,
-                                             String deliveryDate, String establishDate, String completeDate);
+                                             String deliveryDate, String establishDate, String completeDate, String examineStatus);
+
+    /**
+     * 分配订单
+     * @param orderId 订单ID
+     * @param orderUserId 用户Id
+     * @return 结果
+     */
+    void distributionUser(String orderId, String orderUserId);
+
+    /**
+     * 操作订单状态
+     * @param orderId 订单ID
+     * @param orderStatus 订单状态
+     * @return 结果
+     */
+    void updateOrderStatus(String orderId, String orderStatus);
 }

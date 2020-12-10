@@ -7,23 +7,33 @@
 package com.cl.ysyd.service.order.impl;
 
 import com.cl.ysyd.common.constants.SortConstant;
+import com.cl.ysyd.common.enums.AuditStatusEnum;
+import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.DateUtil;
+import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.order.TmOrderMapper;
+import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.order.IOrderService;
 import com.cl.ysyd.service.order.helper.OrderHelper;
+import com.cl.ysyd.service.sys.IBizDictionaryService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单service实现类
@@ -39,6 +49,12 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private TmOrderMapper tmOrderMapper;
 
+    @Autowired
+    private TsUserMapper userMapper;
+
+    @Autowired
+    private IBizDictionaryService iTcDictService;
+
     /**
      * 订单Helper
      */
@@ -46,20 +62,22 @@ public class OrderServiceImpl implements IOrderService {
     private OrderHelper orderHelper;
 
     private final static String SERIAL = "00001";
-    private final static String END = "23:59:59";
     private final static int LENGTH = 5;
 
     @Override
-    public int deleteByPrimaryKey(String pkId) {
+    public void cancelByPrimaryKey(String pkId) {
         log.info("Service deleteByPrimaryKey start. primaryKey=【{}】",pkId);
         TmOrderEntity checkEntity = this.tmOrderMapper.selectByPrimaryKey(pkId);
         if (checkEntity == null) {
             log.info("根据主键 pkId【{}】查询信息不存在",pkId);
             throw new BusiException("数据不存在");
         }
-        int ret = this.tmOrderMapper.deleteByPrimaryKey(pkId); 
+        checkEntity.setStatus(SortConstant.ZERO.byteValue());
+        checkEntity.setLastUpdateTime(new Date());
+        checkEntity.setLastUpdateUser(LoginUtil.getUserId());
+        int ret = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);
+        Assert.isTrue(ret==SortConstant.ONE, "作废失败!");
         log.info("Service deleteByPrimaryKey end. ret=【{}】",ret);
-        return ret;
     }
 
     @Override
@@ -72,7 +90,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public int createOrder(TmOrderReqDto reqDto) {
+    public void createOrder(TmOrderReqDto reqDto) {
         log.info("Service createOrder start. reqDto=【{}】",reqDto);
         TmOrderEntity entity = this.orderHelper.editEntity(reqDto);
         //当前年月日
@@ -93,30 +111,81 @@ public class OrderServiceImpl implements IOrderService {
         entity.setCreateTime(new Date());
         entity.setPkId(UuidUtil.getUuid());
         int ret = this.tmOrderMapper.insertSelective(entity);
+        Assert.isTrue(ret==SortConstant.ONE, "新增失败!");
         log.info("Service createOrder end. ret=【{}】",ret);
-        return ret;
     }
 
     @Override
-    public int updateByPrimaryKey(String pkId, TmOrderReqDto reqDto) {
+    public void updateByPrimaryKey(String pkId, TmOrderReqDto reqDto) {
         log.info("Service updateByPrimaryKey start. pkId=【{}】, reqDto =【{}】",pkId,reqDto);
-        if(StringUtils.isEmpty(pkId)) {
-            throw new BusiException("参数错误,缺少pkId");
-        }
         TmOrderEntity checkEntity = this.tmOrderMapper.selectByPrimaryKey(pkId);
         if (checkEntity == null) {
-            log.info("根据主键 pkId【{}】查询信息不存在",pkId);
-            throw new BusiException("数据不存在");
+            throw new BusiException("数据不存在!");
         }
         TmOrderEntity entity = this.orderHelper.editEntity(reqDto);
         entity.setPkId(pkId);
         int ret = this.tmOrderMapper.updateByPrimaryKey(entity);
+        Assert.isTrue(ret==SortConstant.ONE, "修改失败!");
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
-        return ret;
     }
 
     @Override
-    public PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus, String deliveryDate, String establishDate, String completeDate) {
-        return null;
+    public PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus,
+                                                    String deliveryDate, String establishDate, String completeDate, String examineStatus) {
+        PageHelper.orderBy("CREATE_TIME DESC");
+        Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
+        String userId = LoginUtil.getUserId();
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, userEntity.getType());
+        List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
+        PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
+        pageInfo.setList(orderResDtoList);
+        return pageInfo;
+    }
+
+    @Override
+    public void distributionUser(String orderId, String orderUserId) {
+        //校验订单ID对应的订单是否存在
+        log.info("Service updateByPrimaryKey start. orderId=【{}】, orderUserId =【{}】",orderId,orderUserId);
+        TmOrderEntity checkEntity = this.tmOrderMapper.selectByPrimaryKey(orderId);
+        if (checkEntity == null) {
+            throw new BusiException("订单数据不存在!");
+        }
+        String orderUser = checkEntity.getOrderUser();
+        if(StringUtils.isNotBlank(orderUser)){
+            throw new BusiException("订单已经分配用户!");
+        }
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(orderUserId);
+        if(null == userEntity){
+            throw new BusiException("选择的用户不存在!");
+        }
+        Byte status = userEntity.getStatus();
+        if(status.equals(SortConstant.ZERO.byteValue())){
+            throw new BusiException("选择的用户已经被禁用!");
+        }
+        String auditStatus = userEntity.getAuditStatus();
+        if(auditStatus.equals(AuditStatusEnum.NOT_REVIEWED)){
+            throw new BusiException("选择的用户还未审核!");
+        }
+        checkEntity.setOrderUser(orderUserId);
+        checkEntity.setLastUpdateUser(LoginUtil.getUserId());
+        checkEntity.setLastUpdateTime(new Date());
+        int ret = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);
+        Assert.isTrue(ret==SortConstant.ONE, "分配失败!");
+    }
+
+    @Override
+    public void updateOrderStatus(String orderId, String orderStatus) {
+        TmOrderEntity checkEntity = this.tmOrderMapper.selectByPrimaryKey(orderId);
+        if (checkEntity == null) {
+            throw new BusiException("订单数据不存在!");
+        }
+        String orderStatusText = this.iTcDictService.getTextByBizCode(DictType.ORDER_STATUS.getCode(), orderStatus);
+        Assert.hasText(orderStatusText, "选择的订单状态不存在!");
+        checkEntity.setOrderStatus(orderStatus);
+        checkEntity.setLastUpdateTime(new Date());
+        checkEntity.setLastUpdateUser(LoginUtil.getUserId());
+        int ret = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);
+        Assert.isTrue(ret==SortConstant.ONE, "修改订单状态失败!");
     }
 }

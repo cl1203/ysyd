@@ -31,6 +31,8 @@ public enum DictType {
 
     POWER_TYPE("power_type", "权限类型"),
 
+    IS_CANCEL("is_cancel", "订单是否作废"),
+
     PURCHASE_STATUS("purchase_status", "采购状态状态");
 
 

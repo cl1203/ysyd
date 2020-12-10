@@ -8,6 +8,7 @@ package com.cl.ysyd.service.order.helper;
 
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
@@ -19,6 +20,7 @@ import com.cl.ysyd.service.sys.IBizDictionaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -63,7 +65,7 @@ public class OrderHelper {
         resDto.setLastUpdateTime(DateUtil.getDateString(TmOrder.getLastUpdateTime(), DateUtil.DATETIMESHOWFORMAT));
         resDto.setLastUpdateUser(TmOrder.getLastUpdateUser());
         resDto.setOrderSize(TmOrder.getOrderSize());
-        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), String.valueOf(TmOrder.getStatus()));
+        String statusText = this.iTcDictService.getTextByBizCode(DictType.IS_CANCEL.getCode(), String.valueOf(TmOrder.getStatus()));
         resDto.setStatus(String.valueOf(TmOrder.getStatus()));
         resDto.setStatusText(statusText);
         resDto.setPkId(TmOrder.getPkId());
@@ -118,13 +120,25 @@ public class OrderHelper {
         if(StringUtils.isNotBlank(reqDto.getCompleteDate())){
             entity.setCompleteDate(DateUtil.getDateToString(reqDto.getCompleteDate(), DateUtil.DATESHOWFORMAT));
         }
-        entity.setOrderStatus(reqDto.getOrderStatus());
+        entity.setOrderStatus(OrderStatusEnum.WAITING.getCode());
         entity.setFolderUrl(reqDto.getFolderUrl());
         entity.setSku(reqDto.getSku());
         entity.setOrderPeople(reqDto.getOrderPeople());
-        entity.setOrderSize(reqDto.getOrderSize());
-        entity.setOrderType(reqDto.getOrderType());
-        entity.setExamineStatus(reqDto.getExamineStatus());
+        if(StringUtils.isNotBlank(reqDto.getOrderSize())){
+            String orderSizeText = this.iTcDictService.getTextByBizCode(DictType.ORDER_SIZE.getCode(), reqDto.getOrderSize());
+            Assert.hasText(orderSizeText, "订单尺码不存在");
+            entity.setOrderSize(reqDto.getOrderSize());
+        }
+        if(StringUtils.isNotBlank(reqDto.getOrderType())){
+            String orderTypeText = this.iTcDictService.getTextByBizCode(DictType.ORDER_TYPE.getCode(), reqDto.getOrderType());
+            Assert.hasText(orderTypeText, "订单类型不存在");
+            entity.setOrderType(reqDto.getOrderType());
+        }
+        if(StringUtils.isNotBlank(reqDto.getExamineStatus())){
+            String examinesStatusText = this.iTcDictService.getTextByBizCode(DictType.EXAMINE_STATUS.getCode(), reqDto.getExamineStatus());
+            Assert.hasText(examinesStatusText, "订单审核状态不存在");
+            entity.setExamineStatus(reqDto.getExamineStatus());
+        }
         if(StringUtils.isNotBlank(reqDto.getStatus())){
             entity.setStatus(Byte.valueOf(reqDto.getStatus()));
         }else{

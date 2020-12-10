@@ -1,6 +1,6 @@
 /**
  * TmOrderEntityExample.java
- * Created at 2020-12-07
+ * Created at 2020-12-10
  * Created by chenlong
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
@@ -140,7 +140,7 @@ public class TmOrderEntityExample {
      * Example标准条件内部类
      * 订单
      * table:tm_order
-     * @author chenlong  2020-12-07
+     * @author chenlong  2020-12-10
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1588,7 +1588,7 @@ public class TmOrderEntityExample {
      * Example内部类Criteria
      * 订单
      * table:tm_order
-     * @author chenlong  2020-12-07
+     * @author chenlong  2020-12-10
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -1601,7 +1601,7 @@ public class TmOrderEntityExample {
      * Example标准条件内部类
      * 订单
      * table:tm_order
-     * @author chenlong  2020-12-07
+     * @author chenlong  2020-12-10
      */
     public static class Criterion {
         private String condition;

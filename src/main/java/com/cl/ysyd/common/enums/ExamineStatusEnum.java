@@ -1,9 +1,8 @@
 package com.cl.ysyd.common.enums;
 
-public enum AuditStatus {
-
-    REVIEWED("Y", "已审核"),
-    NOT_REVIEWED("N", "未审核");
+public enum ExamineStatusEnum {
+    ADOPT("adopt", "审核通过"),
+    FAILED("failed", "审核未通过");
 
     /**
      * 状态编码
@@ -21,16 +20,8 @@ public enum AuditStatus {
      * @param code 状态编码
      * @param msg  状态描述
      */
-    AuditStatus(String code, String msg) {
+    ExamineStatusEnum(String code, String msg) {
         this.code = code;
-        this.msg = msg;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
         this.msg = msg;
     }
 
@@ -40,5 +31,9 @@ public enum AuditStatus {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 }
