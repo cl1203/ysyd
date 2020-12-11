@@ -82,6 +82,11 @@ public class OrderHelper {
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(TmOrder.getOrderUser());
         if(null != userEntity){
             resDto.setOrderUserName(userEntity.getRealName());
+            String type = userEntity.getType();
+            String userTypeText = this.iTcDictService.getTextByBizCode(DictType.USER_TYPE.getCode(), type);
+            if(StringUtils.isNotBlank(userTypeText)){
+                resDto.setUserType(userTypeText);
+            }
         }
         return resDto;
     }

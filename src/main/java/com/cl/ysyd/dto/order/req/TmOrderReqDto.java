@@ -12,7 +12,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -53,7 +52,6 @@ public class TmOrderReqDto {
      * 订单创建日期
      */
     @ApiModelProperty(value="订单创建日期" , required = true)
-    @NotNull(message="订单创建日期不能为空")
     private String establishDate;
 
     /**

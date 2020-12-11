@@ -10,6 +10,9 @@ import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * 订单 service接口类
  * @author chenlong  2020-12-07 14:42:40
@@ -73,4 +76,36 @@ public interface IOrderService {
      * @return 结果
      */
     void updateOrderStatus(String orderId, String orderStatus);
+
+    /**
+     * 导出
+     * @param response 响应
+     * @param orderUser 订单所属用户
+     * @param orderStatus 订单状态
+     * @param deliveryDate 交货日期
+     * @param establishDate 订单创建日期
+     * @param completeDate 完成日期
+     * @throws IOException IO异常
+     */
+    void export(HttpServletResponse response , String orderUser, String orderStatus,
+                String deliveryDate, String establishDate, String completeDate)throws IOException;
+
+    /**
+     * 接单之前的接口, 查询此用户还有多少未完成的订单
+     * @return 未完成的订单数量
+     */
+    int queryNumByUserId();
+
+    /**
+     * 接单
+     * @param orderType 订单类型
+     * @param number 数量
+     */
+    void connectOrder(String orderType, Integer number);
+
+    /**
+     * 退回订单
+     * @param pkId 主键订单ID
+     */
+    void returnOrder(String pkId);
 }

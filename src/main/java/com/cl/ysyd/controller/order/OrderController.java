@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * 订单控制层
@@ -39,10 +41,11 @@ public class OrderController {
     /**
      * 根据主键删除信息
      * @param pkId 主键
-     * @return 响应结果:ResponseData<Integer>
+     * @return 响应结果:ResponseData<String>
      */
     @ApiOperation(value = "作废订单")
     @PutMapping(value = "/cancel/{pkId}")
+    @LoggerManage(description = "作废订单")
     public ResponseData<String> cancelByPrimaryKey(@PathVariable String pkId) {
         log.info("Controller deleteByPrimaryKey start.");
         this.iOrderService.cancelByPrimaryKey(pkId);
@@ -57,6 +60,7 @@ public class OrderController {
      */
     @ApiOperation(value = "根据主键查询订单")
     @GetMapping(value = "/{pkId}")
+    @LoggerManage(description = "根据主键查询订单")
     public ResponseData<TmOrderResDto> queryByPrimaryKey(@PathVariable String pkId) {
         log.info("Controller queryByPrimaryKey start.");
         TmOrderResDto resDto =  this.iOrderService.queryByPrimaryKey(pkId);
@@ -67,10 +71,11 @@ public class OrderController {
     /**
      * 新增方法
      * @param reqDto 请求dto
-     * @return 响应结果:ResponseData<Integer>
+     * @return 响应结果:ResponseData<String>
      */
     @ApiOperation(value = "新增订单")
     @PostMapping(value = "")
+    @LoggerManage(description = "新增订单")
     public ResponseData<String> createOrder(@RequestBody @Valid TmOrderReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");
         this.iOrderService.createOrder(reqDto);
@@ -82,10 +87,11 @@ public class OrderController {
      * 根据主键更新信息
      * @param pkId 主键
      * @param reqDto 请求dto
-     * @return 响应结果:ResponseData<Integer>
+     * @return 响应结果:ResponseData<String>
      */
     @ApiOperation(value = "修改订单")
     @PutMapping(value = "/update/{pkId}")
+    @LoggerManage(description = "修改订单")
     public ResponseData<String> updateByPrimaryKey(@PathVariable String pkId, @RequestBody @Valid TmOrderReqDto reqDto) {
         log.info("Controller updateByPrimaryKey start.");
         this.iOrderService.updateByPrimaryKey(pkId, reqDto);
@@ -147,4 +153,69 @@ public class OrderController {
         log.info("Controller updateOrderStatus end.");
         return new ResponseData<>("修改订单状态成功!");
     }
+
+    /**
+     * 导出
+     * @param response 响应
+     * @param orderUser 订单所属用户
+     * @param orderStatus 订单状态
+     * @param deliveryDate 交货日期
+     * @param establishDate 订单创建日期
+     * @param completeDate 完成日期
+     * @throws IOException IO异常
+     */
+    @GetMapping("/export")
+    @ApiOperation(value = "导出订单列表数据" , notes = "导出订单列表数据")
+    @LoggerManage(description = "导出订单列表数据")
+    public void export(HttpServletResponse response , String orderUser, String orderStatus,
+                              String deliveryDate, String establishDate, String completeDate)throws IOException {
+        log.info("Controller export start.");
+        this.iOrderService.export(response ,orderUser , orderStatus, deliveryDate, establishDate, completeDate);
+        log.info("Controller export end.");
+    }
+
+    /**
+     * 接单之前的接口, 查询此用户还有多少未完成的订单
+     * @return 未完成的订单数量
+     */
+    @GetMapping("/queryNum")
+    @ApiOperation(value = "查询此用户还有多少未完成的订单", notes = "查询此用户还有多少未完成的订单")
+    @LoggerManage(description = "查询此用户还有多少未完成的订单")
+    public ResponseData<Integer> queryNumByUserId(){
+        log.info("Controller queryNumByUserId start.");
+        int num = this.iOrderService.queryNumByUserId();
+        log.info("Controller queryNumByUserId end.");
+        return new ResponseData<>(num);
+    }
+
+    /**
+     * 接单
+     * @param orderType 订单类型
+     * @param number 数量
+     */
+    @PutMapping("/connect/{orderType}/{number}")
+    @ApiOperation(value = "接单", notes = "接单")
+    @LoggerManage(description = "接单")
+    public ResponseData<String> connectOrder(@PathVariable String orderType, @PathVariable Integer number){
+        log.info("Controller connectOrder start.");
+        this.iOrderService.connectOrder(orderType, number);
+        log.info("Controller connectOrder end.");
+        return new ResponseData<>("接单成功!");
+    }
+
+    /**
+     * 退回订单
+     * @param pkId 主键
+     * @return 响应结果:ResponseData<String>
+     */
+    @ApiOperation(value = "退回订单")
+    @PutMapping(value = "/returnOrder/{pkId}")
+    @LoggerManage(description = "退回订单")
+    public ResponseData<String> returnOrder(@PathVariable String pkId) {
+        log.info("Controller returnOrder start.");
+        this.iOrderService.returnOrder(pkId);
+        log.info("Controller returnOrder end.");
+        return new ResponseData<>("退回订单成功!");
+    }
+
 }
