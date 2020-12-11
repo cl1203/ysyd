@@ -2,6 +2,7 @@ package com.cl.ysyd.common.enums;
 
 public enum ExamineStatusEnum {
     ADOPT("adopt", "审核通过"),
+    NOT("not", "未审核"),
     FAILED("failed", "审核未通过");
 
     /**

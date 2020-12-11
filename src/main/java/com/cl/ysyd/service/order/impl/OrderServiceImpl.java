@@ -152,10 +152,10 @@ public class OrderServiceImpl implements IOrderService {
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         String userId = LoginUtil.getUserId();
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
-        /*if(null == userEntity){
+        if(null == userEntity){
             throw new BusiException("userId对应的用户不存在!");
-        }*/
-        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, null);
+        }
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, userEntity.getType());
         List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(orderResDtoList);

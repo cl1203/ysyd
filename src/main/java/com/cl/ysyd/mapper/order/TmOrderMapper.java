@@ -11,6 +11,7 @@ import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.ExamineStatusEnum;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.utils.DateUtil;
+import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.entity.order.TmOrderEntity;
 import com.cl.ysyd.entity.order.TmOrderEntityExample;
 import com.github.pagehelper.Page;
@@ -46,13 +47,13 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         //查询
         TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
         TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
-        /*if(userType.equals("admin")){
+        if(userType.equals("admin")){
             if(StringUtils.isNotBlank(orderUser)){
                 criteria.andOrderUserEqualTo(orderUser);
             }
         }else{
             criteria.andOrderUserEqualTo(LoginUtil.getUserId());
-        }*/
+        }
         if(StringUtils.isNotBlank(orderStatus)){
             criteria.andOrderStatusEqualTo(orderStatus);
         }
@@ -70,11 +71,10 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         }else{
             List<String> examineStatusList = new ArrayList<>();
             examineStatusList.add(ExamineStatusEnum.ADOPT.getCode());
-            examineStatusList.add(null);
+            examineStatusList.add(ExamineStatusEnum.NOT.getCode());
             criteria.andExamineStatusIn(examineStatusList);
         }
-        List<TmOrderEntity> orderEntityList = this.selectByExample(orderEntityExample);
-        return orderEntityList;
+        return this.selectByExample(orderEntityExample);
     }
 
     /**

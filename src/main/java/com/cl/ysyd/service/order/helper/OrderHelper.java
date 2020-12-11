@@ -8,6 +8,7 @@ package com.cl.ysyd.service.order.helper;
 
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.enums.ExamineStatusEnum;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
@@ -139,11 +140,12 @@ public class OrderHelper {
             Assert.hasText(orderTypeText, "订单类型不存在");
             entity.setOrderType(reqDto.getOrderType());
         }
-        if(StringUtils.isNotBlank(reqDto.getExamineStatus())){
+        /*if(StringUtils.isNotBlank(reqDto.getExamineStatus())){
             String examinesStatusText = this.iTcDictService.getTextByBizCode(DictType.EXAMINE_STATUS.getCode(), reqDto.getExamineStatus());
             Assert.hasText(examinesStatusText, "订单审核状态不存在");
             entity.setExamineStatus(reqDto.getExamineStatus());
-        }
+        }*/
+        entity.setExamineStatus(ExamineStatusEnum.NOT.getCode());
         if(StringUtils.isNotBlank(reqDto.getStatus())){
             entity.setStatus(Byte.valueOf(reqDto.getStatus()));
         }else{
