@@ -92,11 +92,11 @@ public class MenuController {
      * @return 响应结果
      */
     @ApiOperation(value = "获取所有菜单和按钮")
-    @GetMapping(value = "/query")
+    @GetMapping(value = "/query/{roleId}")
     @LoggerManage(description = "")
-    public ResponseData<List<TsMenuResDto>> queryMenuAndButton(){
+    public ResponseData<List<TsMenuResDto>> queryMenuAndButton(@PathVariable String roleId){
         log.info("Controller queryMenuAndButton start.");
-        List<TsMenuResDto> resDtoList = this.iMenuService.queryMenuAndButton();
+        List<TsMenuResDto> resDtoList = this.iMenuService.queryMenuAndButton(roleId);
         log.info("Controller queryMenuAndButton end.");
         return new ResponseData<>(resDtoList);
     }

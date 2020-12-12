@@ -110,4 +110,13 @@ public class TsMenuResDto {
      */
     @ApiModelProperty(value = "按钮集合")
     private List<TsMenuResDto> buttonResDtoList;
+
+    /**
+     * 按钮集合
+     */
+    @ApiModelProperty(value = "权限集合")
+    private List<TsMenuResDto> children;
+
+    @ApiModelProperty(value = "是否绑定")
+    private Byte binding;
 }

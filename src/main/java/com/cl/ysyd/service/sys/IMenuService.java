@@ -49,5 +49,5 @@ public interface IMenuService {
      * 获取所有菜单和按钮
      * @return 结果集
      */
-    List<TsMenuResDto> queryMenuAndButton();
+    List<TsMenuResDto> queryMenuAndButton(String roleId);
 }
