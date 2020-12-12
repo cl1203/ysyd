@@ -157,7 +157,7 @@ public class UserServiceImpl implements IUserService {
         String mobile = reqDto.getMobile();
         //String email = reqDto.getEmail();
         if (StringUtils.isNotBlank(mobile)) {
-            String mobileRegex = "^1(3|4|5|7|8)\\d{9}$";
+            String mobileRegex = "^1(3|4|5|7|8|9)\\d{9}$";
             if (!CheckMatchAndSpaceUtil.match(mobileRegex, mobile)) {
                 throw new BusiException("手机号码不符合规则,请修改! ");
             }
@@ -169,6 +169,7 @@ public class UserServiceImpl implements IUserService {
             }
         }*/
     }
+
 
 
     @Override
