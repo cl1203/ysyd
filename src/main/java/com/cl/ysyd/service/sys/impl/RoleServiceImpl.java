@@ -214,6 +214,8 @@ public class RoleServiceImpl implements IRoleService {
             log.info("User does not exist. roleId={}", reqDto.getRoleId());
             throw new BusiException("角色信息不存在!");
         }
+        //删除角色已有关系
+        this.roleMenuMapper.deleteRoleMenuByRoleId(reqDto.getRoleId());
         List<String> menuIdList = reqDto.getMenuIdList();
         menuIdList.forEach(menuId -> {
             TsMenuEntity menuEntity = this.menuMapper.selectByPrimaryKey(menuId);
