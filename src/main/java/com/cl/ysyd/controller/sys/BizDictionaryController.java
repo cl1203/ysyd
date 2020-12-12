@@ -53,17 +53,6 @@ public class BizDictionaryController {
         return new ResponseData<>(codeList);
     }
 
-    @ApiOperation(value = "单类型编码查询接口")
-    @GetMapping(path = "/portal/type/{type}")
-    public ResponseData<List<DictCodeResDto>> queryCodeListByTypePortal(
-            @ApiParam(value = "类型", required = true) @PathVariable String type) {
-        log.info("Controller queryCodeListByType start. type={}", type);
-
-        List<DictCodeResDto> codeList = this.dictService.queryListByBizType(type);
-
-        log.info("Controller queryCodeListByType end.");
-        return new ResponseData<>(codeList);
-    }
 
     @ApiOperation(value = "多类型编码查询接口")
     @GetMapping(path = "/types")
@@ -86,26 +75,6 @@ public class BizDictionaryController {
         return new ResponseData<>(retMap);
     }
 
-    @ApiOperation(value = "多类型编码查询接口")
-    @GetMapping(path = "/portal/types")
-    public ResponseData<Map<String, List<DictCodeResDto>>> queryMutiCodeListByTypesPortal(
-            @ApiParam(value = "类型(逗号分割)", required = true) @RequestParam(required = false) String types) {
-        log.info("Controller queryMutiCodeListByTypes start. types={}", types);
-        Map<String, List<DictCodeResDto>> retMap = new HashMap<>();
-
-        if (StringUtils.isEmpty(types)) {
-            return new ResponseData<>(retMap);
-        }
-
-        String[] bizTypes = types.split(",");
-        Stream.of(bizTypes).forEach(type -> {
-            List<DictCodeResDto> codeList = this.dictService.queryListByBizType(type);
-            retMap.put(type, codeList);
-        });
-
-        log.info("Controller queryMutiCodeListByTypes end.");
-        return new ResponseData<>(retMap);
-    }
 
     /**
      * 字典编码查询
