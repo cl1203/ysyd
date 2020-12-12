@@ -94,7 +94,7 @@ public class UserHelper {
         Assert.hasText(typeText, "所选用户类型不存在, 请修改!");
         entity.setType(reqDto.getType());
         entity.setUserName(reqDto.getUserName());
-        entity.setPassword(reqDto.getPassword());
+        //entity.setPassword(reqDto.getPassword());
         entity.setRealName(reqDto.getRealName());
         String auditStatusText = this.iTcDictService.getTextByBizCode(DictType.AUDIT_STATUS.getCode(), reqDto.getAuditStatus());
         Assert.hasText(auditStatusText, "所选审核状态不存在, 请修改!");
