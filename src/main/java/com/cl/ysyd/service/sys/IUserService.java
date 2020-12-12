@@ -38,6 +38,13 @@ public interface IUserService {
     int createUser(TsUserReqDto reqDto);
 
     /**
+     * 新增方法
+     * @param reqDto 请求dto
+     * @return int
+     */
+    int registerUser(TsUserReqDto reqDto);
+
+    /**
      * 根据主键更新信息
      * @param pkId 主键
      * @param reqDto 请求dto

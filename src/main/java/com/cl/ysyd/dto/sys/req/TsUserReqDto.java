@@ -38,8 +38,7 @@ public class TsUserReqDto {
     /**
      * 密码
      */
-    @ApiModelProperty(value="密码"  , required = true)
-    @NotBlank(message="密码不能为空")
+    @ApiModelProperty(value="密码")
     @Length(max=100,message="密码字段过长, 最大长度为100")
     private String password;
 

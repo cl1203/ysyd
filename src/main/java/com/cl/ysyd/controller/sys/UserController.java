@@ -74,12 +74,27 @@ public class UserController {
      * @param reqDto 请求dto
      * @return 响应结果:ResponseData<Integer>
      */
-    @ApiOperation(value = "新增用户/注册")
+    @ApiOperation(value = "新增用户")
     @PostMapping(value = "")
     @LoggerManage(description = "新增用户")
     public ResponseData<Integer> createUser(@RequestBody @Valid TsUserReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");
         int result = this.iUserService.createUser(reqDto);
+        log.info("Controller queryByPrimaryKey end.");
+        return new ResponseData<>(result);
+    }
+
+    /**
+     * 新增方法
+     * @param reqDto 请求dto
+     * @return 响应结果:ResponseData<Integer>
+     */
+    @ApiOperation(value = "注册")
+    @PostMapping(value = "")
+    @LoggerManage(description = "注册用户")
+    public ResponseData<Integer> registerUser(@RequestBody @Valid TsUserReqDto reqDto) {
+        log.info("Controller queryByPrimaryKey start.");
+        int result = this.iUserService.registerUser(reqDto);
         log.info("Controller queryByPrimaryKey end.");
         return new ResponseData<>(result);
     }

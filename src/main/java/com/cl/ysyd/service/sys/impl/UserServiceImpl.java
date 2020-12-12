@@ -124,6 +124,23 @@ public class UserServiceImpl implements IUserService {
         return ret;
     }
 
+    @Override
+    public int registerUser(TsUserReqDto reqDto) {
+        log.info("Service createUser start. reqDto=【{}】", reqDto);
+        //校验
+        this.checkParameter(reqDto);
+        TsUserEntity entity = this.userHelper.editEntity(reqDto);
+
+        String password = MD5Util.getInstance().encrypt(reqDto.getPassword());
+        password = MD5Util.getInstance().encryptBySalt(password);
+        entity.setPassword(password);
+        entity.setCreateTime(new Date());
+        entity.setPkId(UuidUtil.getUuid());
+        int ret = this.tsUserMapper.insertSelective(entity);
+        log.info("Service createUser end. ret=【{}】", ret);
+        return ret;
+    }
+
     /**
      * 新增校验
      * @param reqDto 请求对象
