@@ -75,7 +75,7 @@ public class UserController {
      * @return 响应结果:ResponseData<Integer>
      */
     @ApiOperation(value = "新增用户")
-    @PostMapping(value = "")
+    @PostMapping(value = "/create")
     @LoggerManage(description = "新增用户")
     public ResponseData<Integer> createUser(@RequestBody @Valid TsUserReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");
@@ -90,7 +90,7 @@ public class UserController {
      * @return 响应结果:ResponseData<Integer>
      */
     @ApiOperation(value = "注册")
-    @PostMapping(value = "")
+    @PostMapping(value = "/register")
     @LoggerManage(description = "注册用户")
     public ResponseData<Integer> registerUser(@RequestBody @Valid TsUserReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");

@@ -114,7 +114,7 @@ public class UserServiceImpl implements IUserService {
         //校验
         this.checkParameter(reqDto);
         TsUserEntity entity = this.userHelper.editEntity(reqDto);
-        String password = MD5Util.getInstance().encrypt(reqDto.getPassword());
+        String password = MD5Util.getInstance().encrypt(INIT_PASSWORD);
         password = MD5Util.getInstance().encryptBySalt(password);
         entity.setPassword(password);
         entity.setCreateTime(new Date());
@@ -130,8 +130,9 @@ public class UserServiceImpl implements IUserService {
         //校验
         this.checkParameter(reqDto);
         TsUserEntity entity = this.userHelper.editEntity(reqDto);
-
-        String password = MD5Util.getInstance().encrypt(reqDto.getPassword());
+        String password = reqDto.getPassword();
+        Assert.hasText(password, "密码不能为空!");
+        password = MD5Util.getInstance().encrypt(password);
         password = MD5Util.getInstance().encryptBySalt(password);
         entity.setPassword(password);
         entity.setCreateTime(new Date());
