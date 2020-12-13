@@ -90,7 +90,7 @@ public class UserController {
      * @return 响应结果:ResponseData<TsUserResDto>
      */
     @ApiOperation(value = "根据用户名查询用户")
-    @GetMapping(value = "/ajax{userName}")
+    @GetMapping(value = "/ajax/{userName}")
     @LoggerManage(description = "根据用户名查询用户")
     public ResponseData<Boolean> queryUserByUserName(@PathVariable String userName){
         log.info("Controller queryUserByUserName start.");
