@@ -6,10 +6,12 @@
  **/
 package com.cl.ysyd.controller.order;
 
+import com.cl.ysyd.aop.LoggerManage;
 import com.cl.ysyd.common.constants.ResponseData;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.service.order.IPurchaseService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -88,5 +90,27 @@ public class PurchaseController {
         int result = this.iPurchaseService.updateByPrimaryKey(pkId, reqDto);
         log.info("Controller updateByPrimaryKey end.");
         return new ResponseData<>(result);
+    }
+
+    /**
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param orderNo 订单号
+     * @param purchaseNo 采购单号
+     * @param purchaseStatus 采购状态
+     * @param purchasePersonnel 采购员
+     * @param orderStatus 订单状态
+     * @return 采购列表结果集
+     */
+    @ApiOperation(value = "查询采购单列表")
+    @GetMapping(path = "/{pageNum}/{pageSize}")
+    @LoggerManage(description = "查询采购单列表")
+    public ResponseData<PageInfo<TmPurchaseResDto>> queryPurchaseByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderNo, String purchaseNo,
+                                                                  String purchaseStatus, String purchasePersonnel, String orderStatus){
+        log.info("Controller queryOrderByPage start.");
+        PageInfo<TmPurchaseResDto> resDto = this.iPurchaseService.queryPurchaseByPage(pageNum, pageSize, orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus);
+        log.info("Controller queryOrderByPage end.");
+        return new ResponseData<>(resDto);
     }
 }

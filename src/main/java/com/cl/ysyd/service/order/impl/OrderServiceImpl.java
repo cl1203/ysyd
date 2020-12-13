@@ -9,6 +9,7 @@ package com.cl.ysyd.service.order.impl;
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.AuditStatusEnum;
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.ExcelUtils;
@@ -151,6 +152,7 @@ public class OrderServiceImpl implements IOrderService {
         PageHelper.orderBy("CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         String userId = LoginUtil.getUserId();
+        Assert.hasText(userId, "用户ID为空!");
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
         if(null == userEntity){
             throw new BusiException("userId对应的用户不存在!");
@@ -185,6 +187,7 @@ public class OrderServiceImpl implements IOrderService {
             throw new BusiException("选择的用户还未审核!");
         }
         checkEntity.setOrderUser(orderUserId);
+        checkEntity.setOrderStatus(OrderStatusEnum.ORDERING.getCode());
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());
         checkEntity.setLastUpdateTime(new Date());
         int ret = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);
@@ -274,6 +277,7 @@ public class OrderServiceImpl implements IOrderService {
         tmOrderEntity.setOrderUser(LoginUtil.getUserId());
         tmOrderEntity.setLastUpdateTime(new Date());
         tmOrderEntity.setLastUpdateUser(LoginUtil.getUserId());
+        tmOrderEntity.setOrderStatus(OrderStatusEnum.ORDERING.getCode());
         int j = this.tmOrderMapper.updateByPrimaryKeySelective(tmOrderEntity);
         Assert.isTrue(j == SortConstant.ONE, "分配订单失败!");
     }

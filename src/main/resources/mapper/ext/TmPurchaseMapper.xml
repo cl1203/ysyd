@@ -1,3 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cl.ysyd.mapper.order.TmPurchaseMapper" />
+<mapper namespace="com.cl.ysyd.mapper.order.TmPurchaseMapper" >
+
+    <!--<resultMap id="BaseResultMap" type="com.cl.ysyd.entity.order.TmPurchaseEntity">
+        <id column="pk_id" jdbcType="VARCHAR" property="pkId" />
+        <result column="purchase_no" jdbcType="VARCHAR" property="purchaseNo" />
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="purchase_status" jdbcType="VARCHAR" property="purchaseStatus" />
+        <result column="purchase_personnel" jdbcType="VARCHAR" property="purchasePersonnel" />
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
+        <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser" />
+    </resultMap>-->
+    <select id="queryPurchaseList" resultMap="BaseResultMap">
+        SELECT
+            p.*
+        FROM
+            tm_purchase p
+        LEFT JOIN tm_order o ON p.order_no = o.order_no
+            where o.status = 1
+        <if test="orderNo != null and orderNo != '' ">
+            and p.order_no = #{orderNo}
+        </if>
+        <if test="purchaseNo != null and orderNo != '' ">
+            and p.purchase_no = #{purchaseNo}
+        </if>
+        <if test="purchaseStatus != null and purchaseStatus != '' ">
+            and p.purchase_status = #{purchaseStatus}
+        </if>
+        <if test="purchasePersonnel != null and purchasePersonnel != '' ">
+            and p.purchase_personnel = #{purchasePersonnel}
+        </if>
+        <if test="orderStatus != null and orderStatus != '' ">
+            and p.order_status = #{orderStatus}
+        </if>
+        <if test="userType != 'admin'">
+            and o.order_user = #{userId}
+        </if>
+        and p.status = 1
+    </select>
+
+</mapper>

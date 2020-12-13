@@ -16,6 +16,7 @@
             ts_role
         where
             status = 1
+        and pk_id != 1
         order by pk_id
     </select>
 

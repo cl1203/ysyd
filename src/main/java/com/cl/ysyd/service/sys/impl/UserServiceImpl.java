@@ -255,6 +255,7 @@ public class UserServiceImpl implements IUserService {
             criteria.andStatusEqualTo(Byte.valueOf(status));
         }
         criteria.andAuditStatusEqualTo(auditStatus);
+        criteria.andPkIdNotEqualTo(SortConstant.ONE.toString());
         return entityExample;
     }
 

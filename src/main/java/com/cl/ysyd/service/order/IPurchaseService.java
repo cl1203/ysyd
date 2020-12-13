@@ -8,6 +8,7 @@ package com.cl.ysyd.service.order;
 
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
+import com.github.pagehelper.PageInfo;
 
 /**
  * 采购单 service接口类
@@ -42,4 +43,7 @@ public interface IPurchaseService {
      * @return int
      */
     int updateByPrimaryKey(String pkId, TmPurchaseReqDto reqDto);
+
+    PageInfo<TmPurchaseResDto> queryPurchaseByPage(Integer pageNum, Integer pageSize, String orderNo, String purchaseNo,
+                                                   String purchaseStatus, String purchasePersonnel, String orderStatus);
 }

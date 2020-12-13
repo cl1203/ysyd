@@ -7,17 +7,26 @@
 package com.cl.ysyd.service.order.impl;
 
 import com.cl.ysyd.common.exception.BusiException;
+import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
+import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.order.TmPurchaseMapper;
+import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.order.IPurchaseService;
 import com.cl.ysyd.service.order.helper.PurchaseHelper;
-import java.util.Date;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 采购单service实现类
@@ -31,6 +40,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
      */
     @Autowired
     private TmPurchaseMapper tmPurchaseMapper;
+
+    @Autowired
+    private TsUserMapper userMapper;
 
     /**
      * 采购单Helper
@@ -87,5 +99,22 @@ public class PurchaseServiceImpl implements IPurchaseService {
         int ret = this.tmPurchaseMapper.updateByPrimaryKey(entity);
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
         return ret;
+    }
+
+    @Override
+    public PageInfo<TmPurchaseResDto> queryPurchaseByPage(Integer pageNum, Integer pageSize, String orderNo, String purchaseNo, String purchaseStatus, String purchasePersonnel, String orderStatus) {
+        PageHelper.orderBy("CREATE_TIME DESC");
+        Page<TmPurchaseResDto> startPage = PageHelper.startPage(pageNum, pageSize);
+        String userId = LoginUtil.getUserId();
+        Assert.hasText(userId, "用户ID为空!");
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
+        if(null == userEntity){
+            throw new BusiException("userId对应的用户不存在!");
+        }
+        List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryPurchaseList(orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus, userEntity.getType(), userId);
+        List<TmPurchaseResDto> purchaseResDtoList = this.purchaseHelper.editResDtoList(purchaseEntityList);
+        PageInfo<TmPurchaseResDto> pageInfo = new PageInfo<>(startPage);
+        pageInfo.setList(purchaseResDtoList);
+        return pageInfo;
     }
 }

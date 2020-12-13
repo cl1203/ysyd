@@ -204,6 +204,7 @@ public class RoleServiceImpl implements IRoleService {
         if(StringUtils.isNotBlank(status)){
             criteria.andStatusEqualTo(Byte.valueOf(status));
         }
+        criteria.andPkIdNotEqualTo(SortConstant.ONE.toString());
         return roleEntityExample;
     }
 

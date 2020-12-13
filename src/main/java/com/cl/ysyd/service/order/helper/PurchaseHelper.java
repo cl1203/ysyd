@@ -6,13 +6,17 @@
  **/
 package com.cl.ysyd.service.order.helper;
 
+import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.cl.ysyd.service.sys.IBizDictionaryService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 采购单帮助类
@@ -20,6 +24,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PurchaseHelper {
+
+    @Autowired
+    private IBizDictionaryService iTcDictService;
 
     /**
      * entity转resDto
@@ -31,16 +38,17 @@ public class PurchaseHelper {
             return null;
         }
         TmPurchaseResDto resDto = new TmPurchaseResDto();
-        resDto.setCreateUser(TmPurchase.getCreateUser());
-        resDto.setCreateTime(TmPurchase.getCreateTime());
         resDto.setOrderNo(TmPurchase.getOrderNo());
         resDto.setPurchaseNo(TmPurchase.getPurchaseNo());
         resDto.setTotalAmount(TmPurchase.getTotalAmount());
         resDto.setRemarks(TmPurchase.getRemarks());
-        resDto.setLastUpdateTime(TmPurchase.getLastUpdateTime());
         resDto.setPurchaseStatus(TmPurchase.getPurchaseStatus());
-        resDto.setLastUpdateUser(TmPurchase.getLastUpdateUser());
+        if(StringUtils.isNotBlank(TmPurchase.getPurchaseStatus())){
+            this.iTcDictService.getTextByBizCode(DictType.PURCHASE_STATUS.getCode(), TmPurchase.getPurchaseStatus());
+        }
         resDto.setStatus(TmPurchase.getStatus());
+        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), TmPurchase.getStatus().toString());
+        resDto.setStatusText(statusText);
         resDto.setPurchasePersonnel(TmPurchase.getPurchasePersonnel());
         resDto.setPkId(TmPurchase.getPkId());
         return resDto;
