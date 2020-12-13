@@ -14,15 +14,15 @@ public class FtpFileUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(FtpFileUtil.class);
 
     //ftp服务器ip地址
-    private static final String FTP_ADDRESS = "39.108.52.48";
+    private static final String FTP_ADDRESS = "47.106.34.32";
     //端口号
     private static final int FTP_PORT = 21;
     //用户名
-    private static final String FTP_USERNAME = "ftptest2";
+    private static final String FTP_USERNAME = "root";
     //密码
-    private static final String FTP_PASSWORD = "cl1203";
+    private static final String FTP_PASSWORD = "Abc123...";
     //图片路径
-    private static String FTP_BASEPATH = "/home/www/site/img";
+    private static String FTP_BASEPATH = "/usr/ysyd/img";
 
     private static FTPClient ftp;
 
