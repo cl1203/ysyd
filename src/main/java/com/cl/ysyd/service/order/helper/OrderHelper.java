@@ -15,9 +15,13 @@ import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.order.TmPurchaseEntity;
+import com.cl.ysyd.entity.order.TmPurchaseEntityExample;
 import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.order.TmPurchaseMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +44,9 @@ public class OrderHelper {
 
     @Autowired
     private TsUserMapper userMapper;
+
+    @Autowired
+    private TmPurchaseMapper purchaseMapper;
 
     /**
      * entity转resDto
@@ -88,6 +95,17 @@ public class OrderHelper {
             if(StringUtils.isNotBlank(userTypeText)){
                 resDto.setUserType(userTypeText);
             }
+        }
+        //根据订单号查询是否已经生成采购单
+        TmPurchaseEntityExample purchaseEntityExample = new TmPurchaseEntityExample();
+        TmPurchaseEntityExample.Criteria criteria = purchaseEntityExample.createCriteria();
+        criteria.andOrderNoEqualTo(TmOrder.getOrderNo());
+        criteria.andStatusEqualTo(SortConstant.ONE.byteValue());
+        List<TmPurchaseEntity> purchaseEntityList = this.purchaseMapper.selectByExample(purchaseEntityExample);
+        if(CollectionUtils.isNotEmpty(purchaseEntityList)){
+            resDto.setIsPurchase(SortConstant.ZERO.byteValue());
+        }else{
+            resDto.setIsPurchase(SortConstant.ONE.byteValue());
         }
         return resDto;
     }

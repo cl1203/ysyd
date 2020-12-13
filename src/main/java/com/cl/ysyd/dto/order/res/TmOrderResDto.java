@@ -166,4 +166,7 @@ public class TmOrderResDto {
      */
     @ApiModelProperty(value="最后修改人" )
     private String lastUpdateUser;
+
+    @ApiModelProperty(value = "是否已经生成了采购单, 1: 否 0: 是")
+    private Byte isPurchase;
 }
