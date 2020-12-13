@@ -4,33 +4,41 @@ import com.cl.ysyd.common.constants.AopConstant;
 import com.cl.ysyd.common.constants.TokenInfo;
 import com.cl.ysyd.common.exception.BusiException;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Aspect
 @Component
-public class TokenInterceptor implements HandlerInterceptor {
+public class TokenAdvice {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public final static String USER_KEY = "userId";
+    private final static String USER_KEY = "userId";
 
-    public final static String TOKEN_KEY = "token";
+    private final static String TOKEN_KEY = "token";
 
     //不需要登录就可以访问的路径(比如:登录等)
     private String[] includeUrls = new String[]{
             "/ysyd/v1/user/login"
     };
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    @Before("within(com.cl.ysyd.controller..*)")
+    public void preHandle() {
+        //获取RequestAttributes
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        //从获取RequestAttributes中获取HttpServletRequest的信息
+        assert requestAttributes != null;
+        HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
+        assert request != null;
         String url = request.getRequestURL().toString();
         int i = this.getIndex(url);
         url = url.substring(i);
@@ -63,13 +71,10 @@ public class TokenInterceptor implements HandlerInterceptor {
                 }
             }
         }
-        return true;
     }
 
     /**
      * 校验当前token是否有效
-     * @param userId
-     * @return
      */
     private boolean checkToken(String userId){
         TokenInfo tokenInfo = AopConstant.currentLoginTokenMap.get(userId);
@@ -86,12 +91,11 @@ public class TokenInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * @Author: xxxxx
-     * @Description: 是否需要过滤
-     * @Date: 2018-03-12 13:20:54
-     * @param url
+     * Author: xxxxx
+     * Description: 是否需要过滤
+     * Date: 2018-03-12 13:20:54
      */
-    public boolean isNeedFilter(String url) {
+    private boolean isNeedFilter(String url) {
         for (String includeUrl : includeUrls) {
             if(includeUrl.equals(url)) {
                 return false;
@@ -115,13 +119,4 @@ public class TokenInterceptor implements HandlerInterceptor {
         return slashMatcher.start();
     }
 
-    @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-
-    }
 }

@@ -23,10 +23,11 @@ public class AopContactInfo {
     private Long startTime;
 
 
-    @Before("within(com.cl.ysyd.controller.*)")
+    @Before("within(com.cl.ysyd.controller..*)")
     public void requestLimit()throws BusiException {
         //获取httprequest
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
         //HttpServletResponse response = attributes.getResponse();
         if(null == request){

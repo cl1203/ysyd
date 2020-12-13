@@ -29,7 +29,7 @@ import java.io.IOException;
 @RestController
 @Slf4j
 @Api(tags="订单接口")
-@RequestMapping(value = "order")
+@RequestMapping(value = "/v1/order")
 @CrossOrigin
 public class OrderController {
     /**
