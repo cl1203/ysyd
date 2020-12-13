@@ -22,15 +22,14 @@
         SELECT
             tm.*
         FROM
-            ts_role tr
-            LEFT JOIN tr_user_role tur ON tr.pk_id = tur.role_id
-            LEFT JOIN tr_role_menu trm ON tur.role_id = trm.role_id
-            LEFT JOIN ts_menu tm ON trm.menu_id = tm.pk_id
+            ts_menu tm
+            LEFT JOIN tr_role_menu trm ON trm.menu_id = tm.pk_id
         WHERE
-            tr.pk_id = #{roleId}
-            AND tm.parent_id = #{parentId}
-            AND tm.type = #{type}
-            order by tm.sort
+            trm.role_id = 1
+            AND tm.parent_id = 0
+            AND tm.type = 'menu'
+        ORDER BY
+            tm.sort
     </select>
 
     <select id="queryMenuListAll" resultMap="ResultMap">
