@@ -40,6 +40,7 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色service实现类
@@ -235,5 +236,11 @@ public class RoleServiceImpl implements IRoleService {
             Assert.isTrue(i == SortConstant.ONE, "绑定菜单按钮权限失败!");
         });
 
+    }
+
+    @Override
+    public Map<String, String> queryAll() {
+        Map<String, String>  tsRoleResDtoList = this.tsRoleMapper.queryAll();
+        return tsRoleResDtoList;
     }
 }

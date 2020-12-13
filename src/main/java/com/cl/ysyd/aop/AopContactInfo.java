@@ -2,16 +2,13 @@ package com.cl.ysyd.aop;
 
 import com.cl.ysyd.common.constants.AopConstant;
 import com.cl.ysyd.common.exception.BusiException;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Aspect
-@Component
+/*@Aspect
+@Component*/
 public class AopContactInfo {
 
     private static final Integer COUNT = 5;
@@ -23,7 +20,7 @@ public class AopContactInfo {
     private Long startTime;
 
 
-    @Before("within(com.cl.ysyd.controller..*)")
+    //@Before("within(com.cl.ysyd.controller..*)")
     public void requestLimit()throws BusiException {
         //获取httprequest
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

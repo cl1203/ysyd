@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * 角色控制层
@@ -115,5 +116,19 @@ public class RoleController {
         this.iRoleService.bindingMenu(reqDto);
         log.info("Controller bindingRole end. ");
         return new ResponseData<>("分配菜单按钮成功!");
+    }
+
+    /**
+     * 查询所有角色
+     * @return 所有角色结果集
+     */
+    @ApiOperation(value = "查询所有角色")
+    @GetMapping(path = "/queryAll")
+    @LoggerManage(description = "查询所有角色")
+    public ResponseData<Map<String, String>> queryAll(){
+        log.info("Controller queryAll start.");
+        Map<String, String> roleResDtoList = this.iRoleService.queryAll();
+        log.info("Controller queryAll end. ");
+        return new ResponseData<>(roleResDtoList);
     }
 }

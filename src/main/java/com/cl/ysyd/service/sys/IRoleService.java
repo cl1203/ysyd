@@ -11,6 +11,8 @@ import com.cl.ysyd.dto.sys.req.TsRoleReqDto;
 import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.github.pagehelper.PageInfo;
 
+import java.util.Map;
+
 /**
  * 角色 service接口类
  * @author chenlong  2020-11-24 23:03:59
@@ -57,4 +59,6 @@ public interface IRoleService {
      * @param reqDto 请求对象
      */
     void bindingMenu(BindingRoleAndMenuReqDto reqDto);
+
+    Map<String, String> queryAll();
 }

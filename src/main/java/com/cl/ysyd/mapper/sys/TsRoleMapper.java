@@ -12,6 +12,7 @@ import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsRoleEntityExample;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 角色 mapper类
@@ -46,4 +47,6 @@ public interface TsRoleMapper extends IBaseMapper<TsRoleEntity, TsRoleEntityExam
         criteria.andRoleNameEqualTo(roleName);
         return this.countByExample(roleEntityExample);
     }
+
+    Map<String, String> queryAll();
 }
