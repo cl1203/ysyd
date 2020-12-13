@@ -6,8 +6,10 @@
  **/
 package com.cl.ysyd.service.order.impl;
 
+import com.cl.ysyd.common.enums.PurchaseStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.LoginUtil;
+import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
@@ -44,6 +46,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Autowired
     private TsUserMapper userMapper;
 
+    private static final String P = "P";
+
     /**
      * 采购单Helper
      */
@@ -76,8 +80,10 @@ public class PurchaseServiceImpl implements IPurchaseService {
     public int createPurchase(TmPurchaseReqDto reqDto) {
         log.info("Service createPurchase start. reqDto=【{}】",reqDto);
         TmPurchaseEntity entity = this.purchaseHelper.editEntity(reqDto);
+        entity.setPurchaseNo(P + reqDto.getOrderNo());
+        entity.setPurchaseStatus(PurchaseStatusEnum.WAIR_PURCHASE.getCode());
         entity.setCreateTime(new Date());
-        // TODO 添加主键
+        entity.setPkId(UuidUtil.getUuid());
         int ret = this.tmPurchaseMapper.insert(entity);
         log.info("Service createPurchase end. ret=【{}】",ret);
         return ret;

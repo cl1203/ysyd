@@ -7,6 +7,7 @@
 package com.cl.ysyd.service.order.helper;
 
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
@@ -15,7 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +30,8 @@ public class PurchaseHelper {
 
     @Autowired
     private IBizDictionaryService iTcDictService;
+
+
 
     /**
      * entity转resDto
@@ -80,16 +85,18 @@ public class PurchaseHelper {
             return null;
         }
         TmPurchaseEntity entity = new TmPurchaseEntity();
-        entity.setPurchaseNo(reqDto.getPurchaseNo());
+        //entity.setPurchaseNo(P + reqDto.getOrderNo());
         entity.setOrderNo(reqDto.getOrderNo());
         entity.setPurchaseStatus(reqDto.getPurchaseStatus());
         entity.setPurchasePersonnel(reqDto.getPurchasePersonnel());
-        entity.setTotalAmount(reqDto.getTotalAmount());
+        if(StringUtils.isNotBlank(reqDto.getTotalAmount())){
+            entity.setTotalAmount(new BigDecimal(reqDto.getTotalAmount()));
+        }
         entity.setStatus(reqDto.getStatus());
         entity.setRemarks(reqDto.getRemarks());
-        entity.setCreateUser(reqDto.getCreateUser());
-        entity.setLastUpdateTime(reqDto.getLastUpdateTime());
-        entity.setLastUpdateUser(reqDto.getLastUpdateUser());
+        entity.setCreateUser(LoginUtil.getUserId());
+        entity.setLastUpdateTime(new Date());
+        entity.setLastUpdateUser(LoginUtil.getUserId());
         return entity;
     }
 

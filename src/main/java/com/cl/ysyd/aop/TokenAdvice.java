@@ -28,7 +28,8 @@ public class TokenAdvice {
 
     //不需要登录就可以访问的路径(比如:登录等)
     private String[] includeUrls = new String[]{
-            "/ysyd/v1/user/login"
+            "/ysyd/v1/user/login",
+            "/v1/user/ajax"
     };
 
     @Before("within(com.cl.ysyd.controller..*)")
@@ -93,7 +94,7 @@ public class TokenAdvice {
      */
     private boolean isNeedFilter(String url) {
         for (String includeUrl : includeUrls) {
-            if(includeUrl.equals(url)) {
+            if(includeUrl.equals(url) || url.contains(includeUrl)) {
                 return false;
             }
         }

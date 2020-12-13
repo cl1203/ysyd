@@ -8,12 +8,11 @@ package com.cl.ysyd.dto.order.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import java.util.Date;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.Date;
 
 /**
  * 采购单输出Dto类
@@ -26,8 +25,6 @@ public class TmPurchaseReqDto {
      * 采购单号
      */
     @ApiModelProperty(value="采购单号" )
-    @NotBlank(message="采购单号不能为空")
-    @Length(max=50,message="采购单号字段过长, 最大长度为50")
     private String purchaseNo;
 
     /**
@@ -42,23 +39,19 @@ public class TmPurchaseReqDto {
      * 采购状态
      */
     @ApiModelProperty(value="采购状态" )
-    @NotBlank(message="采购状态不能为空")
-    @Length(max=30,message="采购状态字段过长, 最大长度为30")
     private String purchaseStatus;
 
     /**
      * 采购人员
      */
     @ApiModelProperty(value="采购人员" )
-    @NotBlank(message="采购人员不能为空")
-    @Length(max=50,message="采购人员字段过长, 最大长度为50")
     private String purchasePersonnel;
 
     /**
      * 采购总金额
      */
     @ApiModelProperty(value="采购总金额" )
-    private BigDecimal totalAmount;
+    private String totalAmount;
 
     /**
      * 状态 0:禁用 1:可用 
@@ -71,8 +64,6 @@ public class TmPurchaseReqDto {
      * 备注 
      */
     @ApiModelProperty(value="备注 " )
-    @NotBlank(message="备注 不能为空")
-    @Length(max=128,message="备注 字段过长, 最大长度为128")
     private String remarks;
 
     /**
@@ -86,8 +77,6 @@ public class TmPurchaseReqDto {
      * 创建人
      */
     @ApiModelProperty(value="创建人" )
-    @NotBlank(message="创建人不能为空")
-    @Length(max=32,message="创建人字段过长, 最大长度为32")
     private String createUser;
 
     /**
@@ -95,14 +84,11 @@ public class TmPurchaseReqDto {
      * 默认值:CURRENT_TIMESTAMP
      */
     @ApiModelProperty(value="最后修改时间" )
-    @NotNull(message="最后修改时间不能为空")
     private Date lastUpdateTime;
 
     /**
      * 最后修改人
      */
     @ApiModelProperty(value="最后修改人" )
-    @NotBlank(message="最后修改人不能为空")
-    @Length(max=32,message="最后修改人字段过长, 最大长度为32")
     private String lastUpdateUser;
 }
