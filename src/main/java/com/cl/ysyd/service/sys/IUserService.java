@@ -38,6 +38,13 @@ public interface IUserService {
     int createUser(TsUserReqDto reqDto);
 
     /**
+     * 根据用户名查询是否存在
+     * @param userName 用户名
+     * @return 结果
+     */
+    Boolean queryUserByUserName(String userName);
+
+    /**
      * 新增方法
      * @param reqDto 请求dto
      * @return int

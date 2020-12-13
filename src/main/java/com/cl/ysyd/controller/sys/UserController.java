@@ -85,6 +85,21 @@ public class UserController {
     }
 
     /**
+     * 根据用户名查询是否重复
+     * @param userName 用户名
+     * @return 响应结果:ResponseData<TsUserResDto>
+     */
+    @ApiOperation(value = "根据用户名查询用户")
+    @GetMapping(value = "/ajax/{userName}")
+    @LoggerManage(description = "根据用户名查询用户")
+    public ResponseData<Boolean> queryUserByUserName(@PathVariable String userName){
+        log.info("Controller queryUserByUserName start.");
+        Boolean flag =  this.iUserService.queryUserByUserName(userName);
+        log.info("Controller queryUserByUserName end.");
+        return new ResponseData<>(flag);
+    }
+
+    /**
      * 新增方法
      * @param reqDto 请求dto
      * @return 响应结果:ResponseData<Integer>

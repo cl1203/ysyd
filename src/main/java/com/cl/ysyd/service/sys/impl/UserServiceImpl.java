@@ -125,6 +125,16 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public Boolean queryUserByUserName(String userName) {
+        long l = this.tsUserMapper.countByUserName(userName);
+        if(l == SortConstant.ZERO){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
     public int registerUser(TsUserReqDto reqDto) {
         log.info("Service createUser start. reqDto=【{}】", reqDto);
         //校验
