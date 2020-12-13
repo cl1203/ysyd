@@ -7,6 +7,7 @@
 package com.cl.ysyd.service.sys.impl;
 
 import com.cl.ysyd.common.constants.SortConstant;
+import com.cl.ysyd.common.enums.AuditStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
@@ -83,9 +84,13 @@ public class UserServiceImpl implements IUserService {
             log.info("根据主键 pkId【{}】查询信息不存在", pkId);
             throw new BusiException("数据不存在");
         }
+        String auditStatus = checkEntity.getAuditStatus();
+        if(!AuditStatusEnum.NOT_REVIEWED.getCode().equals(auditStatus)){
+            throw new BusiException("只能删除未审核的用户");
+        }
         int ret = this.tsUserMapper.deleteByPrimaryKey(pkId);
         //删除用户角色关系表
-        this.trUserRoleMapper.deleteUserRoleByUserId(pkId);
+        //this.trUserRoleMapper.deleteUserRoleByUserId(pkId);
         log.info("Service deleteByPrimaryKey end. ret=【{}】", ret);
         return ret;
     }
