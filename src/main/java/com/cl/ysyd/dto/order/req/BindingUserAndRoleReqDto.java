@@ -7,8 +7,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.util.List;
-
 /**
  * 订单输出Dto类
  * @author chenlong  2020-11-24
@@ -27,9 +25,9 @@ public class BindingUserAndRoleReqDto {
     /**
      * 图片地址
      */
-    @ApiModelProperty(value="角色ID集合"  , required = true)
-    @NotEmpty(message="角色ID集合不能为空")
-    private List<String> roleIdList;
+    @ApiModelProperty(value="角色ID"  , required = true)
+    @NotEmpty(message="角色ID不能为空")
+    private String roleId;
 
 
 }

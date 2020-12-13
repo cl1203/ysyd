@@ -306,24 +306,24 @@ public class UserServiceImpl implements IUserService {
             log.info("User does not exist. userId={}", reqDto.getUserId());
             throw new BusiException("用户信息不存在!");
         }
-        List<String> roleIdList = reqDto.getRoleIdList();
-        roleIdList.forEach(roleId -> {
-            TsRoleEntity roleEntity = this.tsRoleMapper.selectByPrimaryKey(roleId);
-            if (null == roleEntity) {
-                log.info("User does not exist. roleId={}", roleId);
-                throw new BusiException("角色信息不存在!");
-            }
-            TrUserRoleEntity userRoleEntity = new TrUserRoleEntity();
-            userRoleEntity.setPkId(UuidUtil.getUuid());
-            userRoleEntity.setUserId(reqDto.getUserId());
-            userRoleEntity.setRoleId(roleId);
-            userRoleEntity.setCreateTime(new Date());
-            userRoleEntity.setLastUpdateTime(new Date());
-            userRoleEntity.setCreateUser(LoginUtil.getUserId());
-            userRoleEntity.setLastUpdateUser(LoginUtil.getUserId());
-            int i = this.trUserRoleMapper.insertSelective(userRoleEntity);
-            Assert.isTrue(i == SortConstant.ONE, "绑定角色失败!");
-        });
+        //删除原本关系
+        this.trUserRoleMapper.deleteUserRoleByUserId(reqDto.getUserId());
+        String roleId = reqDto.getRoleId();
+        TsRoleEntity roleEntity = this.tsRoleMapper.selectByPrimaryKey(roleId);
+        if (null == roleEntity) {
+            log.info("User does not exist. roleId={}", roleId);
+            throw new BusiException("角色信息不存在!");
+        }
+        TrUserRoleEntity userRoleEntity = new TrUserRoleEntity();
+        userRoleEntity.setPkId(UuidUtil.getUuid());
+        userRoleEntity.setUserId(reqDto.getUserId());
+        userRoleEntity.setRoleId(roleId);
+        userRoleEntity.setCreateTime(new Date());
+        userRoleEntity.setLastUpdateTime(new Date());
+        userRoleEntity.setCreateUser(LoginUtil.getUserId());
+        userRoleEntity.setLastUpdateUser(LoginUtil.getUserId());
+        int i = this.trUserRoleMapper.insertSelective(userRoleEntity);
+        Assert.isTrue(i == SortConstant.ONE, "绑定角色失败!");
 
     }
 

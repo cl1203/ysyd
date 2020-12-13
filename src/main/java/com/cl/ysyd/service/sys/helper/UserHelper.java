@@ -6,13 +6,18 @@
  **/
 package com.cl.ysyd.service.sys.helper;
 
+import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.sys.req.TsUserReqDto;
 import com.cl.ysyd.dto.sys.res.TsUserResDto;
+import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.sys.TrUserRoleMapper;
+import com.cl.ysyd.mapper.sys.TsRoleMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -30,6 +35,15 @@ public class UserHelper {
 
     @Autowired
     private IBizDictionaryService iTcDictService;
+
+    @Autowired
+    private TrUserRoleMapper userRoleMapper;
+
+    @Autowired
+    private TsRoleMapper roleMapper;
+
+    @Autowired
+    private RoleHelper roleHelper;
 
     /**
      * entity转resDto
@@ -61,6 +75,13 @@ public class UserHelper {
         String auditStatusText = this.iTcDictService.getTextByBizCode(DictType.AUDIT_STATUS.getCode(), TsUser.getAuditStatus());
         resDto.setAuditStatusText(auditStatusText);
         resDto.setAuditStatus(TsUser.getAuditStatus());
+        // 用户角色ID
+        List<String> roleIds = this.userRoleMapper.getUserRoleIdList(TsUser.getPkId());
+        if(CollectionUtils.isNotEmpty(roleIds)){
+            String roleId = roleIds.get(SortConstant.ZERO);
+            TsRoleEntity tsRoleEntity = this.roleMapper.selectByPrimaryKey(roleId);
+            resDto.setRoleResDto(this.roleHelper.editResDto(tsRoleEntity));
+        }
         return resDto;
     }
 
