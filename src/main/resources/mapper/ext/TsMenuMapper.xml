@@ -25,9 +25,9 @@
             ts_menu tm
             LEFT JOIN tr_role_menu trm ON trm.menu_id = tm.pk_id
         WHERE
-            trm.role_id = 1
-            AND tm.parent_id = 0
-            AND tm.type = 'menu'
+            trm.role_id = #{roleId}
+            AND tm.parent_id = #{parentId}
+            AND tm.type = #{type}
         ORDER BY
             tm.sort
     </select>
