@@ -6,4 +6,5 @@ public class SortConstant {
     public static final Integer ONE = 1;
     public static final Integer TWO = 2;
     public static final Integer PAGE_SIZE = 10000;//导出10000条
+    public static final String MAX_IMG_SIZE = "10485760";
 }

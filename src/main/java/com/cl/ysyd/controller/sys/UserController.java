@@ -105,7 +105,7 @@ public class UserController {
      * @return 响应结果:ResponseData<Integer>
      */
     @ApiOperation(value = "注册")
-    @PostMapping(value = "/register")
+    @PostMapping(value = "register")
     @LoggerManage(description = "注册用户")
     public ResponseData<Integer> registerUser(@RequestBody @Valid TsUserReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");

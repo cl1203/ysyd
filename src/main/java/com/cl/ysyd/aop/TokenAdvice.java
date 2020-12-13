@@ -29,7 +29,8 @@ public class TokenAdvice {
     //不需要登录就可以访问的路径(比如:登录等)
     private String[] includeUrls = new String[]{
             "/ysyd/v1/user/login",
-            "/v1/user/ajax"
+            "/v1/user/ajax",
+            "/v1/user/register"
     };
 
     @Before("within(com.cl.ysyd.controller..*)")
