@@ -8,6 +8,6 @@ public class AopConstant {
 
     public static HashMap<String,TokenInfo> currentLoginTokenMap = new HashMap<>();
 
-    public static long loginUserfulTime = 1000 * 60 * 30;
+    public static long loginUserfulTime = 1000 * 60;
 
 }

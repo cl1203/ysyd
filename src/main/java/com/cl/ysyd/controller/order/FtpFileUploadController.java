@@ -4,12 +4,16 @@ package com.cl.ysyd.controller.order;
 import com.cl.ysyd.common.constants.ResponseData;
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.exception.BusiException;
+import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.FtpFileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Date;
 
 
 @RestController
@@ -32,6 +36,9 @@ public class FtpFileUploadController {
             throw new BusiException("文件大小不能超过10M！");
         }
         String fileName = file.getOriginalFilename();
+        if(StringUtils.isBlank(fileName)){
+            fileName = DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT);
+        }
         if (fileName.indexOf(" ") > 0) {
             throw new BusiException("文件名不能包含空格！请修改图片名称后重新上传！");
         }

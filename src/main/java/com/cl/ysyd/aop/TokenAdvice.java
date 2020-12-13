@@ -30,7 +30,8 @@ public class TokenAdvice {
     private String[] includeUrls = new String[]{
             "/ysyd/v1/user/login",
             "/v1/user/ajax",
-            "/v1/user/register"
+            "/v1/user/register",
+            "/ftpFile/uploadImg"
     };
 
     @Before("within(com.cl.ysyd.controller..*)")
