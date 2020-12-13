@@ -4,6 +4,7 @@ import com.cl.ysyd.aop.LoggerManage;
 import com.cl.ysyd.common.constants.ResponseData;
 import com.cl.ysyd.dto.order.req.BindingRoleAndMenuReqDto;
 import com.cl.ysyd.dto.sys.req.TsRoleReqDto;
+import com.cl.ysyd.dto.sys.res.RoleAllResDto;
 import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.cl.ysyd.service.sys.IRoleService;
 import com.github.pagehelper.PageInfo;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
+import java.util.List;
 
 /**
  * 角色控制层
@@ -125,9 +126,9 @@ public class RoleController {
     @ApiOperation(value = "查询所有角色")
     @GetMapping(path = "/queryAll")
     @LoggerManage(description = "查询所有角色")
-    public ResponseData<Map<String, String>> queryAll(){
+    public ResponseData<List<RoleAllResDto>> queryAll(){
         log.info("Controller queryAll start.");
-        Map<String, String> roleResDtoList = this.iRoleService.queryAll();
+        List<RoleAllResDto> roleResDtoList = this.iRoleService.queryAll();
         log.info("Controller queryAll end. ");
         return new ResponseData<>(roleResDtoList);
     }

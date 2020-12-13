@@ -8,11 +8,11 @@ package com.cl.ysyd.mapper.sys;
 
 import com.cl.ysyd.common.base.IBaseMapper;
 import com.cl.ysyd.common.enums.IsValidEnum;
+import com.cl.ysyd.dto.sys.res.RoleAllResDto;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsRoleEntityExample;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 角色 mapper类
@@ -48,5 +48,5 @@ public interface TsRoleMapper extends IBaseMapper<TsRoleEntity, TsRoleEntityExam
         return this.countByExample(roleEntityExample);
     }
 
-    Map<String, String> queryAll();
+    List<RoleAllResDto> queryAll();
 }

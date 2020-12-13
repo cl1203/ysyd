@@ -8,10 +8,11 @@ package com.cl.ysyd.service.sys;
 
 import com.cl.ysyd.dto.order.req.BindingRoleAndMenuReqDto;
 import com.cl.ysyd.dto.sys.req.TsRoleReqDto;
+import com.cl.ysyd.dto.sys.res.RoleAllResDto;
 import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.github.pagehelper.PageInfo;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 角色 service接口类
@@ -60,5 +61,5 @@ public interface IRoleService {
      */
     void bindingMenu(BindingRoleAndMenuReqDto reqDto);
 
-    Map<String, String> queryAll();
+    List<RoleAllResDto> queryAll();
 }

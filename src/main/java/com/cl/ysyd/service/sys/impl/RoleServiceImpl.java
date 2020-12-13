@@ -13,6 +13,7 @@ import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.BindingRoleAndMenuReqDto;
 import com.cl.ysyd.dto.sys.req.TsRoleReqDto;
+import com.cl.ysyd.dto.sys.res.RoleAllResDto;
 import com.cl.ysyd.dto.sys.res.TsMenuResDto;
 import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.cl.ysyd.entity.sys.TrRoleMenuEntity;
@@ -40,7 +41,6 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 角色service实现类
@@ -239,8 +239,8 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    public Map<String, String> queryAll() {
-        Map<String, String>  tsRoleResDtoList = this.tsRoleMapper.queryAll();
+    public List<RoleAllResDto> queryAll() {
+        List<RoleAllResDto>  tsRoleResDtoList = this.tsRoleMapper.queryAll();
         return tsRoleResDtoList;
     }
 }

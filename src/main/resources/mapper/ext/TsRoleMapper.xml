@@ -2,8 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cl.ysyd.mapper.sys.TsRoleMapper" >
 
+    <resultMap id="roleMap" type="com.cl.ysyd.dto.sys.res.RoleAllResDto">
+        <id column="pk_id" jdbcType="VARCHAR" property="key" />
+        <result column="role_name" jdbcType="VARCHAR" property="label" />
+    </resultMap>
 
-    <select id="queryAll" resultType="java.util.HashMap">
+
+    <select id="queryAll" resultMap="roleMap">
         select
             pk_id,
             role_name
