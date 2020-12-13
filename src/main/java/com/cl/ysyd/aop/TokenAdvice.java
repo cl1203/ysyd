@@ -48,22 +48,22 @@ public class TokenAdvice {
             String token = request.getHeader(TOKEN_KEY);
             String userId = request.getHeader(USER_KEY);
             if(StringUtils.isBlank(token)){
-                throw new BusiException("Token为空, 请求失败!");
+                throw new BusiException("55555", "Token为空, 请求失败!");
             }
             logger.info("登录用户的token为: token{}", token);
             if(StringUtils.isBlank(userId)){
-                throw new BusiException("用户ID为空, 请求失败!");
+                throw new BusiException("55555", "用户ID为空, 请求失败!");
             }
             logger.info("登录用户为: userId{}", userId);
             //如果token无效
             if (!checkToken(userId)){
-                throw new BusiException("token无效, 登陆失败!");
+                throw new BusiException("55555", "token无效, 登陆失败!");
             }else{
                 // 用户登录唯一检验
                 logger.info("current_userId === {}",userId);
                 TokenInfo tokenInfo = AopConstant.currentLoginTokenMap.get(userId);
                 if (!token.equals(tokenInfo.getToken())){
-                    throw new BusiException("用户在其他地方登陆,请重新登录!");
+                    throw new BusiException("55555", "用户在其他地方登陆,请重新登录!");
                 }
             }
         }
@@ -75,11 +75,11 @@ public class TokenAdvice {
     private boolean checkToken(String userId){
         TokenInfo tokenInfo = AopConstant.currentLoginTokenMap.get(userId);
         if(null == tokenInfo){
-            throw new BusiException("请求异常,请重新登录!");
+            throw new BusiException("55555", "请求异常,请重新登录!");
         }
         long tokenTime = tokenInfo.getDate();
         if ((System.currentTimeMillis() - tokenTime) > AopConstant.loginUserfulTime){
-            throw new BusiException("登录超时,请重新登录!");
+            throw new BusiException("55555", "登录超时,请重新登录!");
         }
         //检验通过 , 更新时间
         tokenInfo.setDate(System.currentTimeMillis());
