@@ -8,12 +8,10 @@ package com.cl.ysyd.dto.order.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import java.util.Date;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.Date;
 
 /**
  * 采购单明细输出Dto类
@@ -26,7 +24,6 @@ public class TmPurchaseDetailReqDto {
      * 采购单号
      */
     @ApiModelProperty(value="采购单号" )
-    @NotBlank(message="采购单号不能为空")
     @Length(max=32,message="采购单号字段过长, 最大长度为32")
     private String purchaseNo;
 
@@ -34,7 +31,6 @@ public class TmPurchaseDetailReqDto {
      * 采购编号
      */
     @ApiModelProperty(value="采购编号" )
-    @NotBlank(message="采购编号不能为空")
     @Length(max=50,message="采购编号字段过长, 最大长度为50")
     private String purchaseNumber;
 
@@ -42,7 +38,6 @@ public class TmPurchaseDetailReqDto {
      * 物料名称
      */
     @ApiModelProperty(value="物料名称" )
-    @NotBlank(message="物料名称不能为空")
     @Length(max=100,message="物料名称字段过长, 最大长度为100")
     private String materielName;
 
@@ -50,25 +45,24 @@ public class TmPurchaseDetailReqDto {
      * 克重
      */
     @ApiModelProperty(value="克重" )
-    private BigDecimal gramWeight;
+    private String gramWeight;
 
     /**
      * 幅宽
      */
     @ApiModelProperty(value="幅宽" )
-    private BigDecimal widthOfCloth;
+    private String widthOfCloth;
 
     /**
      * 采购单价
      */
     @ApiModelProperty(value="采购单价" )
-    private BigDecimal unitPrice;
+    private String unitPrice;
 
     /**
      * 单位
      */
     @ApiModelProperty(value="单位" )
-    @NotBlank(message="单位不能为空")
     @Length(max=50,message="单位字段过长, 最大长度为50")
     private String unit;
 
@@ -76,7 +70,6 @@ public class TmPurchaseDetailReqDto {
      * 供应商
      */
     @ApiModelProperty(value="供应商" )
-    @NotBlank(message="供应商不能为空")
     @Length(max=100,message="供应商字段过长, 最大长度为100")
     private String supplier;
 
@@ -84,7 +77,6 @@ public class TmPurchaseDetailReqDto {
      * 颜色
      */
     @ApiModelProperty(value="颜色" )
-    @NotBlank(message="颜色不能为空")
     @Length(max=50,message="颜色字段过长, 最大长度为50")
     private String colour;
 
@@ -92,20 +84,19 @@ public class TmPurchaseDetailReqDto {
      * 数量
      */
     @ApiModelProperty(value="数量" )
-    private Integer quantity;
+    private String quantity;
 
     /**
      * 总金额
      */
     @ApiModelProperty(value="总金额" )
-    private BigDecimal totalAmount;
+    private String totalAmountDetail;
 
     /**
      * 采购日期(录入采购单日期)
      */
     @ApiModelProperty(value="采购日期(录入采购单日期)" )
-    @NotNull(message="采购日期(录入采购单日期)不能为空")
-    private Date purchaseDate;
+    private String purchaseDate;
 
     /**
      * 状态 0:禁用 1:可用 
@@ -118,7 +109,6 @@ public class TmPurchaseDetailReqDto {
      * 备注 
      */
     @ApiModelProperty(value="备注 " )
-    @NotBlank(message="备注 不能为空")
     @Length(max=128,message="备注 字段过长, 最大长度为128")
     private String remarks;
 
@@ -133,7 +123,6 @@ public class TmPurchaseDetailReqDto {
      * 创建人
      */
     @ApiModelProperty(value="创建人" )
-    @NotBlank(message="创建人不能为空")
     @Length(max=32,message="创建人字段过长, 最大长度为32")
     private String createUser;
 
@@ -142,14 +131,12 @@ public class TmPurchaseDetailReqDto {
      * 默认值:CURRENT_TIMESTAMP
      */
     @ApiModelProperty(value="最后修改时间" )
-    @NotNull(message="最后修改时间不能为空")
     private Date lastUpdateTime;
 
     /**
      * 最后修改人
      */
     @ApiModelProperty(value="最后修改人" )
-    @NotBlank(message="最后修改人不能为空")
     @Length(max=32,message="最后修改人字段过长, 最大长度为32")
     private String lastUpdateUser;
 }

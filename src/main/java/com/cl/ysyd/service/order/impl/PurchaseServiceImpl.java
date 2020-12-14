@@ -16,6 +16,7 @@ import com.cl.ysyd.entity.order.TmPurchaseEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.order.TmPurchaseMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
+import com.cl.ysyd.service.order.IPurchaseDetailService;
 import com.cl.ysyd.service.order.IPurchaseService;
 import com.cl.ysyd.service.order.helper.PurchaseHelper;
 import com.github.pagehelper.Page;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Date;
@@ -36,6 +38,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@Transactional
 public class PurchaseServiceImpl implements IPurchaseService {
     /**
      * 采购单Mapper
@@ -47,6 +50,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
     private TsUserMapper userMapper;
 
     private static final String P = "P";
+
+    @Autowired
+    private IPurchaseDetailService purchaseDetailService;
 
     /**
      * 采购单Helper
@@ -84,6 +90,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         entity.setPurchaseStatus(PurchaseStatusEnum.WAIR_PURCHASE.getCode());
         entity.setCreateTime(new Date());
         entity.setPkId(UuidUtil.getUuid());
+        //新增采购单
         int ret = this.tmPurchaseMapper.insert(entity);
         log.info("Service createPurchase end. ret=【{}】",ret);
         return ret;
@@ -123,4 +130,5 @@ public class PurchaseServiceImpl implements IPurchaseService {
         pageInfo.setList(purchaseResDtoList);
         return pageInfo;
     }
+
 }

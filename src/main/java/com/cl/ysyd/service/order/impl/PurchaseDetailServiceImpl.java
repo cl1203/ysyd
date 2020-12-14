@@ -7,17 +7,19 @@
 package com.cl.ysyd.service.order.impl;
 
 import com.cl.ysyd.common.exception.BusiException;
+import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseDetailReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseDetailResDto;
 import com.cl.ysyd.entity.order.TmPurchaseDetailEntity;
 import com.cl.ysyd.mapper.order.TmPurchaseDetailMapper;
 import com.cl.ysyd.service.order.IPurchaseDetailService;
 import com.cl.ysyd.service.order.helper.PurchaseDetailHelper;
-import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.Date;
 
 /**
  * 采购单明细service实现类
@@ -65,7 +67,7 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         log.info("Service createPurchaseDetail start. reqDto=【{}】",reqDto);
         TmPurchaseDetailEntity entity = this.purchaseDetailHelper.editEntity(reqDto);
         entity.setCreateTime(new Date());
-        // TODO 添加主键
+        entity.setPkId(UuidUtil.getUuid());
         int ret = this.tmPurchaseDetailMapper.insert(entity);
         log.info("Service createPurchaseDetail end. ret=【{}】",ret);
         return ret;

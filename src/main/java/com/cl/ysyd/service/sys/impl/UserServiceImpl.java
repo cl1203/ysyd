@@ -76,6 +76,8 @@ public class UserServiceImpl implements IUserService {
      */
     private static final String INIT_PASSWORD = "12345678";
 
+    private static final String REGEX = "^[a-z0-9A-Z]+$";
+
     @Override
     public int deleteByPrimaryKey(String pkId) {
         log.info("Service deleteByPrimaryKey start. primaryKey=【{}】", pkId);
@@ -172,8 +174,8 @@ public class UserServiceImpl implements IUserService {
         }
         boolean flag = CheckMatchAndSpaceUtil.checkBlankSpace(userName);
         Assert.isTrue(flag , "用户名不能包含空格!");
-        String regex = "^[a-z0-9A-Z]+$";
-        if(!CheckMatchAndSpaceUtil.match(regex , userName)) {
+
+        if(!CheckMatchAndSpaceUtil.match(REGEX , userName)) {
             throw new BusiException("用户名格式规则: 必须只能包含数字和字母! ");
         }
         //校验手机号码和邮箱

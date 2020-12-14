@@ -3,7 +3,6 @@ package com.cl.ysyd.aop;
 import com.cl.ysyd.common.constants.AopConstant;
 import com.cl.ysyd.common.constants.TokenInfo;
 import com.cl.ysyd.common.exception.BusiException;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -48,7 +47,7 @@ public class TokenAdvice {
         //是否需要过滤
         boolean needFilter = isNeedFilter(url);
         if (needFilter) {
-            String token = request.getHeader(TOKEN_KEY);
+            /*String token = request.getHeader(TOKEN_KEY);
             String userId = request.getHeader(USER_KEY);
             if(StringUtils.isBlank(token)){
                 throw new BusiException("55555", "Token为空, 请求失败!");
@@ -68,7 +67,7 @@ public class TokenAdvice {
                 if (!token.equals(tokenInfo.getToken())){
                     throw new BusiException("55555", "用户在其他地方登陆,请重新登录!");
                 }
-            }
+            }*/
         }
     }
 

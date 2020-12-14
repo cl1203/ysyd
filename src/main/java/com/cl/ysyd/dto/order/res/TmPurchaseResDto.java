@@ -52,6 +52,9 @@ public class TmPurchaseResDto {
     @ApiModelProperty(value="采购人员" )
     private String purchasePersonnel;
 
+    @ApiModelProperty(value="采购人员姓名" )
+    private String purchasePersonnelName;
+
     /**
      * 采购总金额
      */

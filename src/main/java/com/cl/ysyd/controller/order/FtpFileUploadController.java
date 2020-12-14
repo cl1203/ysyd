@@ -42,10 +42,12 @@ public class FtpFileUploadController {
         if (fileName.indexOf(" ") > 0) {
             throw new BusiException("文件名不能包含空格！请修改图片名称后重新上传！");
         }
-        String filePath = null;
+        String filePath = "http://47.106.34.32/img/";
         boolean flag= FtpFileUtil.uploadFile(file , fileName);
         if(flag){
-            filePath = fileName;
+            filePath = filePath + fileName;
+        }else{
+            throw new BusiException("上传失败!");
         }
         return new ResponseData<>(filePath);  //该路径图片名称，前端框架可用ngnix指定的路径+filePath,即可访问到ngnix图片服务器中的图片
     }

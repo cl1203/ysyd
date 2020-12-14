@@ -12,7 +12,9 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 采购单输出Dto类
@@ -45,6 +47,7 @@ public class TmPurchaseReqDto {
      * 采购人员
      */
     @ApiModelProperty(value="采购人员" )
+    @Length(max=50,message="订单号字段过长, 最大长度为50")
     private String purchasePersonnel;
 
     /**
@@ -64,6 +67,7 @@ public class TmPurchaseReqDto {
      * 备注 
      */
     @ApiModelProperty(value="备注 " )
+    @Length(max=128,message="备注 字段过长, 最大长度为128")
     private String remarks;
 
     /**
@@ -91,4 +95,8 @@ public class TmPurchaseReqDto {
      */
     @ApiModelProperty(value="最后修改人" )
     private String lastUpdateUser;
+
+    @ApiModelProperty(value="采购明细list" )
+    @Valid
+    private List<TmPurchaseDetailReqDto> purchaseDetailReqDtoList;
 }

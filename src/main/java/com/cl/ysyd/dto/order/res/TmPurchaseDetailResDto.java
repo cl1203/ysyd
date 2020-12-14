@@ -8,9 +8,9 @@ package com.cl.ysyd.dto.order.res;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * 采购单明细输出Dto类
@@ -95,7 +95,7 @@ public class TmPurchaseDetailResDto {
      * 采购日期(录入采购单日期)
      */
     @ApiModelProperty(value="采购日期(录入采购单日期)" )
-    private Date purchaseDate;
+    private String purchaseDate;
 
     /**
      * 状态 0:禁用 1:可用 
@@ -103,6 +103,9 @@ public class TmPurchaseDetailResDto {
      */
     @ApiModelProperty(value="状态 0:禁用 1:可用 " )
     private Byte status;
+
+    @ApiModelProperty(value="状态文本" )
+    private String statusText;
 
     /**
      * 备注 
@@ -115,7 +118,7 @@ public class TmPurchaseDetailResDto {
      * 默认值:CURRENT_TIMESTAMP
      */
     @ApiModelProperty(value="创建时间" )
-    private Date createTime;
+    private String createTime;
 
     /**
      * 创建人
@@ -128,7 +131,7 @@ public class TmPurchaseDetailResDto {
      * 默认值:CURRENT_TIMESTAMP
      */
     @ApiModelProperty(value="最后修改时间" )
-    private Date lastUpdateTime;
+    private String lastUpdateTime;
 
     /**
      * 最后修改人

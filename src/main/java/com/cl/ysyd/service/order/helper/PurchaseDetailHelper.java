@@ -6,13 +6,25 @@
  **/
 package com.cl.ysyd.service.order.helper;
 
+import com.cl.ysyd.common.constants.SortConstant;
+import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.exception.BusiException;
+import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
+import com.cl.ysyd.common.utils.DateUtil;
+import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseDetailReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseDetailResDto;
 import com.cl.ysyd.entity.order.TmPurchaseDetailEntity;
+import com.cl.ysyd.service.sys.IBizDictionaryService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.springframework.stereotype.Component;
 
 /**
  * 采购单明细帮助类
@@ -20,6 +32,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PurchaseDetailHelper {
+
+    @Autowired
+    private IBizDictionaryService iTcDictService;
 
     /**
      * entity转resDto
@@ -32,14 +47,16 @@ public class PurchaseDetailHelper {
         }
         TmPurchaseDetailResDto resDto = new TmPurchaseDetailResDto();
         resDto.setCreateUser(TmPurchaseDetail.getCreateUser());
-        resDto.setCreateTime(TmPurchaseDetail.getCreateTime());
+        resDto.setCreateTime(DateUtil.getDateString(TmPurchaseDetail.getCreateTime(), DateUtil.DATETIMESHOWFORMAT));
         resDto.setQuantity(TmPurchaseDetail.getQuantity());
         resDto.setPurchaseNo(TmPurchaseDetail.getPurchaseNo());
         resDto.setTotalAmount(TmPurchaseDetail.getTotalAmount());
         resDto.setRemarks(TmPurchaseDetail.getRemarks());
-        resDto.setLastUpdateTime(TmPurchaseDetail.getLastUpdateTime());
+        resDto.setLastUpdateTime(DateUtil.getDateString(TmPurchaseDetail.getLastUpdateTime(), DateUtil.DATETIMESHOWFORMAT));
         resDto.setLastUpdateUser(TmPurchaseDetail.getLastUpdateUser());
         resDto.setStatus(TmPurchaseDetail.getStatus());
+        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), String.valueOf(TmPurchaseDetail.getStatus()));
+        resDto.setStatusText(statusText);
         resDto.setPurchaseNumber(TmPurchaseDetail.getPurchaseNumber());
         resDto.setMaterielName(TmPurchaseDetail.getMaterielName());
         resDto.setWidthOfCloth(TmPurchaseDetail.getWidthOfCloth());
@@ -47,7 +64,7 @@ public class PurchaseDetailHelper {
         resDto.setGramWeight(TmPurchaseDetail.getGramWeight());
         resDto.setSupplier(TmPurchaseDetail.getSupplier());
         resDto.setColour(TmPurchaseDetail.getColour());
-        resDto.setPurchaseDate(TmPurchaseDetail.getPurchaseDate());
+        resDto.setPurchaseDate(DateUtil.getDateString(TmPurchaseDetail.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
         resDto.setUnit(TmPurchaseDetail.getUnit());
         resDto.setUnitPrice(TmPurchaseDetail.getUnitPrice());
         return resDto;
@@ -82,20 +99,48 @@ public class PurchaseDetailHelper {
         entity.setPurchaseNo(reqDto.getPurchaseNo());
         entity.setPurchaseNumber(reqDto.getPurchaseNumber());
         entity.setMaterielName(reqDto.getMaterielName());
-        entity.setGramWeight(reqDto.getGramWeight());
-        entity.setWidthOfCloth(reqDto.getWidthOfCloth());
-        entity.setUnitPrice(reqDto.getUnitPrice());
+        if(StringUtils.isNotBlank(reqDto.getGramWeight())){
+            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getGramWeight())) {
+                throw new BusiException("克重不符合规则, 整数位最多8位, 小数位最多2位!");
+            }
+            entity.setGramWeight(new BigDecimal(reqDto.getGramWeight()));
+        }
+
+        if(StringUtils.isNotBlank(reqDto.getWidthOfCloth())){
+            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getWidthOfCloth())) {
+                throw new BusiException("幅宽不符合规则, 整数位最多8位, 小数位最多2位!");
+            }
+            entity.setGramWeight(new BigDecimal(reqDto.getWidthOfCloth()));
+        }
+        if(StringUtils.isNotBlank(reqDto.getUnitPrice())){
+            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
+                throw new BusiException("采购单价不符合规则, 整数位最多8位, 小数位最多2位!");
+            }
+            entity.setGramWeight(new BigDecimal(reqDto.getUnitPrice()));
+        }
         entity.setUnit(reqDto.getUnit());
         entity.setSupplier(reqDto.getSupplier());
         entity.setColour(reqDto.getColour());
-        entity.setQuantity(reqDto.getQuantity());
-        entity.setTotalAmount(reqDto.getTotalAmount());
-        entity.setPurchaseDate(reqDto.getPurchaseDate());
+        if(StringUtils.isNotBlank(reqDto.getQuantity())){
+            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP_INT, reqDto.getQuantity())) {
+                throw new BusiException("数量不符合规则, 整数位最多10位, 不能有小数位!");
+            }
+            entity.setQuantity(Integer.valueOf(reqDto.getQuantity()));
+        }
+        if(StringUtils.isNotBlank(reqDto.getTotalAmountDetail())){
+            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getTotalAmountDetail())) {
+                throw new BusiException("采购明细总价不符合规则, 整数位最多8位, 小数位最多2位!");
+            }
+            entity.setGramWeight(new BigDecimal(reqDto.getTotalAmountDetail()));
+        }
+        entity.setPurchaseDate(DateUtil.getDateToString(reqDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
+        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
+        Assert.hasText(statusText, "所选状态不存在, 请修改!");
         entity.setStatus(reqDto.getStatus());
         entity.setRemarks(reqDto.getRemarks());
-        entity.setCreateUser(reqDto.getCreateUser());
-        entity.setLastUpdateTime(reqDto.getLastUpdateTime());
-        entity.setLastUpdateUser(reqDto.getLastUpdateUser());
+        entity.setCreateUser(LoginUtil.getUserId());
+        entity.setLastUpdateTime(new Date());
+        entity.setLastUpdateUser(LoginUtil.getUserId());
         return entity;
     }
 
