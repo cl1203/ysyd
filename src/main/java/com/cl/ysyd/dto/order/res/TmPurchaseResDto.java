@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 采购单输出Dto类
@@ -102,4 +103,7 @@ public class TmPurchaseResDto {
      */
     @ApiModelProperty(value="最后修改人" )
     private String lastUpdateUser;
+
+    @ApiModelProperty(value="采购明细list" )
+    private List<TmPurchaseDetailResDto> purchaseDetailReqDtoList;
 }

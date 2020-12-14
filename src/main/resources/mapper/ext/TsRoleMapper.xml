@@ -20,5 +20,15 @@
         order by pk_id
     </select>
 
+    <select id="queryByUserId" resultMap="BaseResultMap" parameterType="string">
+        SELECT
+            tr.*
+        FROM
+            ts_role tr
+            LEFT JOIN tr_user_role tur ON tur.role_id = tr.pk_id
+        WHERE
+            tur.user_id = #{userId}
+    </select>
+
 
 </mapper>

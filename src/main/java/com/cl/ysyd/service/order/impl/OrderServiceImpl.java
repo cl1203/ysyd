@@ -18,8 +18,10 @@ import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.order.TmOrderMapper;
+import com.cl.ysyd.mapper.sys.TsRoleMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.order.IOrderService;
 import com.cl.ysyd.service.order.helper.OrderHelper;
@@ -57,6 +59,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private IBizDictionaryService iTcDictService;
+
+    @Autowired
+    private TsRoleMapper roleMapper;
 
     /**
      * 订单Helper
@@ -154,10 +159,12 @@ public class OrderServiceImpl implements IOrderService {
         String userId = LoginUtil.getUserId();
         Assert.hasText(userId, "用户ID为空!");
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
-        if(null == userEntity){
-            throw new BusiException("userId对应的用户不存在!");
-        }
-        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, userEntity.getType());
+        Assert.notNull(userEntity, "userId对应的用户不存在");
+        //根据用户ID查询对应角色是否拥有所有数据权限
+        TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
+        Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
+        String isAll = tsRoleEntity.getIsAll();
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll);
         List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(orderResDtoList);

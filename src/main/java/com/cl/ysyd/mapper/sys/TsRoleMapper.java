@@ -49,4 +49,6 @@ public interface TsRoleMapper extends IBaseMapper<TsRoleEntity, TsRoleEntityExam
     }
 
     List<RoleAllResDto> queryAll();
+
+    TsRoleEntity queryByUserId(String userId);
 }

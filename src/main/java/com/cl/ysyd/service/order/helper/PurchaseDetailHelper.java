@@ -133,7 +133,11 @@ public class PurchaseDetailHelper {
             }
             entity.setGramWeight(new BigDecimal(reqDto.getTotalAmountDetail()));
         }
-        entity.setPurchaseDate(DateUtil.getDateToString(reqDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
+        if(StringUtils.isNotBlank(reqDto.getPurchaseDate())){
+            entity.setPurchaseDate(DateUtil.getDateToString(reqDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
+        }else{
+            entity.setPurchaseDate(DateUtil.dateToDate(new Date(), DateUtil.DATESHOWFORMAT));
+        }
         String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
         Assert.hasText(statusText, "所选状态不存在, 请修改!");
         entity.setStatus(reqDto.getStatus());

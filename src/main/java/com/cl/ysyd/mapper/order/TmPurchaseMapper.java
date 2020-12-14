@@ -20,6 +20,6 @@ import java.util.List;
 public interface TmPurchaseMapper extends IBaseMapper<TmPurchaseEntity, TmPurchaseEntityExample, String> {
 
     List<TmPurchaseEntity> queryPurchaseList(@Param("orderNo") String orderNo, @Param("purchaseNo")String purchaseNo, @Param("purchaseStatus")String purchaseStatus, @Param("purchasePersonnel")String purchasePersonnel,
-                                             @Param("orderStatus")String orderStatus, @Param("userType")String userType, @Param("userId")String userId);
+                                             @Param("orderStatus")String orderStatus, @Param("isAll")String isAll, @Param("userId")String userId);
 
 }

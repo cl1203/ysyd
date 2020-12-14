@@ -8,6 +8,7 @@ package com.cl.ysyd.service.order.helper;
 
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.enums.PurchaseStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
@@ -102,10 +103,12 @@ public class PurchaseHelper {
         TmPurchaseEntity entity = new TmPurchaseEntity();
         //entity.setPurchaseNo(P + reqDto.getOrderNo());
         entity.setOrderNo(reqDto.getOrderNo());
-        entity.setPurchaseStatus(reqDto.getPurchaseStatus());
         if(StringUtils.isNotBlank(reqDto.getPurchaseStatus())){
             String purchaseStatusText = this.iTcDictService.getTextByBizCode(DictType.PURCHASE_STATUS.getCode(), reqDto.getPurchaseStatus());
             Assert.hasText(purchaseStatusText, "采购状态不存在, 请修改!");
+            entity.setPurchaseStatus(reqDto.getPurchaseStatus());
+        }else{
+            entity.setPurchaseStatus(PurchaseStatusEnum.WAIR_PURCHASE.getCode());
         }
         if(StringUtils.isNotBlank(reqDto.getPurchasePersonnel())){
             TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(reqDto.getPurchasePersonnel());

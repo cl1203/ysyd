@@ -68,7 +68,7 @@ public class PurchaseDetailServiceImpl implements IPurchaseDetailService {
         TmPurchaseDetailEntity entity = this.purchaseDetailHelper.editEntity(reqDto);
         entity.setCreateTime(new Date());
         entity.setPkId(UuidUtil.getUuid());
-        int ret = this.tmPurchaseDetailMapper.insert(entity);
+        int ret = this.tmPurchaseDetailMapper.insertSelective(entity);
         log.info("Service createPurchaseDetail end. ret=【{}】",ret);
         return ret;
     }

@@ -8,6 +8,7 @@ package com.cl.ysyd.mapper.order;
 
 import com.cl.ysyd.common.base.IBaseMapper;
 import com.cl.ysyd.common.constants.SortConstant;
+import com.cl.ysyd.common.enums.AuditStatusEnum;
 import com.cl.ysyd.common.enums.ExamineStatusEnum;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.utils.DateUtil;
@@ -17,6 +18,7 @@ import com.cl.ysyd.entity.order.TmOrderEntityExample;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,6 +34,21 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
     String querySerialNumber(@Param("date") String date);
 
     /**
+     * 根据订单号查询订单
+     * @param orderNo 订单号
+     * @return 订单对象
+     */
+    default TmOrderEntity queryByOrderNo(String orderNo){
+        //查询
+        TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
+        TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
+        criteria.andStatusEqualTo(SortConstant.ONE.byteValue());
+        criteria.andOrderNoEqualTo(orderNo);
+        List<TmOrderEntity> orderEntityList = this.selectByExample(orderEntityExample);
+        return CollectionUtils.isNotEmpty(orderEntityList) ? orderEntityList.get(SortConstant.ZERO) : null;
+    }
+
+    /**
      * 分页查询
      * @param orderUser 订单所属用户
      * @param orderStatus 订单状态
@@ -39,15 +56,15 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
      * @param establishDate 创建日期
      * @param completeDate 完成日期
      * @param examineStatus 审核状态
-     * @param userType 用户类型
+     * @param isAll 是否拥有所有数据权限
      * @return 列表结果集
      */
-    default List<TmOrderEntity> queryOrderList(String orderUser, String orderStatus,
-                                               String deliveryDate, String establishDate, String completeDate, String examineStatus, String userType){
+    default List<TmOrderEntity> queryOrderList(String orderUser, String orderStatus,String deliveryDate, String establishDate,
+                                               String completeDate, String examineStatus, String isAll){
         //查询
         TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
         TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
-        if(userType.equals("admin")){
+        if(isAll.equals(AuditStatusEnum.REVIEWED.getCode())){
             if(StringUtils.isNotBlank(orderUser)){
                 criteria.andOrderUserEqualTo(orderUser);
             }

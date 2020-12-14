@@ -6,23 +6,33 @@
  **/
 package com.cl.ysyd.service.order.impl;
 
-import com.cl.ysyd.common.enums.PurchaseStatusEnum;
+import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.common.utils.UuidUtil;
+import com.cl.ysyd.dto.order.req.TmPurchaseDetailReqDto;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
+import com.cl.ysyd.dto.order.res.TmPurchaseDetailResDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
+import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.order.TmPurchaseDetailEntity;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
+import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.order.TmOrderMapper;
+import com.cl.ysyd.mapper.order.TmPurchaseDetailMapper;
 import com.cl.ysyd.mapper.order.TmPurchaseMapper;
+import com.cl.ysyd.mapper.sys.TsRoleMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.order.IPurchaseDetailService;
 import com.cl.ysyd.service.order.IPurchaseService;
+import com.cl.ysyd.service.order.helper.PurchaseDetailHelper;
 import com.cl.ysyd.service.order.helper.PurchaseHelper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +64,24 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Autowired
     private IPurchaseDetailService purchaseDetailService;
 
+    @Autowired
+    private TmPurchaseDetailMapper tmPurchaseDetailMapper;
+
+    /**
+     * 采购单明细Helper
+     */
+    @Autowired
+    private PurchaseDetailHelper purchaseDetailHelper;
+
+    @Autowired
+    private TsRoleMapper roleMapper;
+
+    /**
+     * 订单Mapper
+     */
+    @Autowired
+    private TmOrderMapper tmOrderMapper;
+
     /**
      * 采购单Helper
      */
@@ -78,6 +106,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
         log.info("Service selectByPrimaryKey start. primaryKey=【{}】",pkId);
         TmPurchaseEntity entity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
         TmPurchaseResDto resDto = this.purchaseHelper.editResDto(entity);
+        List<TmPurchaseDetailEntity> tmPurchaseDetailEntityList = this.tmPurchaseDetailMapper.queryByPurchaseNo(entity.getPurchaseNo());
+        List<TmPurchaseDetailResDto> tmPurchaseDetailResDtos = this.purchaseDetailHelper.editResDtoList(tmPurchaseDetailEntityList);
+        resDto.setPurchaseDetailReqDtoList(tmPurchaseDetailResDtos);
         log.info("Service selectByPrimaryKey end. res=【{}】",resDto);
         return resDto;
     }
@@ -86,12 +117,13 @@ public class PurchaseServiceImpl implements IPurchaseService {
     public int createPurchase(TmPurchaseReqDto reqDto) {
         log.info("Service createPurchase start. reqDto=【{}】",reqDto);
         TmPurchaseEntity entity = this.purchaseHelper.editEntity(reqDto);
+        TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(reqDto.getOrderNo());
+        Assert.notNull(tmOrderEntity, "订单号对应的订单不存在!");
         entity.setPurchaseNo(P + reqDto.getOrderNo());
-        entity.setPurchaseStatus(PurchaseStatusEnum.WAIR_PURCHASE.getCode());
         entity.setCreateTime(new Date());
         entity.setPkId(UuidUtil.getUuid());
         //新增采购单
-        int ret = this.tmPurchaseMapper.insert(entity);
+        int ret = this.tmPurchaseMapper.insertSelective(entity);
         log.info("Service createPurchase end. ret=【{}】",ret);
         return ret;
     }
@@ -109,7 +141,21 @@ public class PurchaseServiceImpl implements IPurchaseService {
         }
         TmPurchaseEntity entity = this.purchaseHelper.editEntity(reqDto);
         entity.setPkId(pkId);
-        int ret = this.tmPurchaseMapper.updateByPrimaryKey(entity);
+        //修改采购表
+        int ret = this.tmPurchaseMapper.updateByPrimaryKeySelective(entity);
+        //修改采购明细
+        List<TmPurchaseDetailReqDto> purchaseDetailReqDtoList = reqDto.getPurchaseDetailReqDtoList();
+        int i = SortConstant.ZERO;
+        if(CollectionUtils.isNotEmpty(purchaseDetailReqDtoList)){
+            //先删除所有的明细 再新增
+            Assert.hasText(reqDto.getPurchaseNo(), "采购单号不能为空!");
+            this.tmPurchaseDetailMapper.deleteByPurchaseNo(reqDto.getPurchaseNo());
+            purchaseDetailReqDtoList.forEach(tmPurchaseDetailReqDto -> {
+                tmPurchaseDetailReqDto.setPurchaseNo(reqDto.getPurchaseNo());
+                tmPurchaseDetailReqDto.setPurchaseNumber(reqDto.getPurchaseNo() + "-" + (i + SortConstant.ONE));
+                this.purchaseDetailService.createPurchaseDetail(tmPurchaseDetailReqDto);
+            });
+        }
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
         return ret;
     }
@@ -121,10 +167,11 @@ public class PurchaseServiceImpl implements IPurchaseService {
         String userId = LoginUtil.getUserId();
         Assert.hasText(userId, "用户ID为空!");
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
-        if(null == userEntity){
-            throw new BusiException("userId对应的用户不存在!");
-        }
-        List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryPurchaseList(orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus, userEntity.getType(), userId);
+        Assert.notNull(userEntity, "userId对应的用户不存在!");
+        TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
+        Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
+        String isAll = tsRoleEntity.getIsAll();
+        List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryPurchaseList(orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus, isAll, userId);
         List<TmPurchaseResDto> purchaseResDtoList = this.purchaseHelper.editResDtoList(purchaseEntityList);
         PageInfo<TmPurchaseResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(purchaseResDtoList);
