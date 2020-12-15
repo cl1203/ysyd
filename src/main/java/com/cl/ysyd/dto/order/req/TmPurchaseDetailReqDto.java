@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -90,7 +91,7 @@ public class TmPurchaseDetailReqDto {
      * 总金额
      */
     @ApiModelProperty(value="总金额" )
-    private String totalAmountDetail;
+    private BigDecimal totalAmountDetail;
 
     /**
      * 采购日期(录入采购单日期)

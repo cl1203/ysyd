@@ -42,6 +42,7 @@ public class PurchaseController {
      */
     @ApiOperation(value = "删除采购单")
     @DeleteMapping(value = "/{pkId}")
+    @LoggerManage(description = "删除采购单")
     public ResponseData<Integer> deleteByPrimaryKey(@PathVariable String pkId) {
         log.info("Controller deleteByPrimaryKey start.");
         int result = this.iPurchaseService.deleteByPrimaryKey(pkId);
@@ -56,6 +57,7 @@ public class PurchaseController {
      */
     @ApiOperation(value = "根据主键查询采购单")
     @GetMapping(value = "/{pkId}")
+    @LoggerManage(description = "根据主键查询采购单")
     public ResponseData<TmPurchaseResDto> queryByPrimaryKey(@PathVariable String pkId) {
         log.info("Controller queryByPrimaryKey start.");
         TmPurchaseResDto resDto =  this.iPurchaseService.queryByPrimaryKey(pkId);
@@ -70,6 +72,7 @@ public class PurchaseController {
      */
     @ApiOperation(value = "新增采购单")
     @PostMapping(value = "")
+    @LoggerManage(description = "新增采购单")
     public ResponseData<Integer> createPurchase(@RequestBody @Valid TmPurchaseReqDto reqDto) {
         log.info("Controller queryByPrimaryKey start.");
         int result = this.iPurchaseService.createPurchase(reqDto);
@@ -85,6 +88,7 @@ public class PurchaseController {
      */
     @ApiOperation(value = "修改采购单")
     @PutMapping(value = "/{pkId}")
+    @LoggerManage(description = "修改采购单")
     public ResponseData<Integer> updateByPrimaryKey(@PathVariable String pkId, @RequestBody @Valid TmPurchaseReqDto reqDto) {
         log.info("Controller updateByPrimaryKey start.");
         int result = this.iPurchaseService.updateByPrimaryKey(pkId, reqDto);
@@ -112,5 +116,15 @@ public class PurchaseController {
         PageInfo<TmPurchaseResDto> resDto = this.iPurchaseService.queryPurchaseByPage(pageNum, pageSize, orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus);
         log.info("Controller queryOrderByPage end.");
         return new ResponseData<>(resDto);
+    }
+
+    @ApiOperation(value = "完成采购单")
+    @PutMapping(value = "/complete/{pkId}/{userId}")
+    @LoggerManage(description = "完成采购单")
+    public ResponseData<Integer> completeByPrimaryKey(@PathVariable String pkId, @PathVariable String userId) {
+        log.info("Controller updateByPrimaryKey start.");
+        int result = this.iPurchaseService.completeByPrimaryKey(pkId, userId);
+        log.info("Controller updateByPrimaryKey end.");
+        return new ResponseData<>(result);
     }
 }

@@ -113,26 +113,26 @@ public class PurchaseDetailHelper {
             entity.setGramWeight(new BigDecimal(reqDto.getWidthOfCloth()));
         }
         if(StringUtils.isNotBlank(reqDto.getUnitPrice())){
-            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
+            /*if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
                 throw new BusiException("采购单价不符合规则, 整数位最多8位, 小数位最多2位!");
-            }
+            }*/
             entity.setGramWeight(new BigDecimal(reqDto.getUnitPrice()));
         }
         entity.setUnit(reqDto.getUnit());
         entity.setSupplier(reqDto.getSupplier());
         entity.setColour(reqDto.getColour());
         if(StringUtils.isNotBlank(reqDto.getQuantity())){
-            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP_INT, reqDto.getQuantity())) {
+            /*if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP_INT, reqDto.getQuantity())) {
                 throw new BusiException("数量不符合规则, 整数位最多10位, 不能有小数位!");
-            }
+            }*/
             entity.setQuantity(Integer.valueOf(reqDto.getQuantity()));
         }
-        if(StringUtils.isNotBlank(reqDto.getTotalAmountDetail())){
+        /*if(null != reqDto.getTotalAmountDetail()){
             if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getTotalAmountDetail())) {
                 throw new BusiException("采购明细总价不符合规则, 整数位最多8位, 小数位最多2位!");
             }
-            entity.setGramWeight(new BigDecimal(reqDto.getTotalAmountDetail()));
-        }
+            entity.setGramWeight(reqDto.getTotalAmountDetail());
+        }*/
         if(StringUtils.isNotBlank(reqDto.getPurchaseDate())){
             entity.setPurchaseDate(DateUtil.getDateToString(reqDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
         }else{

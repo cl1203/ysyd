@@ -22,4 +22,6 @@ public interface TmPurchaseMapper extends IBaseMapper<TmPurchaseEntity, TmPurcha
     List<TmPurchaseEntity> queryPurchaseList(@Param("orderNo") String orderNo, @Param("purchaseNo")String purchaseNo, @Param("purchaseStatus")String purchaseStatus, @Param("purchasePersonnel")String purchasePersonnel,
                                              @Param("orderStatus")String orderStatus, @Param("isAll")String isAll, @Param("userId")String userId);
 
+
+
 }

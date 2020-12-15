@@ -7,7 +7,10 @@
 package com.cl.ysyd.service.order.impl;
 
 import com.cl.ysyd.common.constants.SortConstant;
+import com.cl.ysyd.common.enums.OrderStatusEnum;
+import com.cl.ysyd.common.enums.PurchaseStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
+import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseDetailReqDto;
@@ -24,6 +27,7 @@ import com.cl.ysyd.mapper.order.TmPurchaseDetailMapper;
 import com.cl.ysyd.mapper.order.TmPurchaseMapper;
 import com.cl.ysyd.mapper.sys.TsRoleMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
+import com.cl.ysyd.service.order.IOrderService;
 import com.cl.ysyd.service.order.IPurchaseDetailService;
 import com.cl.ysyd.service.order.IPurchaseService;
 import com.cl.ysyd.service.order.helper.PurchaseDetailHelper;
@@ -39,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -67,6 +72,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Autowired
     private TmPurchaseDetailMapper tmPurchaseDetailMapper;
 
+    @Autowired
+    private IOrderService iOrderService;
     /**
      * 采购单明细Helper
      */
@@ -141,8 +148,6 @@ public class PurchaseServiceImpl implements IPurchaseService {
         }
         TmPurchaseEntity entity = this.purchaseHelper.editEntity(reqDto);
         entity.setPkId(pkId);
-        //修改采购表
-        int ret = this.tmPurchaseMapper.updateByPrimaryKeySelective(entity);
         //修改采购明细
         List<TmPurchaseDetailReqDto> purchaseDetailReqDtoList = reqDto.getPurchaseDetailReqDtoList();
         int i = SortConstant.ZERO;
@@ -150,12 +155,40 @@ public class PurchaseServiceImpl implements IPurchaseService {
             //先删除所有的明细 再新增
             Assert.hasText(reqDto.getPurchaseNo(), "采购单号不能为空!");
             this.tmPurchaseDetailMapper.deleteByPurchaseNo(reqDto.getPurchaseNo());
-            purchaseDetailReqDtoList.forEach(tmPurchaseDetailReqDto -> {
+            //采购总金额  等于每个明细总金额之和
+            BigDecimal totalAmount = new BigDecimal("0");
+            //订单状态 采购中
+            TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(checkEntity.getOrderNo());
+            //修改订单状态
+            this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.PURCHASING.getCode());
+            //purchaseDetailReqDtoList.forEach(tmPurchaseDetailReqDto -> {
+            for(TmPurchaseDetailReqDto tmPurchaseDetailReqDto :  purchaseDetailReqDtoList){
                 tmPurchaseDetailReqDto.setPurchaseNo(reqDto.getPurchaseNo());
                 tmPurchaseDetailReqDto.setPurchaseNumber(reqDto.getPurchaseNo() + "-" + (i + SortConstant.ONE));
+                if(StringUtils.isNotBlank(tmPurchaseDetailReqDto.getUnitPrice())){
+                    if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, tmPurchaseDetailReqDto.getUnitPrice())) {
+                        throw new BusiException("采购单价不符合规则, 整数位最多8位, 小数位最多2位!");
+                    }
+                }
+                if(StringUtils.isNotBlank(tmPurchaseDetailReqDto.getQuantity())){
+                    if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP_INT, tmPurchaseDetailReqDto.getQuantity())) {
+                        throw new BusiException("数量不符合规则, 整数位最多10位, 不能有小数位!");
+                    }
+                }
+                if(StringUtils.isNotBlank(tmPurchaseDetailReqDto.getUnitPrice()) && StringUtils.isNotBlank(tmPurchaseDetailReqDto.getQuantity())){
+                    BigDecimal totalAmountDetail = new BigDecimal(tmPurchaseDetailReqDto.getUnitPrice()).multiply(new BigDecimal(tmPurchaseDetailReqDto.getQuantity())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+                    tmPurchaseDetailReqDto.setTotalAmountDetail(totalAmountDetail);
+                    totalAmount = totalAmount.add(totalAmountDetail);
+                }
                 this.purchaseDetailService.createPurchaseDetail(tmPurchaseDetailReqDto);
-            });
+           }
+            //采购状态 采购中
+            entity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_ING.getCode());
+            //采购总金额
+            entity.setTotalAmount(totalAmount);
         }
+        //修改采购表
+        int ret = this.tmPurchaseMapper.updateByPrimaryKeySelective(entity);
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
         return ret;
     }
@@ -176,6 +209,25 @@ public class PurchaseServiceImpl implements IPurchaseService {
         PageInfo<TmPurchaseResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(purchaseResDtoList);
         return pageInfo;
+    }
+
+    @Override
+    public int completeByPrimaryKey(String pkId, String userId) {
+        TmPurchaseEntity checkEntity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
+        if (checkEntity == null) {
+            log.info("根据主键 pkId【{}】查询信息不存在",pkId);
+            throw new BusiException("数据不存在");
+        }
+        //采购单完成
+        checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
+        checkEntity.setPurchasePersonnel(userId);
+        int i = this.tmPurchaseMapper.updateByPrimaryKeySelective(checkEntity);
+        Assert.isTrue(i==SortConstant.ONE, "完成采购单,修改状态失败!");
+        //修改订单状态
+        TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(checkEntity.getOrderNo());
+        Assert.notNull(tmOrderEntity, "采购单对应的订单不存在!");
+        this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
+        return i;
     }
 
 }

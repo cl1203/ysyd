@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class TmPurchaseReqDto {
      * 采购总金额
      */
     @ApiModelProperty(value="采购总金额" )
-    private String totalAmount;
+    private BigDecimal totalAmount;
 
     /**
      * 状态 0:禁用 1:可用 

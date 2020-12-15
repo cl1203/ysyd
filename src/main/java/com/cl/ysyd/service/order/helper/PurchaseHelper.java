@@ -6,16 +6,16 @@
  **/
 package com.cl.ysyd.service.order.helper;
 
-import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.enums.PurchaseStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
-import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
+import com.cl.ysyd.entity.order.TmOrderEntity;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.order.TmOrderMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +41,9 @@ public class PurchaseHelper {
     private TsUserMapper userMapper;
 
 
+    @Autowired
+    private TmOrderMapper orderMapper;
+
     /**
      * entity转resDto
      * @param TmPurchase
@@ -53,6 +55,9 @@ public class PurchaseHelper {
         }
         TmPurchaseResDto resDto = new TmPurchaseResDto();
         resDto.setOrderNo(TmPurchase.getOrderNo());
+        TmOrderEntity tmOrderEntity = this.orderMapper.queryByOrderNo(TmPurchase.getOrderNo());
+        Assert.notNull(tmOrderEntity, "采购单对应的订单不存在!");
+        resDto.setOrderImg(tmOrderEntity.getImgUrl());
         resDto.setPurchaseNo(TmPurchase.getPurchaseNo());
         resDto.setTotalAmount(TmPurchase.getTotalAmount());
         resDto.setRemarks(TmPurchase.getRemarks());
@@ -117,11 +122,11 @@ public class PurchaseHelper {
             }
             entity.setPurchasePersonnel(reqDto.getPurchasePersonnel());
         }
-        if(StringUtils.isNotBlank(reqDto.getTotalAmount())){
-            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getTotalAmount())) {
+        if(null != reqDto.getTotalAmount()){
+            /*if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getTotalAmount())) {
                 throw new BusiException("采购总金额不符合规则, 整数位最多8位, 小数位最多2位!");
-            }
-            entity.setTotalAmount(new BigDecimal(reqDto.getTotalAmount()));
+            }*/
+            entity.setTotalAmount(reqDto.getTotalAmount());
         }
         entity.setStatus(reqDto.getStatus());
         String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
