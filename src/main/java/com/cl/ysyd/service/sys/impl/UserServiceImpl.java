@@ -300,7 +300,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void updatePassword(TsUserReqDto reqDto) {
-        List<TsUserEntity> userEntityList = this.checkUser(reqDto);
+        List<TsUserEntity> userEntityList = this.checkUser(reqDto.getUserName(), reqDto.getPassword());
         String newPassword = reqDto.getNewPassword();
         Assert.hasText(newPassword , "新密码不能为空!");
         boolean flag = CheckMatchAndSpaceUtil.checkBlankSpace(newPassword);
@@ -345,12 +345,37 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    @Override
+    public void bindingWeChat(String userName, String password) {
+        //验证用户名和密码
+        List<TsUserEntity> userEntityList = this.checkUser(userName, password);
+        TsUserEntity userEntity = userEntityList.get(SortConstant.ZERO);
+        String isBinding = userEntity.getIsBinding();
+        if(isBinding.equals(AuditStatusEnum.REVIEWED.getCode())){
+            throw new BusiException("此用户已经被其他公众号绑定!");
+        }
+        userEntity.setIsBinding(AuditStatusEnum.REVIEWED.getCode());
+        int i = this.tsUserMapper.updateByPrimaryKeySelective(userEntity);
+        Assert.isTrue(i==SortConstant.ONE, "绑定用户失败!");
+    }
+
+    @Override
+    public void relieveWeChat(String userName) {
+        TsUserEntityExample userEntityExample = new TsUserEntityExample();
+        TsUserEntityExample.Criteria criteria = userEntityExample.createCriteria();
+        criteria.andUserNameEqualTo(userName);
+        List<TsUserEntity> sysUserEntityList = this.tsUserMapper.selectByExample(userEntityExample);
+        Assert.notEmpty(sysUserEntityList , "绑定的用户名不存在!");
+        TsUserEntity userEntity = sysUserEntityList.get(SortConstant.ZERO);
+        userEntity.setIsBinding(AuditStatusEnum.NOT_REVIEWED.getCode());
+        int i = this.tsUserMapper.updateByPrimaryKeySelective(userEntity);
+        Assert.isTrue(i==SortConstant.ONE, "用户解除绑定失败!");
+    }
+
     /**
      * 验证用户的用户名和密码
      */
-    private List<TsUserEntity> checkUser(TsUserReqDto reqDto){
-        String userName = reqDto.getUserName();
-        String password = reqDto.getPassword();
+    private List<TsUserEntity> checkUser(String userName, String password){
         TsUserEntityExample userEntityExample = new TsUserEntityExample();
         TsUserEntityExample.Criteria criteria = userEntityExample.createCriteria();
         criteria.andUserNameEqualTo(userName);

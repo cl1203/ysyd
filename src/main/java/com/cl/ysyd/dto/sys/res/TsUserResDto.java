@@ -118,4 +118,7 @@ public class TsUserResDto {
      */
     @ApiModelProperty(value="角色信息" )
     private TsRoleResDto roleResDto;
+
+    @ApiModelProperty(value="是否绑定公众号" )
+    private String isBinding;
 }

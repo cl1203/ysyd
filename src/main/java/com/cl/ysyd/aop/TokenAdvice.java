@@ -31,7 +31,9 @@ public class TokenAdvice {
             "/ysyd/v1/user/login",
             "/v1/user/ajax",
             "/v1/user/register",
-            "/ftpFile/uploadImg"
+            //"/ftpFile/uploadImg",
+            "/v1/user/bindingWeChat",
+            "/v1/user/relieveWeChat"
     };
 
     @Before("within(com.cl.ysyd.controller..*)")
@@ -43,7 +45,7 @@ public class TokenAdvice {
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
         assert request != null;
         String url = request.getRequestURL().toString();
-        int i = this.getIndex(url);
+       int i = this.getIndex(url);
         url = url.substring(i);
         //是否需要过滤
         boolean needFilter = isNeedFilter(url);

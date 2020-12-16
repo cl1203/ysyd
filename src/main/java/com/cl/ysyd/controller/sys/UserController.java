@@ -188,4 +188,24 @@ public class UserController {
         return new ResponseData<>("分配角色成功!");
     }
 
+    @ApiOperation(value = "用户绑定微信公众号")
+    @PutMapping(path = "/bindingWeChat/{userName}/{password}")
+    @LoggerManage(description = "用户绑定微信公众号")
+    public ResponseData<String> bindingWeChat(@PathVariable String userName, @PathVariable String password){
+        log.info("Controller bindingWeChat start.");
+        this.iUserService.bindingWeChat(userName, password);
+        log.info("Controller bindingWeChat end. ");
+        return new ResponseData<>("绑定成功!");
+    }
+
+    @ApiOperation(value = "用户解绑微信公众号")
+    @PutMapping(path = "/relieveWeChat/{userName}/{password}")
+    @LoggerManage(description = "用户解绑微信公众号")
+    public ResponseData<String> relieveWeChat(@PathVariable String userName){
+        log.info("Controller relieveWeChat start.");
+        this.iUserService.relieveWeChat(userName);
+        log.info("Controller relieveWeChat end. ");
+        return new ResponseData<>("解绑成功!");
+    }
+
 }

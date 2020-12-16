@@ -114,4 +114,7 @@ public class TsUserReqDto {
      */
     @ApiModelProperty(value="最后修改人" )
     private String lastUpdateUser;
+
+    @ApiModelProperty(value="是否绑定公众号" )
+    private String isBinding;
 }

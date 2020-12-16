@@ -75,6 +75,8 @@ public class TsUserEntity implements Serializable {
      */
     private Date createTime;
 
+    private String isBinding;
+
     /**
      * 创建人
      */
@@ -285,5 +287,13 @@ public class TsUserEntity implements Serializable {
      */
     public void setLastUpdateUser(String lastUpdateUser) {
         this.lastUpdateUser = lastUpdateUser == null ? null : lastUpdateUser.trim();
+    }
+
+    public String getIsBinding() {
+        return isBinding;
+    }
+
+    public void setIsBinding(String isBinding) {
+        this.isBinding = isBinding;
     }
 }

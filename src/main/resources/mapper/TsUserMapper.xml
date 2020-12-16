@@ -7,6 +7,7 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="is_binding" jdbcType="VARCHAR" property="isBinding" />
     <result column="audit_status" jdbcType="TINYINT" property="auditStatus" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="email" jdbcType="VARCHAR" property="email" />
@@ -76,7 +77,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    pk_id, type, user_name, password, real_name, audit_status, mobile, email, status, 
+    pk_id, type, user_name, password, real_name, is_binding, audit_status, mobile, email, status,
     remarks, create_time, create_user, last_update_time, last_update_user
   </sql>
   <select id="selectByExample" parameterType="com.cl.ysyd.entity.sys.TsUserEntityExample" resultMap="BaseResultMap">
@@ -111,12 +112,12 @@
   </delete>
   <insert id="insert" parameterType="com.cl.ysyd.entity.sys.TsUserEntity">
     insert into ts_user (pk_id, type, user_name, 
-      password, real_name, audit_status, 
+      password, real_name, audit_status, is_binding,
       mobile, email, status, 
       remarks, create_time, create_user, 
       last_update_time, last_update_user)
     values (#{pkId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{auditStatus,jdbcType=TINYINT}, 
+      #{password,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{auditStatus,jdbcType=TINYINT}, #{isBinding,jdbcType=VARCHAR},
       #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
       #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
       #{lastUpdateTime,jdbcType=TIMESTAMP}, #{lastUpdateUser,jdbcType=VARCHAR})
@@ -138,6 +139,9 @@
       </if>
       <if test="realName != null">
         real_name,
+      </if>
+      <if test="isBinding != null">
+        is_binding,
       </if>
       <if test="auditStatus != null">
         audit_status,
@@ -182,6 +186,9 @@
       </if>
       <if test="realName != null">
         #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="isBinding != null">
+        #{isBinding,jdbcType=VARCHAR},
       </if>
       <if test="auditStatus != null">
         #{auditStatus,jdbcType=TINYINT},
@@ -236,6 +243,9 @@
       <if test="record.realName != null">
         real_name = #{record.realName,jdbcType=VARCHAR},
       </if>
+      <if test="record.isBinding != null">
+        is_binding = #{record.isBinding,jdbcType=VARCHAR},
+      </if>
       <if test="record.auditStatus != null">
         audit_status = #{record.auditStatus,jdbcType=TINYINT},
       </if>
@@ -275,6 +285,7 @@
       user_name = #{record.userName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       real_name = #{record.realName,jdbcType=VARCHAR},
+      is_binding = #{record.isBinding,jdbcType=VARCHAR},
       audit_status = #{record.auditStatus,jdbcType=TINYINT},
       mobile = #{record.mobile,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
@@ -302,6 +313,9 @@
       </if>
       <if test="realName != null">
         real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="isBinding != null">
+        is_binding = #{isBinding,jdbcType=VARCHAR},
       </if>
       <if test="auditStatus != null">
         audit_status = #{auditStatus,jdbcType=TINYINT},
@@ -339,6 +353,7 @@
       user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       real_name = #{realName,jdbcType=VARCHAR},
+      is_binding = #{isBinding,jdbcType=VARCHAR},
       audit_status = #{auditStatus,jdbcType=TINYINT},
       mobile = #{mobile,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},

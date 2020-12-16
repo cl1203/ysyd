@@ -84,4 +84,17 @@ public interface IUserService {
      * @param reqDto 请求对象
      */
     void bindingRole(BindingUserAndRoleReqDto reqDto);
+
+    /**
+     * 绑定微信公众号
+     * @param userName 用户名
+     * @param password 密码
+     */
+    void bindingWeChat(String userName, String password);
+
+    /**
+     * 解除绑定
+     * @param userName 用户名
+     */
+    void relieveWeChat(String userName);
 }
