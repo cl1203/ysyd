@@ -38,14 +38,22 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 采购单service实现类
@@ -94,6 +102,32 @@ public class PurchaseServiceImpl implements IPurchaseService {
      */
     @Autowired
     private PurchaseHelper purchaseHelper;
+
+    /**
+     * 采购导出第一页sheet名称
+     */
+    private static final String PURCHASE_TAB="采购信息";
+
+    /**
+     * 采购导出第二页sheet名称
+     */
+    private static final String PURCHASE_DETAIL_TAB="采购明细信息";
+
+    /**
+     * 采购信息表头
+     */
+    private static final String[] PURCHASE_TITLE={"采购单号", "订单号", "采购状态", "采购人员", "采购总金额", "状态", "备注"};
+    /**
+     * 采购明细信息表头
+     */
+    private static final String[] PURCHASE_DETAIL_TITLE={"采购单号", "采购编号", "物料名称", "克重","幅宽", "采购单价", "数量",
+                                                "单位", "颜色", "供应商", "总金额", "采购日期", "状态", "备注"};
+
+    private static final String CONTENT_TYPE = "application/octet-stream";
+
+    private static final String ENCODING = "utf-8";
+
+    private static final String FILE_NAME = "采购数据";
 
     @Override
     public int deleteByPrimaryKey(String pkId) {
@@ -219,6 +253,227 @@ public class PurchaseServiceImpl implements IPurchaseService {
     }
 
     @Override
+    public void export(HttpServletResponse response, String orderNo, String purchaseNo, String purchaseStatus, String purchasePersonnel, String orderStatus) throws IOException {
+        //获取采购列表信息
+        List<TmPurchaseResDto> purchaseResDtoList = this.queryPurchaseByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus).getList();
+        if(CollectionUtils.isNotEmpty(purchaseResDtoList)){
+            List<String> purchaseNoList = purchaseResDtoList.stream().map(TmPurchaseResDto::getPurchaseNo).collect(Collectors.toList());
+            List<TmPurchaseDetailEntity> tmPurchaseDetailEntities = this.tmPurchaseDetailMapper.queryByPurchaseNo(purchaseNoList);
+            //采购明细list
+            List<TmPurchaseDetailResDto> purchaseDetailResDtoList = this.purchaseDetailHelper.editResDtoList(tmPurchaseDetailEntities);
+            //导出
+            this.exportExcel(purchaseResDtoList, purchaseDetailResDtoList, response);
+        }
+    }
+
+    private void exportExcel(List<TmPurchaseResDto> purchaseResDtoList, List<TmPurchaseDetailResDto> purchaseDetailResDtoList, HttpServletResponse response) throws IOException {
+        //实例化HSSFWorkbook
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        //sheet1
+        this.createSheet1(purchaseResDtoList, workbook);
+        //sheet2
+        this.createSheet2(purchaseDetailResDtoList, workbook);
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(ENCODING);
+        //这后面可以设置导出Excel的名称，此例中名为student.xls（解决文件名称乱码问题）
+        response.setHeader("content-disposition", "attachment;filename=" + new String(FILE_NAME.getBytes(), "ISO8859-1") + ".xls" );
+        //刷新缓冲
+        response.flushBuffer();
+        //workbook将Excel写入到response的输出流中，供页面下载
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+    private void createSheet2(List<TmPurchaseDetailResDto> purchaseDetailResDtoList, HSSFWorkbook workbook) {
+        //创建sheet
+        HSSFSheet sheet = workbook.createSheet(PURCHASE_DETAIL_TAB);
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(SortConstant.TWENTY);
+        //创建第一行表头
+        HSSFRow headrow = sheet.createRow(SortConstant.ZERO);
+        //高度
+        headrow.setHeight(SortConstant.HEAD_HEIGHT);
+        //添加标题
+        for(int i = 0; i < PURCHASE_DETAIL_TITLE.length; i++){
+            //标题的显示样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.HEAD_FONT);
+            //创建单元格
+            HSSFCell cell = headrow.createCell(i);
+            //标题写入单元格
+            cell.setCellValue(PURCHASE_DETAIL_TITLE[i]);
+            headerStyle.setFont(font);
+            cell.setCellStyle(headerStyle);
+        }
+        if(CollectionUtils.isNotEmpty(purchaseDetailResDtoList)){
+            //添加数据
+            for(int i = 0; i< purchaseDetailResDtoList.size(); i++){
+                int j = i + SortConstant.ONE;
+                //创建行
+                HSSFRow row = sheet.createRow(j);
+                //高度
+                row.setHeight(SortConstant.ROW_HEIGHT);
+                //内容样式
+                HSSFCellStyle headerStyle = workbook.createCellStyle();
+                //设置样式
+                HSSFFont font = this.getHssfFont(workbook, headerStyle);
+                //字体大小
+                font.setFontHeightInPoints(SortConstant.ROW_FONT);
+                headerStyle.setFont(font);
+                purchaseDetailResDtoList.forEach(resDto -> {
+                    Cell cell0 = row.createCell(0);
+                    cell0.setCellValue(resDto.getPurchaseNo());
+                    cell0.setCellStyle(headerStyle);
+                    Cell cell1 = row.createCell(1);
+                    cell1.setCellValue(resDto.getPurchaseNumber());
+                    cell1.setCellStyle(headerStyle);
+                    Cell cell2 = row.createCell(2);
+                    cell2.setCellValue(resDto.getMaterielName());
+                    cell2.setCellStyle(headerStyle);
+                    Cell cell3 = row.createCell(3);
+                    if(null != resDto.getGramWeight()){
+                        cell3.setCellValue(resDto.getGramWeight().toString());
+                        cell3.setCellStyle(headerStyle);
+                    }
+                    Cell cell4 = row.createCell(4);
+                    if(null != resDto.getWidthOfCloth()){
+                        cell4.setCellValue(resDto.getWidthOfCloth().toString());
+                        cell4.setCellStyle(headerStyle);
+                    }
+                    Cell cell5 = row.createCell(5);
+                    if(null != resDto.getUnitPrice()){
+                        cell5.setCellValue(resDto.getUnitPrice().toString());
+                        cell5.setCellStyle(headerStyle);
+                    }
+                    Cell cell6 = row.createCell(6);
+                    if(null != resDto.getQuantity()){
+                        cell6.setCellValue(resDto.getQuantity().toString());
+                        cell6.setCellStyle(headerStyle);
+                    }
+                    Cell cell7 = row.createCell(7);
+                    cell7.setCellValue(resDto.getUnit());
+                    cell7.setCellStyle(headerStyle);
+                    Cell cell8 = row.createCell(8);
+                    cell8.setCellValue(resDto.getColour());
+                    cell8.setCellStyle(headerStyle);
+                    Cell cell9 = row.createCell(9);
+                    cell9.setCellValue(resDto.getSupplier());
+                    cell9.setCellStyle(headerStyle);
+                    Cell cell10 = row.createCell(10);
+                    if(null != resDto.getTotalAmount()){
+                        cell10.setCellValue(resDto.getTotalAmount().toString());
+                        cell10.setCellStyle(headerStyle);
+                    }
+                    Cell cell11 = row.createCell(11);
+                    cell11.setCellValue(resDto.getPurchaseDate());
+                    cell11.setCellStyle(headerStyle);
+                    Cell cell12 = row.createCell(12);
+                    cell12.setCellValue(resDto.getStatusText());
+                    cell12.setCellStyle(headerStyle);
+                    Cell cell13 = row.createCell(13);
+                    cell13.setCellValue(resDto.getRemarks());
+                    cell13.setCellStyle(headerStyle);
+                });
+            }
+        }
+    }
+
+
+    private void createSheet1(List<TmPurchaseResDto> purchaseResDtoList, HSSFWorkbook workbook) {
+        //创建sheet
+        HSSFSheet sheet = workbook.createSheet(PURCHASE_TAB);
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(SortConstant.TWENTY);
+        //创建第一行表头
+        HSSFRow headrow = sheet.createRow(SortConstant.ZERO);
+        //高度
+        headrow.setHeight(SortConstant.HEAD_HEIGHT);
+        //添加标题
+        for(int i = 0; i < PURCHASE_TITLE.length; i++){
+            //标题的显示样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.HEAD_FONT);
+            //创建单元格
+            HSSFCell cell = headrow.createCell(i);
+            //标题写入单元格
+            cell.setCellValue(PURCHASE_TITLE[i]);
+            headerStyle.setFont(font);
+            cell.setCellStyle(headerStyle);
+        }
+        //添加数据
+        for(int i = 0; i< purchaseResDtoList.size(); i++){
+            int j = i + SortConstant.ONE;
+            //创建行
+            HSSFRow row = sheet.createRow(j);
+            //高度
+            row.setHeight(SortConstant.ROW_HEIGHT);
+            //内容样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.ROW_FONT);
+            headerStyle.setFont(font);
+            purchaseResDtoList.forEach(resDto -> {
+                Cell cell0 = row.createCell(0);
+                cell0.setCellValue(resDto.getPurchaseNo());
+                cell0.setCellStyle(headerStyle);
+                Cell cell1 = row.createCell(1);
+                cell1.setCellValue(resDto.getOrderNo());
+                cell1.setCellStyle(headerStyle);
+                Cell cell2 = row.createCell(2);
+                cell2.setCellValue(resDto.getPurchaseStatusText());
+                cell2.setCellStyle(headerStyle);
+                Cell cell3 = row.createCell(3);
+                cell3.setCellValue(resDto.getPurchasePersonnelName());
+                cell3.setCellStyle(headerStyle);
+                Cell cell4 = row.createCell(4);
+                if(null != resDto.getTotalAmount()){
+                    cell4.setCellValue(resDto.getTotalAmount().toString());
+                    cell4.setCellStyle(headerStyle);
+                }else{
+                    cell4.setCellValue("");
+                }
+                Cell cell5 = row.createCell(5);
+                cell5.setCellValue(resDto.getStatusText());
+                cell5.setCellStyle(headerStyle);
+                Cell cell6 = row.createCell(6);
+                cell6.setCellValue(resDto.getRemarks());
+                cell6.setCellStyle(headerStyle);
+            });
+
+        }
+    }
+
+    /**
+     * 设置样式
+     * @param workbook book
+     * @param headerStyle  style
+     * @return return
+     */
+    private HSSFFont getHssfFont(HSSFWorkbook workbook, HSSFCellStyle headerStyle) {
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);//水平居中
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setWrapText(true);
+        headerStyle.setShrinkToFit(true);
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setBold(true);
+        return font;
+    }
+
+    @Override
     public int completeByPrimaryKeyApp(String pkId, String userId) {
         Assert.hasText(pkId, "采购单ID不能为空!");
         Assert.hasText(userId, "用户ID不能为空!");
@@ -231,7 +486,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
         checkEntity.setPurchasePersonnel(userId);
         checkEntity.setLastUpdateTime(new Date());
-        checkEntity.setLastUpdateUser(LoginUtil.getUserId());
+        checkEntity.setLastUpdateUser(userId);
         int i = this.tmPurchaseMapper.updateByPrimaryKeySelective(checkEntity);
         Assert.isTrue(i==SortConstant.ONE, "完成采购单,修改状态失败!");
         //修改订单状态
@@ -259,5 +514,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
         return i;
     }
+
+
 
 }

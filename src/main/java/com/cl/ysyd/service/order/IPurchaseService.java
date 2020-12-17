@@ -10,6 +10,9 @@ import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * 采购单 service接口类
  * @author chenlong  2020-11-24 23:42:08
@@ -50,4 +53,7 @@ public interface IPurchaseService {
     int completeByPrimaryKeyApp(String pkId, String userId);
 
     int completeByPrimaryKey(String pkId);
+
+    void export(HttpServletResponse response, String orderNo, String purchaseNo,
+                String purchaseStatus, String purchasePersonnel, String orderStatus)throws IOException;
 }

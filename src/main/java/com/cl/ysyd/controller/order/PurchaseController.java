@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * 采购单控制层
@@ -147,5 +149,19 @@ public class PurchaseController {
         int result = this.iPurchaseService.completeByPrimaryKey(pkId);
         log.info("Controller updateByPrimaryKey end.");
         return new ResponseData<>(result);
+    }
+
+    /**
+     * 导出采购信息（多sheet页）
+     * @param response 响应
+     */
+    @GetMapping("/export")
+    @ApiOperation(value = "导出采购列表以及采购明细数据")
+    @LoggerManage(description = "导出采购列表以及采购明细数据")
+    public void exportPurchase(HttpServletResponse response, String orderNo, String purchaseNo,
+                               String purchaseStatus, String purchasePersonnel, String orderStatus) throws IOException{
+        log.info("Controller exportPurchase start.");
+        this.iPurchaseService.export(response,orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus);
+        log.info("Controller exportPurchase end.");
     }
 }

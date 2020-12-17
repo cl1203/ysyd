@@ -365,6 +365,7 @@ public class UserServiceImpl implements IUserService {
         userEntity.setIsBinding(AuditStatusEnum.REVIEWED.getCode());
         int i = this.tsUserMapper.updateByPrimaryKeySelective(userEntity);
         Assert.isTrue(i==SortConstant.ONE, "绑定用户失败!");
+
     }
 
     @Override

@@ -165,13 +165,13 @@ public class OrderController {
      * @throws IOException IO异常
      */
     @GetMapping("/export")
-    @ApiOperation(value = "导出订单列表数据" , notes = "导出订单列表数据")
+    @ApiOperation(value = "导出订单列表数据")
     @LoggerManage(description = "导出订单列表数据")
-    public void export(HttpServletResponse response , String orderUser, String orderStatus,
+    public void exportOrder(HttpServletResponse response , String orderUser, String orderStatus,
                               String deliveryDate, String establishDate, String completeDate)throws IOException {
-        log.info("Controller export start.");
+        log.info("Controller exportOrder start.");
         this.iOrderService.export(response ,orderUser , orderStatus, deliveryDate, establishDate, completeDate);
-        log.info("Controller export end.");
+        log.info("Controller exportOrder end.");
     }
 
     /**
@@ -179,7 +179,7 @@ public class OrderController {
      * @return 未完成的订单数量
      */
     @GetMapping("/queryNum")
-    @ApiOperation(value = "查询此用户还有多少未完成的订单", notes = "查询此用户还有多少未完成的订单")
+    @ApiOperation(value = "查询此用户还有多少未完成的订单")
     @LoggerManage(description = "查询此用户还有多少未完成的订单")
     public ResponseData<Integer> queryNumByUserId(){
         log.info("Controller queryNumByUserId start.");
@@ -194,7 +194,7 @@ public class OrderController {
      * @param number 数量
      */
     @PutMapping("/connect/{orderType}/{number}")
-    @ApiOperation(value = "接单", notes = "接单")
+    @ApiOperation(value = "接单")
     @LoggerManage(description = "接单")
     public ResponseData<String> connectOrder(@PathVariable String orderType, @PathVariable Integer number){
         log.info("Controller connectOrder start.");

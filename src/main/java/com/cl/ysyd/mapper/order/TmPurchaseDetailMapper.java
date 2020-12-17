@@ -39,7 +39,18 @@ public interface TmPurchaseDetailMapper extends IBaseMapper<TmPurchaseDetailEnti
         TmPurchaseDetailEntityExample purchaseDetailEntityExample = new TmPurchaseDetailEntityExample();
         TmPurchaseDetailEntityExample.Criteria criteria = purchaseDetailEntityExample.createCriteria();
         criteria.andPurchaseNoEqualTo(purchaseNo);
-        List<TmPurchaseDetailEntity> tmPurchaseDetailEntityList = this.selectByExample(purchaseDetailEntityExample);
-        return tmPurchaseDetailEntityList;
+        return this.selectByExample(purchaseDetailEntityExample);
+    }
+
+    /**
+     * 根据采购单号list查询所有明细
+     * @param purchaseNoList 采购单号list
+     * @return 采购明细list
+     */
+    default List<TmPurchaseDetailEntity> queryByPurchaseNo(List<String> purchaseNoList){
+        TmPurchaseDetailEntityExample purchaseDetailEntityExample = new TmPurchaseDetailEntityExample();
+        TmPurchaseDetailEntityExample.Criteria criteria = purchaseDetailEntityExample.createCriteria();
+        criteria.andPurchaseNoIn(purchaseNoList);
+        return this.selectByExample(purchaseDetailEntityExample);
     }
 }

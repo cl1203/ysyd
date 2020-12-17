@@ -38,7 +38,7 @@
         <if test="orderStatus != null and orderStatus != '' ">
             and p.order_status = #{orderStatus}
         </if>
-        <if test="isAll != 'Y'">
+        <if test='isAll != "Y"'>
             and o.order_user = #{userId}
         </if>
         and p.status = 1
