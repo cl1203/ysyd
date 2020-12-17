@@ -76,6 +76,7 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public int deleteByPrimaryKey(String pkId) {
         log.info("Service deleteByPrimaryKey start. primaryKey=【{}】",pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         TsRoleEntity checkEntity = this.tsRoleMapper.selectByPrimaryKey(pkId);
         if (checkEntity == null) {
             log.info("根据主键 pkId【{}】查询信息不存在",pkId);
@@ -93,7 +94,11 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public TsRoleResDto queryByPrimaryKey(String pkId) {
         log.info("Service selectByPrimaryKey start. primaryKey=【{}】",pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         TsRoleEntity entity = this.tsRoleMapper.selectByPrimaryKey(pkId);
+        if(null == entity){
+            return null;
+        }
         TsRoleResDto resDto = this.roleHelper.editResDto(entity);
         //根据角色ID查询所有一级菜单
         List<TsMenuEntity> menuEntityListOne = this.menuMapper.queryMenuListByRoleIdAndMenuId(pkId, String.valueOf(SortConstant.ZERO), PowerTypeEnum.MENU.getCode());

@@ -100,7 +100,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public TsUserResDto queryByPrimaryKey(String pkId) {
         log.info("Service selectByPrimaryKey start. primaryKey=【{}】", pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         TsUserEntity entity = this.tsUserMapper.selectByPrimaryKey(pkId);
+        if(null == entity){
+            return null;
+        }
         TsUserResDto resDto = this.userHelper.editResDto(entity);
         // 用户角色ID
         List<String> roleIds = this.trUserRoleMapper.getUserRoleIdList(entity.getPkId());
@@ -133,6 +137,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean queryUserByUserName(String userName) {
+        Assert.hasText(userName, "用户名不能为空!");
         long l = this.tsUserMapper.countByUserName(userName);
         if(l == SortConstant.ZERO){
             return true;
@@ -279,6 +284,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void resetPassword(String pkId) {
         log.info("Service resetPassword start. pkId={}", pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         // 用户信息
         TsUserEntity userEntity = this.tsUserMapper.selectByPrimaryKey(pkId);
         if (userEntity == null) {
@@ -347,6 +353,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void bindingWeChat(String userName, String password) {
+        Assert.hasText(userName, "用户名不能为空!");
+        Assert.hasText(password, "密码不能为空!");
         //验证用户名和密码
         List<TsUserEntity> userEntityList = this.checkUser(userName, password);
         TsUserEntity userEntity = userEntityList.get(SortConstant.ZERO);
@@ -361,6 +369,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void relieveWeChat(String userName) {
+        Assert.hasText(userName, "用户名不能为空!");
         TsUserEntityExample userEntityExample = new TsUserEntityExample();
         TsUserEntityExample.Criteria criteria = userEntityExample.createCriteria();
         criteria.andUserNameEqualTo(userName);

@@ -8,7 +8,6 @@ package com.cl.ysyd.controller.sys;
 
 import com.cl.ysyd.aop.LoggerManage;
 import com.cl.ysyd.common.constants.ResponseData;
-import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.dto.order.req.BindingUserAndRoleReqDto;
 import com.cl.ysyd.dto.sys.req.TsUserReqDto;
 import com.cl.ysyd.dto.sys.res.TsUserResDto;
@@ -17,7 +16,6 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -149,9 +147,6 @@ public class UserController {
     @LoggerManage(description = "重置密码")
     public ResponseData<String> resetPassword(@PathVariable String pkId) {
         log.info("Controller resetPassword start.");
-        if (StringUtils.isEmpty(pkId)) {
-            throw new BusiException("{Common.Parameter.PkId.NotEmpty}");
-        }
         this.iUserService.resetPassword(pkId);
         log.info("Controller resetPassword end. ");
         return new ResponseData<>("密码重置成功!");

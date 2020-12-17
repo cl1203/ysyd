@@ -118,12 +118,33 @@ public class PurchaseController {
         return new ResponseData<>(resDto);
     }
 
-    @ApiOperation(value = "完成采购单")
-    @PutMapping(value = "/complete/{pkId}/{userId}")
-    @LoggerManage(description = "完成采购单")
-    public ResponseData<Integer> completeByPrimaryKey(@PathVariable String pkId, @PathVariable String userId) {
+    /**
+     * 完成采购单
+     * @param pkId 采购单ID
+     * @param userId 用户ID
+     * @return 修改结果
+     */
+    @ApiOperation(value = "公众号完成采购单")
+    @PutMapping(value = "/app/complete/{pkId}/{userId}")
+    @LoggerManage(description = "公众号完成采购单")
+    public ResponseData<Integer> completeByPrimaryKeyApp(@PathVariable String pkId, @PathVariable String userId) {
         log.info("Controller updateByPrimaryKey start.");
-        int result = this.iPurchaseService.completeByPrimaryKey(pkId, userId);
+        int result = this.iPurchaseService.completeByPrimaryKeyApp(pkId, userId);
+        log.info("Controller updateByPrimaryKey end.");
+        return new ResponseData<>(result);
+    }
+
+    /**
+     * 完成采购单
+     * @param pkId 采购单ID
+     * @return 修改结果
+     */
+    @ApiOperation(value = "web端完成采购单")
+    @PutMapping(value = "/complete/{pkId}/{userId}")
+    @LoggerManage(description = "web端完成采购单")
+    public ResponseData<Integer> completeByPrimaryKey(@PathVariable String pkId) {
+        log.info("Controller updateByPrimaryKey start.");
+        int result = this.iPurchaseService.completeByPrimaryKey(pkId);
         log.info("Controller updateByPrimaryKey end.");
         return new ResponseData<>(result);
     }

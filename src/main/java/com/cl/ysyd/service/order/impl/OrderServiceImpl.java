@@ -77,8 +77,10 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public void cancelByPrimaryKey(String pkId) {
         log.info("Service deleteByPrimaryKey start. primaryKey=【{}】",pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         //根据主键查询  校验数据是否存在
         TmOrderEntity checkEntity = this.getTmOrderEntity(pkId);
+        Assert.notNull(checkEntity, "订单不存在!");
         checkEntity.setStatus(SortConstant.ZERO.byteValue());
         checkEntity.setLastUpdateTime(new Date());
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());
@@ -93,6 +95,7 @@ public class OrderServiceImpl implements IOrderService {
      * @return 订单对象
      */
     private TmOrderEntity getTmOrderEntity(String pkId) {
+        Assert.hasText(pkId, "主键ID不能为空!");
         TmOrderEntity checkEntity = this.tmOrderMapper.selectByPrimaryKey(pkId);
         if (checkEntity == null) {
             log.info("根据主键 pkId【{}】查询信息不存在",pkId);
@@ -104,7 +107,11 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public TmOrderResDto queryByPrimaryKey(String pkId) {
         log.info("Service selectByPrimaryKey start. primaryKey=【{}】",pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         TmOrderEntity entity = this.tmOrderMapper.selectByPrimaryKey(pkId);
+        if(null == entity){
+            return null;
+        }
         TmOrderResDto resDto = this.orderHelper.editResDto(entity);
         log.info("Service selectByPrimaryKey end. res=【{}】",resDto);
         return resDto;
@@ -239,6 +246,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void connectOrder(String orderType, Integer number) {
+        Assert.hasText(orderType, "订单类型不能为空!");
+        Assert.notNull(number, "接单数量不能为空!");
         //所有类型的订单 待接单状态的数量是否为0
         List<TmOrderEntity> waitingList = this.tmOrderMapper.queryWaiting(number).getList();
         Assert.isTrue(waitingList.size() > SortConstant.ZERO, "未存在任何待接单状态的订单!");

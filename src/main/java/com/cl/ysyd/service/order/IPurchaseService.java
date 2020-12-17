@@ -47,5 +47,7 @@ public interface IPurchaseService {
     PageInfo<TmPurchaseResDto> queryPurchaseByPage(Integer pageNum, Integer pageSize, String orderNo, String purchaseNo,
                                                    String purchaseStatus, String purchasePersonnel, String orderStatus);
 
-    int completeByPrimaryKey(String pkId, String userId);
+    int completeByPrimaryKeyApp(String pkId, String userId);
+
+    int completeByPrimaryKey(String pkId);
 }

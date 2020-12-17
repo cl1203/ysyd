@@ -98,6 +98,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     public int deleteByPrimaryKey(String pkId) {
         log.info("Service deleteByPrimaryKey start. primaryKey=【{}】",pkId);
+        Assert.hasText(pkId, "主键id不能为空!");
         TmPurchaseEntity checkEntity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
         if (checkEntity == null) {
             log.info("根据主键 pkId【{}】查询信息不存在",pkId);
@@ -111,7 +112,11 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     public TmPurchaseResDto queryByPrimaryKey(String pkId) {
         log.info("Service selectByPrimaryKey start. primaryKey=【{}】",pkId);
+        Assert.hasText(pkId, "主键ID不能为空!");
         TmPurchaseEntity entity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
+        if(null == entity){
+            return null;
+        }
         TmPurchaseResDto resDto = this.purchaseHelper.editResDto(entity);
         List<TmPurchaseDetailEntity> tmPurchaseDetailEntityList = this.tmPurchaseDetailMapper.queryByPurchaseNo(entity.getPurchaseNo());
         List<TmPurchaseDetailResDto> tmPurchaseDetailResDtos = this.purchaseDetailHelper.editResDtoList(tmPurchaseDetailEntityList);
@@ -186,6 +191,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
             entity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_ING.getCode());
             //采购总金额
             entity.setTotalAmount(totalAmount);
+            entity.setLastUpdateUser(LoginUtil.getUserId());
+            entity.setLastUpdateTime(new Date());
         }
         //修改采购表
         int ret = this.tmPurchaseMapper.updateByPrimaryKeySelective(entity);
@@ -212,7 +219,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
     }
 
     @Override
-    public int completeByPrimaryKey(String pkId, String userId) {
+    public int completeByPrimaryKeyApp(String pkId, String userId) {
+        Assert.hasText(pkId, "采购单ID不能为空!");
+        Assert.hasText(userId, "用户ID不能为空!");
         TmPurchaseEntity checkEntity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
         if (checkEntity == null) {
             log.info("根据主键 pkId【{}】查询信息不存在",pkId);
@@ -221,6 +230,27 @@ public class PurchaseServiceImpl implements IPurchaseService {
         //采购单完成
         checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
         checkEntity.setPurchasePersonnel(userId);
+        checkEntity.setLastUpdateTime(new Date());
+        checkEntity.setLastUpdateUser(LoginUtil.getUserId());
+        int i = this.tmPurchaseMapper.updateByPrimaryKeySelective(checkEntity);
+        Assert.isTrue(i==SortConstant.ONE, "完成采购单,修改状态失败!");
+        //修改订单状态
+        TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(checkEntity.getOrderNo());
+        Assert.notNull(tmOrderEntity, "采购单对应的订单不存在!");
+        this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
+        return i;
+    }
+
+    @Override
+    public int completeByPrimaryKey(String pkId) {
+        Assert.hasText(pkId, "采购单ID不能为空!");
+        TmPurchaseEntity checkEntity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
+        Assert.notNull(checkEntity, "采购单信息不存在!");
+        //采购单完成
+        checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
+        checkEntity.setPurchasePersonnel(LoginUtil.getUserId());
+        checkEntity.setLastUpdateTime(new Date());
+        checkEntity.setLastUpdateUser(LoginUtil.getUserId());
         int i = this.tmPurchaseMapper.updateByPrimaryKeySelective(checkEntity);
         Assert.isTrue(i==SortConstant.ONE, "完成采购单,修改状态失败!");
         //修改订单状态

@@ -21,6 +21,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -103,6 +104,7 @@ public class MenuServiceImpl implements IMenuService {
 
     @Override
     public List<TsMenuResDto> queryMenuAndButton(String roleId) {
+        Assert.hasText(roleId, "角色ID不能为空!");
         //根据角色ID查询所绑定
         List<String> menuIdList = this.roleMenuMapper.queryMenuId(roleId);
         //获取所有一级菜单
