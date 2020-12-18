@@ -13,6 +13,7 @@ import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.sys.req.TsRoleReqDto;
 import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
+import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +50,10 @@ public class RoleHelper {
         TsRoleResDto resDto = new TsRoleResDto();
         resDto.setCreateUser(TsRole.getCreateUser());
         if(StringUtils.isNotBlank(TsRole.getCreateUser())){
-            resDto.setCreateUserName(this.userMapper.selectByPrimaryKey(TsRole.getCreateUser()).getRealName());
+            TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(TsRole.getCreateUser());
+            if(null != userEntity){
+                resDto.setCreateUserName(userEntity.getRealName());
+            }
         }
         resDto.setCreateTime(DateUtil.getDateString(TsRole.getCreateTime(),DateUtil.DATETIMESHOWFORMAT));
         resDto.setRoleName(TsRole.getRoleName());
