@@ -236,15 +236,18 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     @Override
     public PageInfo<TmPurchaseResDto> queryPurchaseByPage(Integer pageNum, Integer pageSize, String orderNo, String purchaseNo, String purchaseStatus, String purchasePersonnel, String orderStatus) {
-        PageHelper.orderBy("CREATE_TIME DESC");
-        Page<TmPurchaseResDto> startPage = PageHelper.startPage(pageNum, pageSize);
+
         String userId = LoginUtil.getUserId();
         Assert.hasText(userId, "用户ID为空!");
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
         Assert.notNull(userEntity, "userId对应的用户不存在!");
+
         TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
         Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
         String isAll = tsRoleEntity.getIsAll();
+
+        PageHelper.orderBy("CREATE_TIME DESC");
+        Page<TmPurchaseResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryPurchaseList(orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus, isAll, userId);
         List<TmPurchaseResDto> purchaseResDtoList = this.purchaseHelper.editResDtoList(purchaseEntityList);
         PageInfo<TmPurchaseResDto> pageInfo = new PageInfo<>(startPage);
@@ -324,60 +327,59 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 //字体大小
                 font.setFontHeightInPoints(SortConstant.ROW_FONT);
                 headerStyle.setFont(font);
-                purchaseDetailResDtoList.forEach(resDto -> {
-                    Cell cell0 = row.createCell(0);
-                    cell0.setCellValue(resDto.getPurchaseNo());
-                    cell0.setCellStyle(headerStyle);
-                    Cell cell1 = row.createCell(1);
-                    cell1.setCellValue(resDto.getPurchaseNumber());
-                    cell1.setCellStyle(headerStyle);
-                    Cell cell2 = row.createCell(2);
-                    cell2.setCellValue(resDto.getMaterielName());
-                    cell2.setCellStyle(headerStyle);
-                    Cell cell3 = row.createCell(3);
-                    if(null != resDto.getGramWeight()){
-                        cell3.setCellValue(resDto.getGramWeight().toString());
-                        cell3.setCellStyle(headerStyle);
-                    }
-                    Cell cell4 = row.createCell(4);
-                    if(null != resDto.getWidthOfCloth()){
-                        cell4.setCellValue(resDto.getWidthOfCloth().toString());
-                        cell4.setCellStyle(headerStyle);
-                    }
-                    Cell cell5 = row.createCell(5);
-                    if(null != resDto.getUnitPrice()){
-                        cell5.setCellValue(resDto.getUnitPrice().toString());
-                        cell5.setCellStyle(headerStyle);
-                    }
-                    Cell cell6 = row.createCell(6);
-                    if(null != resDto.getQuantity()){
-                        cell6.setCellValue(resDto.getQuantity().toString());
-                        cell6.setCellStyle(headerStyle);
-                    }
-                    Cell cell7 = row.createCell(7);
-                    cell7.setCellValue(resDto.getUnit());
-                    cell7.setCellStyle(headerStyle);
-                    Cell cell8 = row.createCell(8);
-                    cell8.setCellValue(resDto.getColour());
-                    cell8.setCellStyle(headerStyle);
-                    Cell cell9 = row.createCell(9);
-                    cell9.setCellValue(resDto.getSupplier());
-                    cell9.setCellStyle(headerStyle);
-                    Cell cell10 = row.createCell(10);
-                    if(null != resDto.getTotalAmount()){
-                        cell10.setCellValue(resDto.getTotalAmount().toString());
-                        cell10.setCellStyle(headerStyle);
-                    }
-                    Cell cell11 = row.createCell(11);
-                    cell11.setCellValue(resDto.getPurchaseDate());
-                    cell11.setCellStyle(headerStyle);
-                    Cell cell12 = row.createCell(12);
-                    cell12.setCellValue(resDto.getStatusText());
-                    cell12.setCellStyle(headerStyle);
-                    Cell cell13 = row.createCell(13);
-                    cell13.setCellValue(resDto.getRemarks());
-                    cell13.setCellStyle(headerStyle);
-                });
+                TmPurchaseDetailResDto resDto = purchaseDetailResDtoList.get(i);
+                Cell cell0 = row.createCell(0);
+                cell0.setCellValue(resDto.getPurchaseNo());
+                cell0.setCellStyle(headerStyle);
+                Cell cell1 = row.createCell(1);
+                cell1.setCellValue(resDto.getPurchaseNumber());
+                cell1.setCellStyle(headerStyle);
+                Cell cell2 = row.createCell(2);
+                cell2.setCellValue(resDto.getMaterielName());
+                cell2.setCellStyle(headerStyle);
+                Cell cell3 = row.createCell(3);
+                if(null != resDto.getGramWeight()){
+                    cell3.setCellValue(resDto.getGramWeight().toString());
+                    cell3.setCellStyle(headerStyle);
+                }
+                Cell cell4 = row.createCell(4);
+                if(null != resDto.getWidthOfCloth()){
+                    cell4.setCellValue(resDto.getWidthOfCloth().toString());
+                    cell4.setCellStyle(headerStyle);
+                }
+                Cell cell5 = row.createCell(5);
+                if(null != resDto.getUnitPrice()){
+                    cell5.setCellValue(resDto.getUnitPrice().toString());
+                    cell5.setCellStyle(headerStyle);
+                }
+                Cell cell6 = row.createCell(6);
+                if(null != resDto.getQuantity()){
+                    cell6.setCellValue(resDto.getQuantity().toString());
+                    cell6.setCellStyle(headerStyle);
+                }
+                Cell cell7 = row.createCell(7);
+                cell7.setCellValue(resDto.getUnit());
+                cell7.setCellStyle(headerStyle);
+                Cell cell8 = row.createCell(8);
+                cell8.setCellValue(resDto.getColour());
+                cell8.setCellStyle(headerStyle);
+                Cell cell9 = row.createCell(9);
+                cell9.setCellValue(resDto.getSupplier());
+                cell9.setCellStyle(headerStyle);
+                Cell cell10 = row.createCell(10);
+                if(null != resDto.getTotalAmount()){
+                    cell10.setCellValue(resDto.getTotalAmount().toString());
+                    cell10.setCellStyle(headerStyle);
+                }
+                Cell cell11 = row.createCell(11);
+                cell11.setCellValue(resDto.getPurchaseDate());
+                cell11.setCellStyle(headerStyle);
+                Cell cell12 = row.createCell(12);
+                cell12.setCellValue(resDto.getStatusText());
+                cell12.setCellStyle(headerStyle);
+                Cell cell13 = row.createCell(13);
+                cell13.setCellValue(resDto.getRemarks());
+                cell13.setCellStyle(headerStyle);
             }
         }
     }

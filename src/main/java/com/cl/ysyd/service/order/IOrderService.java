@@ -62,6 +62,19 @@ public interface IOrderService {
                                              String deliveryDate, String establishDate, String completeDate, String examineStatus);
 
     /**
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param orderUser 所属用户
+     * @param deliveryDate 交货日期
+     * @param establishDate 创建日期
+     * @param completeDate 完成日期
+     * @return 结果集
+     */
+    PageInfo<TmOrderResDto> queryOrderBillByPage(Integer pageNum, Integer pageSize, String orderUser,
+                                             String deliveryDate, String establishDate, String completeDate);
+
+    /**
      * 分配订单
      * @param orderId 订单ID
      * @param orderUserId 用户Id
@@ -88,6 +101,18 @@ public interface IOrderService {
      * @throws IOException IO异常
      */
     void export(HttpServletResponse response , String orderUser, String orderStatus,
+                String deliveryDate, String establishDate, String completeDate)throws IOException;
+
+    /**
+     *
+     * @param response 响应
+     * @param orderUser 所属用户
+     * @param deliveryDate 交货日期
+     * @param establishDate 创建日期
+     * @param completeDate 完成日期
+     * @throws IOException IO异常
+     */
+    void exportBill(HttpServletResponse response , String orderUser,
                 String deliveryDate, String establishDate, String completeDate)throws IOException;
 
     /**

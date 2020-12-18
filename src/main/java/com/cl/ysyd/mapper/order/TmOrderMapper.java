@@ -94,6 +94,40 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         return this.selectByExample(orderEntityExample);
     }
 
+
+    /**
+     * 对账单分页查询
+     * @param orderUser 订单所属用户
+     * @param deliveryDate 交货日期
+     * @param establishDate 创建日期
+     * @param completeDate 完成日期
+     * @param isAll 是否拥有所有数据权限
+     * @return 列表结果集
+     */
+    default List<TmOrderEntity> queryOrderList(String orderUser, String deliveryDate, String establishDate,
+                                               String completeDate, String isAll){
+        //查询
+        TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
+        TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
+        if(isAll.equals(AuditStatusEnum.REVIEWED.getCode())){
+            if(StringUtils.isNotBlank(orderUser)){
+                criteria.andOrderUserEqualTo(orderUser);
+            }
+        }else{
+            criteria.andOrderUserEqualTo(LoginUtil.getUserId());
+        }
+        if(StringUtils.isNotBlank(deliveryDate)){
+            criteria.andDeliveryDateEqualTo(DateUtil.getDateToString(deliveryDate, DateUtil.DATESHOWFORMAT));
+        }
+        if(StringUtils.isNotBlank(establishDate)){
+            criteria.andEstablishDateEqualTo(DateUtil.getDateToString(establishDate, DateUtil.DATESHOWFORMAT));
+        }
+        if(StringUtils.isNotBlank(completeDate)){
+            criteria.andCompleteDateEqualTo(DateUtil.getDateToString(completeDate, DateUtil.DATESHOWFORMAT));
+        }
+        return this.selectByExample(orderEntityExample);
+    }
+
     /**
      * 根据用户查询名下未完成订单数量
      * @param userId 用户id

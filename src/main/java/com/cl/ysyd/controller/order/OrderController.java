@@ -111,13 +111,34 @@ public class OrderController {
      * @return 列表结果集
      */
     @ApiOperation(value = "查询订单列表")
-    @GetMapping(path = "/{pageNum}/{pageSize}")
+    @GetMapping(path = "/query/{pageNum}/{pageSize}")
     @LoggerManage(description = "查询订单列表")
     public ResponseData<PageInfo<TmOrderResDto>> queryOrderByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderUser, String orderStatus,
                                                                   String deliveryDate, String establishDate, String completeDate, String examineStatus){
         log.info("Controller queryOrderByPage start.");
         PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus);
         log.info("Controller queryOrderByPage end.");
+        return new ResponseData<>(resDto);
+    }
+
+    /**
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param orderUser 所属用户
+     * @param deliveryDate 交货日期
+     * @param establishDate 创建日期
+     * @param completeDate 完成日期
+     * @return 结果集
+     */
+    @ApiOperation(value = "查询订单对账单列表")
+    @GetMapping(path = "/bill/{pageNum}/{pageSize}")
+    @LoggerManage(description = "查询订单对账单列表")
+    public ResponseData<PageInfo<TmOrderResDto>> queryOrderBillByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderUser,
+                                                                  String deliveryDate, String establishDate, String completeDate){
+        log.info("Controller queryOrderBillByPage start.");
+        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderBillByPage(pageNum, pageSize, orderUser, deliveryDate, establishDate, completeDate);
+        log.info("Controller queryOrderBillByPage end.");
         return new ResponseData<>(resDto);
     }
 
@@ -171,6 +192,24 @@ public class OrderController {
                               String deliveryDate, String establishDate, String completeDate)throws IOException {
         log.info("Controller exportOrder start.");
         this.iOrderService.export(response ,orderUser , orderStatus, deliveryDate, establishDate, completeDate);
+        log.info("Controller exportOrder end.");
+    }
+
+    /**
+     *
+     * @param response 响应
+     * @param orderUser 所属用户
+     * @param deliveryDate 交货日期
+     * @param establishDate 创建日期
+     * @param completeDate 完成日期
+     * @throws IOException IO异常
+     */
+    @GetMapping("/export/bill")
+    @ApiOperation(value = "导出订单对账单列表数据")
+    @LoggerManage(description = "导出订单对账单列表数据")
+    public void exportOrderBill(HttpServletResponse response , String orderUser, String deliveryDate, String establishDate, String completeDate)throws IOException {
+        log.info("Controller exportOrder start.");
+        this.iOrderService.exportBill(response ,orderUser, deliveryDate, establishDate, completeDate);
         log.info("Controller exportOrder end.");
     }
 

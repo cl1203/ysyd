@@ -44,13 +44,13 @@ public class TmOrderResDto {
     /**
      * 订单所属用户
      */
-    @ApiModelProperty(value="订单所属用户" )
+    @ApiModelProperty(value="订单所属用户(接单人)" )
     private String orderUser;
 
     /**
      * 订单所属用户
      */
-    @ApiModelProperty(value="订单所属用户姓名" )
+    @ApiModelProperty(value="订单所属用户姓名(接单人姓名)" )
     private String orderUserName;
 
     @ApiModelProperty(value="订单所属用户类型" )
@@ -169,4 +169,7 @@ public class TmOrderResDto {
 
     @ApiModelProperty(value = "是否已经生成了采购单, 1: 否 0: 是")
     private Byte isPurchase;
+
+    @ApiModelProperty(value = "单价合计")
+    private String totalMoney;
 }

@@ -59,7 +59,7 @@ public class TokenAdvice {
             if(StringUtils.isBlank(userId)){
                 throw new BusiException("55555", "用户ID为空, 请求失败!");
             }
-            logger.info("登录用户为: userId{}", userId);
+            logger.info("登录用户为: " + userId);
             //如果token无效
             if (!checkToken(userId)){
                 throw new BusiException("55555", "token无效, 登陆失败!");

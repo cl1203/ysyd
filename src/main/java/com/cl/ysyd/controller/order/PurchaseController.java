@@ -110,7 +110,7 @@ public class PurchaseController {
      * @return 采购列表结果集
      */
     @ApiOperation(value = "查询采购单列表")
-    @GetMapping(path = "/{pageNum}/{pageSize}")
+    @GetMapping(path = "/query/{pageNum}/{pageSize}")
     @LoggerManage(description = "查询采购单列表")
     public ResponseData<PageInfo<TmPurchaseResDto>> queryPurchaseByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderNo, String purchaseNo,
                                                                   String purchaseStatus, String purchasePersonnel, String orderStatus){

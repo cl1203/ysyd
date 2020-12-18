@@ -30,13 +30,22 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +81,20 @@ public class OrderServiceImpl implements IOrderService {
     private final static String SERIAL = "00001";
     private final static int LENGTH = 5;
     private final static int MAXNUMBER = 5;
+    private static final String CONTENT_TYPE = "application/octet-stream";
+    private static final String ENCODING = "utf-8";
 
+
+    //订单导出表头 fileName
+    private static final String[] HEADERS = {"订单号(orderNo)" , "交货日期(deliveryDate)" , "订单单价(unitPrice)" , "所属用户(orderUserName)" ,"用户类型(userType)",
+            "创建日期(establishDate)" , "完成日期(completeDate)", "订单状态(orderStatusText)" , "SKU(sku)",
+            "下单人(orderPeople)" , "尺码(orderSize)", "类型(orderTypeText)" , "状态(statusText)",};
+    private static final String FILE_NAME = "订单列表信息";
+
+    //对账单导出表头 fileName sheetName
+    private static final String[] HEADERS_BILL = {"订单号" , "交货日期" , "订单状态" , "订单单价" ,"接单人", "创建日期" , "完成日期"};
+    private static final String FILE_NAME_BILL = "订单对账单数据";
+    private static final String SHEET_NAME = "订单对账单";
 
     @Override
     public void cancelByPrimaryKey(String pkId) {
@@ -161,21 +183,52 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus,
                                                     String deliveryDate, String establishDate, String completeDate, String examineStatus) {
+        //查询当前用户是否拥有全部权限
+        String isAll = this.getIsAll();
         PageHelper.orderBy("CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
-        String userId = LoginUtil.getUserId();
-        Assert.hasText(userId, "用户ID为空!");
-        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
-        Assert.notNull(userEntity, "userId对应的用户不存在");
-        //根据用户ID查询对应角色是否拥有所有数据权限
-        TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
-        Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
-        String isAll = tsRoleEntity.getIsAll();
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll);
         List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(orderResDtoList);
         return pageInfo;
+    }
+
+    /**
+     * 查询当前用户是否拥有全部权限
+     * @return 是否
+     */
+    private String getIsAll() {
+        String userId = LoginUtil.getUserId();
+        Assert.hasText(userId, "用户ID为空!");
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
+        Assert.notNull(userEntity, "userId对应的用户不存在");
+
+        //根据用户ID查询对应角色是否拥有所有数据权限
+        TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
+        Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
+        return tsRoleEntity.getIsAll();
+    }
+
+    @Override
+    public PageInfo<TmOrderResDto> queryOrderBillByPage(Integer pageNum, Integer pageSize, String orderUser, String deliveryDate, String establishDate, String completeDate) {
+        String isAll = this.getIsAll();
+        PageHelper.orderBy("CREATE_TIME DESC");
+        Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser,  deliveryDate, establishDate, completeDate, isAll);
+        BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
+        if(CollectionUtils.isNotEmpty(orderEntityList)){
+            for(TmOrderEntity orderEntity : orderEntityList){
+                BigDecimal unitPrice = orderEntity.getUnitPrice();
+                totalMoney = totalMoney.add(unitPrice).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+            }
+            List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
+            orderResDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());
+            PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
+            pageInfo.setList(orderResDtoList);
+            return pageInfo;
+        }
+        return null;
     }
 
     @Override
@@ -225,13 +278,142 @@ public class OrderServiceImpl implements IOrderService {
     public void export(HttpServletResponse response, String orderUser, String orderStatus, String deliveryDate, String establishDate, String completeDate) {
         //查询结果
         List<TmOrderResDto> list = this.queryOrderByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, orderUser, orderStatus, deliveryDate, establishDate, completeDate, null).getList();
-        //表头
-        String[] headers = {"订单号(orderNo)" , "交货日期(deliveryDate)" , "订单单价(unitPrice)" , "所属用户(orderUserName)" ,"用户类型(userType)",
-                "创建日期(establishDate)" , "完成日期(completeDate)", "订单状态(orderStatusText)" , "SKU(sku)",
-                "下单人(orderPeople)" , "尺码(orderSize)", "类型(orderTypeText)" , "状态(statusText)",};
-        /*String title = "";
-        title= URLDecoder.decode(title, UTF_8);*/
-        ExcelUtils.exportExcel("订单列表信息" , headers , list , response , DateUtil.DATESHOWFORMAT);
+        //导出
+        ExcelUtils.exportExcel( FILE_NAME, HEADERS , list , response , DateUtil.DATESHOWFORMAT);
+    }
+
+    @Override
+    public void exportBill(HttpServletResponse response, String orderUser, String deliveryDate, String establishDate, String completeDate)throws IOException {
+        //查询结果
+        List<TmOrderResDto> list = this.queryOrderBillByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, orderUser, deliveryDate, establishDate, completeDate).getList();
+        //实例化HSSFWorkbook
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        //sheet1
+        this.createSheet(list, workbook);
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(ENCODING);
+        //这后面可以设置导出Excel的名称，此例中名为student.xls（解决文件名称乱码问题）
+        response.setHeader("content-disposition", "attachment;filename=" + new String(FILE_NAME_BILL.getBytes(), "ISO8859-1") + ".xls" );
+        //刷新缓冲
+        response.flushBuffer();
+        //workbook将Excel写入到response的输出流中，供页面下载
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+
+    private void createSheet(List<TmOrderResDto> list, HSSFWorkbook workbook){
+        //创建sheet
+        HSSFSheet sheet = workbook.createSheet(SHEET_NAME);
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(SortConstant.TWENTY);
+        //创建第一行表头
+        HSSFRow headrow = sheet.createRow(SortConstant.ZERO);
+        //高度
+        headrow.setHeight(SortConstant.HEAD_HEIGHT);
+        //添加标题
+        for(int i = 0; i < HEADERS_BILL.length; i++){
+            //标题的显示样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.HEAD_FONT);
+            //创建单元格
+            HSSFCell cell = headrow.createCell(i);
+            //标题写入单元格
+            cell.setCellValue(HEADERS_BILL[i]);
+            headerStyle.setFont(font);
+            cell.setCellStyle(headerStyle);
+        }
+        //添加数据
+        for(int i = 0; i< list.size(); i++){
+            int j = i + SortConstant.ONE;
+            //创建行
+            HSSFRow row = sheet.createRow(j);
+            //高度
+            row.setHeight(SortConstant.ROW_HEIGHT);
+            //内容样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.ROW_FONT);
+            headerStyle.setFont(font);
+            TmOrderResDto resDto = list.get(i);
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(resDto.getOrderNo());
+            cell0.setCellStyle(headerStyle);
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(resDto.getDeliveryDate());
+            cell1.setCellStyle(headerStyle);
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(resDto.getOrderStatusText());
+            cell2.setCellStyle(headerStyle);
+            Cell cell3 = row.createCell(3);
+            cell3.setCellValue(resDto.getUnitPrice());
+            cell3.setCellStyle(headerStyle);
+            Cell cell4 = row.createCell(4);
+            cell4.setCellValue(resDto.getOrderUserName());
+            cell4.setCellStyle(headerStyle);
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(resDto.getEstablishDate());
+            cell5.setCellStyle(headerStyle);
+            Cell cell6 = row.createCell(6);
+            cell6.setCellValue(resDto.getCompleteDate());
+            cell6.setCellStyle(headerStyle);
+        }
+        String totalMoney = "";
+        if(CollectionUtils.isNotEmpty(list)){
+            totalMoney = list.get(SortConstant.ZERO).getTotalMoney();
+        }
+        int length = HEADERS_BILL.length;
+        int size = list.size();
+        //创建行
+        HSSFRow row = sheet.createRow(size + SortConstant.ONE);
+        //高度
+        HSSFCell cellText = row.createCell(length - SortConstant.TWO);
+        HSSFCell cellMoney = row.createCell(length - SortConstant.ONE);
+
+        //标题的显示样式
+        HSSFCellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);//水平居中
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setBold(true);
+        font.setFontHeightInPoints(SortConstant.HEAD_FONT);
+        headerStyle.setFont(font);
+        sheet.addMergedRegion(new CellRangeAddress(size + SortConstant.ONE, size + SortConstant.THREE, length - SortConstant.TWO, length - SortConstant.TWO));
+        sheet.addMergedRegion(new CellRangeAddress(size + SortConstant.ONE, size + SortConstant.THREE, length - SortConstant.ONE , length - SortConstant.ONE));
+        cellText.setCellStyle(headerStyle);
+        cellText.setCellValue("合计: ");
+
+        cellMoney.setCellStyle(headerStyle);
+        cellMoney.setCellValue(totalMoney);
+
+    }
+
+    /**
+     * 设置样式
+     * @param workbook book
+     * @param headerStyle  style
+     * @return return
+     */
+    private HSSFFont getHssfFont(HSSFWorkbook workbook, HSSFCellStyle headerStyle) {
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);//水平居中
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setWrapText(true);
+        headerStyle.setShrinkToFit(true);
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setBold(true);
+        return font;
     }
 
     @Override
