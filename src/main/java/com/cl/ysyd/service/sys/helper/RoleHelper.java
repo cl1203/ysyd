@@ -15,6 +15,7 @@ import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -47,7 +48,9 @@ public class RoleHelper {
         }
         TsRoleResDto resDto = new TsRoleResDto();
         resDto.setCreateUser(TsRole.getCreateUser());
-        resDto.setCreateUserName(this.userMapper.selectByPrimaryKey(TsRole.getCreateUser()).getRealName());
+        if(StringUtils.isNotBlank(TsRole.getCreateUser())){
+            resDto.setCreateUserName(this.userMapper.selectByPrimaryKey(TsRole.getCreateUser()).getRealName());
+        }
         resDto.setCreateTime(DateUtil.getDateString(TsRole.getCreateTime(),DateUtil.DATETIMESHOWFORMAT));
         resDto.setRoleName(TsRole.getRoleName());
         resDto.setRemarks(TsRole.getRemarks());
