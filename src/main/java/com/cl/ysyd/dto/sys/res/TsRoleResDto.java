@@ -68,6 +68,9 @@ public class TsRoleResDto {
     @ApiModelProperty(value="创建人" )
     private String createUser;
 
+    @ApiModelProperty(value="创建人名称" )
+    private String createUserName;
+
     /**
      * 最后修改时间
      * 默认值:CURRENT_TIMESTAMP

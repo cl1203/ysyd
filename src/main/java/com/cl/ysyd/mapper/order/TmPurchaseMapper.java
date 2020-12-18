@@ -7,6 +7,7 @@
 package com.cl.ysyd.mapper.order;
 
 import com.cl.ysyd.common.base.IBaseMapper;
+import com.cl.ysyd.dto.order.res.TmPurchaseBillResDto;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
 import com.cl.ysyd.entity.order.TmPurchaseEntityExample;
 import org.apache.ibatis.annotations.Param;
@@ -21,6 +22,8 @@ public interface TmPurchaseMapper extends IBaseMapper<TmPurchaseEntity, TmPurcha
 
     List<TmPurchaseEntity> queryPurchaseList(@Param("orderNo") String orderNo, @Param("purchaseNo")String purchaseNo, @Param("purchaseStatus")String purchaseStatus, @Param("purchasePersonnel")String purchasePersonnel,
                                              @Param("orderStatus")String orderStatus, @Param("isAll")String isAll, @Param("userId")String userId);
+
+    List<TmPurchaseBillResDto> queryBillPurchaseList(@Param("purchasePersonnel")String purchasePersonnel, @Param("supplier")String supplier, @Param("purchaseDate") String purchaseDate, @Param("isAll")String isAll, @Param("userId")String userId);
 
 
 

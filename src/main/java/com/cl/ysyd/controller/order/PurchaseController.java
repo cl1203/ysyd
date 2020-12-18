@@ -9,6 +9,7 @@ package com.cl.ysyd.controller.order;
 import com.cl.ysyd.aop.LoggerManage;
 import com.cl.ysyd.common.constants.ResponseData;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
+import com.cl.ysyd.dto.order.res.TmPurchaseBillResDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.service.order.IPurchaseService;
 import com.github.pagehelper.PageInfo;
@@ -121,6 +122,25 @@ public class PurchaseController {
     }
 
     /**
+     *
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param purchasePersonnel 采购员ID
+     * @param supplier 供应商
+     * @param purchaseDate 采购日期
+     * @return 结果集
+     */
+    @ApiOperation(value = "查询采购单对账单列表")
+    @GetMapping(path = "/bill/{pageNum}/{pageSize}")
+    @LoggerManage(description = "查询采购单对账单列表")
+    public ResponseData<PageInfo<TmPurchaseBillResDto>> queryPurchaseBillByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String purchasePersonnel, String supplier, String purchaseDate){
+        log.info("Controller queryPurchaseBillByPage start.");
+        PageInfo<TmPurchaseBillResDto> resDto = this.iPurchaseService.queryPurchaseBillByPage(pageNum, pageSize, purchasePersonnel, supplier, purchaseDate);
+        log.info("Controller queryPurchaseBillByPage end.");
+        return new ResponseData<>(resDto);
+    }
+
+    /**
      * 完成采购单
      * @param pkId 采购单ID
      * @param userId 用户ID
@@ -152,8 +172,14 @@ public class PurchaseController {
     }
 
     /**
-     * 导出采购信息（多sheet页）
+     *
      * @param response 响应
+     * @param orderNo  订单号
+     * @param purchaseNo 采购单号
+     * @param purchaseStatus 采购状态
+     * @param purchasePersonnel 采购人
+     * @param orderStatus 订单状态
+     * @throws IOException io异常
      */
     @GetMapping("/export")
     @ApiOperation(value = "导出采购列表以及采购明细数据")
@@ -163,5 +189,22 @@ public class PurchaseController {
         log.info("Controller exportPurchase start.");
         this.iPurchaseService.export(response,orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus);
         log.info("Controller exportPurchase end.");
+    }
+
+    /**
+     *
+     * @param response 响应
+     * @param purchasePersonnel 采购员
+     * @param supplier 供应商
+     * @param purchaseDate 采购日期
+     * @throws IOException io异常
+     */
+    @GetMapping("/bill/export")
+    @ApiOperation(value = "导出采购对账单")
+    @LoggerManage(description = "导出采购对账单")
+    public void exportPurchaseBill(HttpServletResponse response, String purchasePersonnel, String supplier, String purchaseDate) throws IOException{
+        log.info("Controller exportPurchaseBill start.");
+        this.iPurchaseService.exportPurchaseBill(response,purchasePersonnel, supplier, purchaseDate);
+        log.info("Controller exportPurchaseBill end.");
     }
 }

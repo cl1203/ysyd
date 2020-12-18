@@ -1,9 +1,4 @@
-/**
- * UserController.java
- * Created at 2020-11-24
- * Created by chenlong
- * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
- **/
+
 package com.cl.ysyd.controller.sys;
 
 import com.cl.ysyd.aop.LoggerManage;

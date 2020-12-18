@@ -2,20 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cl.ysyd.mapper.order.TmPurchaseMapper" >
 
-    <!--<resultMap id="BaseResultMap" type="com.cl.ysyd.entity.order.TmPurchaseEntity">
-        <id column="pk_id" jdbcType="VARCHAR" property="pkId" />
-        <result column="purchase_no" jdbcType="VARCHAR" property="purchaseNo" />
-        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
-        <result column="purchase_status" jdbcType="VARCHAR" property="purchaseStatus" />
-        <result column="purchase_personnel" jdbcType="VARCHAR" property="purchasePersonnel" />
-        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
-        <result column="status" jdbcType="TINYINT" property="status" />
-        <result column="remarks" jdbcType="VARCHAR" property="remarks" />
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-        <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" />
-        <result column="last_update_user" jdbcType="VARCHAR" property="lastUpdateUser" />
-    </resultMap>-->
+
     <select id="queryPurchaseList" resultMap="BaseResultMap">
         SELECT
             p.*
@@ -42,6 +29,57 @@
             and o.order_user = #{userId}
         </if>
         and p.status = 1
+    </select>
+
+
+    <resultMap id="BillMap" type="com.cl.ysyd.dto.order.res.TmPurchaseBillResDto">
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+        <result column="purchase_no" jdbcType="VARCHAR" property="purchaseNo" />
+        <result column="purchase_number" jdbcType="VARCHAR" property="purchaseNumber" />
+        <result column="materiel_name" jdbcType="VARCHAR" property="materielName" />
+        <result column="gram_weight" jdbcType="VARCHAR" property="gramWeight" />
+        <result column="width_of_cloth" jdbcType="VARCHAR" property="widthOfCloth" />
+        <result column="unit_price" jdbcType="VARCHAR" property="unitPrice" />
+        <result column="unit" jdbcType="VARCHAR" property="unit" />
+        <result column="supplier" jdbcType="VARCHAR" property="supplier" />
+        <result column="purchase_personnel" jdbcType="VARCHAR" property="purchasePersonnel" />
+        <result column="real_name" jdbcType="VARCHAR" property="purchasePersonnelName" />
+        <result column="purchase_date" jdbcType="VARCHAR" property="purchaseDate" />
+    </resultMap>
+    <select id="queryBillPurchaseList" resultMap="BillMap">
+        SELECT
+            t.order_no order_no,
+            tp.purchase_no purchase_no,
+            tpd.purchase_number purchase_number,
+            tpd.materiel_name materiel_name,
+            tpd.gram_weight gram_weight,
+            tpd.width_of_cloth width_of_cloth,
+            tpd.unit_price unit_price,
+            tpd.unit unit,
+            tpd.supplier supplier,
+            tp.purchase_personnel purchase_personnel,
+            tu.real_name real_name,
+            tpd.purchase_date purchase_date
+        FROM
+            tm_purchase tp
+            LEFT JOIN tm_purchase_detail tpd ON tp.purchase_no = tpd.purchase_no
+            LEFT JOIN tm_order t ON t.order_no = tp.order_no
+            LEFT JOIN ts_user tu ON tu.pk_id = tp.purchase_personnel
+        WHERE
+            t.STATUS = 1
+        AND tp.STATUS = 1
+        <if test="purchasePersonnel != null and purchasePersonnel != '' ">
+            and tp.purchase_personnel = #{purchasePersonnel}
+        </if>
+        <if test="supplier != null and supplier != '' ">
+            and tpd.supplier = #{supplier}
+        </if>
+        <if test="purchaseDate != null and purchaseDate != '' ">
+            and tpd.purchase_date = #{purchaseDate}
+        </if>
+        <if test='isAll != "Y"'>
+            and o.order_user = #{userId}
+        </if>
     </select>
 
 </mapper>

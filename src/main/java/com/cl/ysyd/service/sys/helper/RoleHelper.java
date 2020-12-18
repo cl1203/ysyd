@@ -6,12 +6,14 @@
  **/
 package com.cl.ysyd.service.sys.helper;
 
+import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.sys.req.TsRoleReqDto;
 import com.cl.ysyd.dto.sys.res.TsRoleResDto;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
+import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,9 @@ public class RoleHelper {
     @Autowired
     private IBizDictionaryService iTcDictService;
 
+    @Autowired
+    private TsUserMapper userMapper;
+
     /**
      * entity转resDto
      * @param TsRole
@@ -42,6 +47,7 @@ public class RoleHelper {
         }
         TsRoleResDto resDto = new TsRoleResDto();
         resDto.setCreateUser(TsRole.getCreateUser());
+        resDto.setCreateUserName(this.userMapper.selectByPrimaryKey(TsRole.getCreateUser()).getRealName());
         resDto.setCreateTime(DateUtil.getDateString(TsRole.getCreateTime(),DateUtil.DATETIMESHOWFORMAT));
         resDto.setRoleName(TsRole.getRoleName());
         resDto.setRemarks(TsRole.getRemarks());
@@ -87,9 +93,7 @@ public class RoleHelper {
         String isAllText = this.iTcDictService.getTextByBizCode(DictType.IS_ALL.getCode(), reqDto.getIsAll());
         Assert.hasText(isAllText, "所选是否拥有全部权限状态不存在, 请修改!");
         entity.setIsAll(reqDto.getIsAll());
-        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus());
-        Assert.hasText(statusText, "所选角色状态不存在, 请修改!");
-        entity.setStatus(Byte.valueOf(reqDto.getStatus()));
+        entity.setStatus(SortConstant.ONE.byteValue());
         entity.setRemarks(reqDto.getRemarks());
         entity.setCreateUser(LoginUtil.getUserId());
         entity.setLastUpdateTime(new Date());

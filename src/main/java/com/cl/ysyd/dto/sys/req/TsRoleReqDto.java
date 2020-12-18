@@ -39,8 +39,7 @@ public class TsRoleReqDto {
      * 状态 0:禁用 1:可用 
      * 默认值:1
      */
-    @ApiModelProperty(value="状态 0:禁用 1:可用 " , required = true)
-    @NotBlank(message="状态不能为空")
+    @ApiModelProperty(value="状态 0:禁用 1:可用 ")
     private String status;
 
     /**

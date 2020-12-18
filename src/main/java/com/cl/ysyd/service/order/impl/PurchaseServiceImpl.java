@@ -15,6 +15,7 @@ import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseDetailReqDto;
 import com.cl.ysyd.dto.order.req.TmPurchaseReqDto;
+import com.cl.ysyd.dto.order.res.TmPurchaseBillResDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseDetailResDto;
 import com.cl.ysyd.dto.order.res.TmPurchaseResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
@@ -236,22 +237,60 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     @Override
     public PageInfo<TmPurchaseResDto> queryPurchaseByPage(Integer pageNum, Integer pageSize, String orderNo, String purchaseNo, String purchaseStatus, String purchasePersonnel, String orderStatus) {
-
-        String userId = LoginUtil.getUserId();
-        Assert.hasText(userId, "用户ID为空!");
-        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
-        Assert.notNull(userEntity, "userId对应的用户不存在!");
-
-        TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
-        Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
-        String isAll = tsRoleEntity.getIsAll();
-
-        PageHelper.orderBy("CREATE_TIME DESC");
+        //获取用户名
+        String userId = this.getUserId();
+        //获取是否拥有所有权限
+        String isAll = this.getIsAll(userId);
+        PageHelper.orderBy("P.CREATE_TIME DESC");
         Page<TmPurchaseResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryPurchaseList(orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus, isAll, userId);
         List<TmPurchaseResDto> purchaseResDtoList = this.purchaseHelper.editResDtoList(purchaseEntityList);
         PageInfo<TmPurchaseResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(purchaseResDtoList);
+        return pageInfo;
+    }
+
+    /**
+     *
+     * @param userId 用户id
+     * @return 是否拥有所有权限
+     */
+    private String getIsAll(String userId) {
+        TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
+        Assert.notNull(tsRoleEntity, "用户对应的角色为空!");
+        return tsRoleEntity.getIsAll();
+    }
+
+    /**
+     * 获取用户名
+     * @return 用户id
+     */
+    private String getUserId() {
+        String userId = LoginUtil.getUserId();
+        Assert.hasText(userId, "用户ID为空!");
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
+        Assert.notNull(userEntity, "userId对应的用户不存在!");
+        return userId;
+    }
+
+    @Override
+    public PageInfo<TmPurchaseBillResDto> queryPurchaseBillByPage(Integer pageNum, Integer pageSize, String purchasePersonnel, String supplier, String purchaseDate) {
+        //获取用户名
+        String userId = this.getUserId();
+        //获取是否拥有所有权限
+        String isAll = this.getIsAll(userId);
+        PageHelper.orderBy("TP.CREATE_TIME DESC");
+        Page<TmPurchaseBillResDto> startPage = PageHelper.startPage(pageNum, pageSize);
+        List<TmPurchaseBillResDto> resDtoList = this.tmPurchaseMapper.queryBillPurchaseList(purchasePersonnel,  supplier, purchaseDate, isAll, userId);
+        BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
+        if(CollectionUtils.isNotEmpty(resDtoList)){
+            for(TmPurchaseBillResDto resDto : resDtoList){
+                totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);;
+            }
+            resDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());
+        }
+        PageInfo<TmPurchaseBillResDto> pageInfo = new PageInfo<>(startPage);
+        pageInfo.setList(resDtoList);
         return pageInfo;
     }
 
@@ -267,6 +306,12 @@ public class PurchaseServiceImpl implements IPurchaseService {
             //导出
             this.exportExcel(purchaseResDtoList, purchaseDetailResDtoList, response);
         }
+    }
+
+    @Override
+    public void exportPurchaseBill(HttpServletResponse response, String purchasePersonnel, String supplier, String purchaseDate) throws IOException {
+        //查询采购对账单
+        List<TmPurchaseBillResDto> list = this.queryPurchaseBillByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, purchasePersonnel, supplier, purchaseDate).getList();
     }
 
     private void exportExcel(List<TmPurchaseResDto> purchaseResDtoList, List<TmPurchaseDetailResDto> purchaseDetailResDtoList, HttpServletResponse response) throws IOException {
