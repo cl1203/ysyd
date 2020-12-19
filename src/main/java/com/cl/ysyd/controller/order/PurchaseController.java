@@ -162,7 +162,7 @@ public class PurchaseController {
      * @return 修改结果
      */
     @ApiOperation(value = "web端完成采购单")
-    @PutMapping(value = "/complete/{pkId}/{userId}")
+    @PutMapping(value = "/complete/{pkId}")
     @LoggerManage(description = "web端完成采购单")
     public ResponseData<Integer> completeByPrimaryKey(@PathVariable String pkId) {
         log.info("Controller updateByPrimaryKey start.");
