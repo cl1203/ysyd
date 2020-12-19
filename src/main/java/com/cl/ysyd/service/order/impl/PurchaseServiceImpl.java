@@ -241,7 +241,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         String userId = this.getUserId();
         //获取是否拥有所有权限
         String isAll = this.getIsAll(userId);
-        PageHelper.orderBy("P.CREATE_TIME DESC");
+        //PageHelper.orderBy("P.CREATE_TIME DESC");
         Page<TmPurchaseResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryPurchaseList(orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus, isAll, userId);
         List<TmPurchaseResDto> purchaseResDtoList = this.purchaseHelper.editResDtoList(purchaseEntityList);
@@ -279,7 +279,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         String userId = this.getUserId();
         //获取是否拥有所有权限
         String isAll = this.getIsAll(userId);
-        PageHelper.orderBy("TP.CREATE_TIME DESC");
+        //PageHelper.orderBy("TP.CREATE_TIME DESC");
         Page<TmPurchaseBillResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmPurchaseBillResDto> resDtoList = this.tmPurchaseMapper.queryBillPurchaseList(purchasePersonnel,  supplier, purchaseDate, isAll, userId);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
