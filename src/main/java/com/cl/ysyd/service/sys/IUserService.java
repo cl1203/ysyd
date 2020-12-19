@@ -11,6 +11,8 @@ import com.cl.ysyd.dto.sys.req.TsUserReqDto;
 import com.cl.ysyd.dto.sys.res.TsUserResDto;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  * 用户 service接口类
  * @author chenlong  2020-11-24 22:59:23
@@ -43,6 +45,13 @@ public interface IUserService {
      * @return 结果
      */
     Boolean queryUserByUserName(String userName);
+
+
+    /**
+     * 查询所有用户
+     * @return 用户集合
+     */
+    List<TsUserResDto> queryUserAll();
 
     /**
      * 新增方法

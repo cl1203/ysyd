@@ -7,6 +7,7 @@
 package com.cl.ysyd.mapper.sys;
 
 import com.cl.ysyd.common.base.IBaseMapper;
+import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.IsValidEnum;
 import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.entity.sys.TsUserEntityExample;
@@ -32,6 +33,19 @@ public interface TsUserMapper extends IBaseMapper<TsUserEntity, TsUserEntityExam
         long l = this.countByExample(tsUserEntityExample);
         return l;
     }
+
+    /**
+     * 查询所有用户
+     * @return 用户集合
+     */
+    default List<TsUserEntity> queryAll(){
+        TsUserEntityExample tsUserEntityExample = new TsUserEntityExample();
+        TsUserEntityExample.Criteria criteria = tsUserEntityExample.createCriteria();
+        criteria.andStatusEqualTo(SortConstant.ONE.byteValue());
+        criteria.andPkIdNotEqualTo(SortConstant.ONE.toString());
+        return this.selectByExample(tsUserEntityExample);
+    }
+
 
     /**
      * 根据用户名查询用户信息

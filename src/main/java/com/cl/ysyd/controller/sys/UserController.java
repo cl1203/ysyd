@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 用户控制层
@@ -92,6 +93,16 @@ public class UserController {
         return new ResponseData<>(flag);
     }
 
+    @ApiOperation(value = "查询所有用户")
+    @GetMapping(value = "/all")
+    @LoggerManage(description = "查询所有用户")
+    public ResponseData<List<TsUserResDto>> queryUserAll(){
+        log.info("Controller queryUserAll start.");
+        List<TsUserResDto> resDtos =  this.iUserService.queryUserAll();
+        log.info("Controller queryUserAll end.");
+        return new ResponseData<>(resDtos);
+    }
+
     /**
      * 新增方法
      * @param reqDto 请求dto
@@ -123,6 +134,10 @@ public class UserController {
         return new ResponseData<>(result);
     }
 
+    /**
+     * 查询所有用户
+     * @return 用户集合
+     */
     @ApiOperation(value = "查询用户列表")
     @GetMapping(path = "/{pageNum}/{pageSize}/{auditStatus}")
     @LoggerManage(description = "查询用户列表")

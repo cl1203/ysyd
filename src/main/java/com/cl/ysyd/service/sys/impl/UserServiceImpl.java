@@ -147,6 +147,15 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<TsUserResDto> queryUserAll() {
+        List<TsUserEntity> userEntityList = this.tsUserMapper.queryAll();
+        if(CollectionUtils.isNotEmpty(userEntityList)){
+            return this.userHelper.editResDtoList(userEntityList);
+        }
+        return null;
+    }
+
+    @Override
     public int registerUser(TsUserReqDto reqDto) {
         log.info("Service createUser start. reqDto=【{}】", reqDto);
         //校验
