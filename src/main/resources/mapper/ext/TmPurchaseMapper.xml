@@ -29,7 +29,7 @@
             and o.order_user = #{userId}
         </if>
         and p.status = 1
-        order by P.CREATE_TIME DESC
+        order by p.create_time DESC
     </select>
 
 
