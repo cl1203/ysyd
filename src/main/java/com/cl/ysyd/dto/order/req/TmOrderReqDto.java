@@ -51,7 +51,7 @@ public class TmOrderReqDto {
     /**
      * 订单创建日期
      */
-    @ApiModelProperty(value="订单创建日期" , required = true)
+    @ApiModelProperty(value="订单创建日期")
     private String establishDate;
 
     /**
