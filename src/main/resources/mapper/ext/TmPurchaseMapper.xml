@@ -81,7 +81,7 @@
         <if test='isAll != "Y"'>
             and o.order_user = #{userId}
         </if>
-        order by TP.CREATE_TIME DESC
+        order by tp.create_time DESC
     </select>
 
 </mapper>
