@@ -166,6 +166,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
         TmPurchaseEntity entity = this.purchaseHelper.editEntity(reqDto);
         TmOrderEntity tmOrderEntity = this.tmOrderMapper.selectByPrimaryKey(reqDto.getOrderId());
         Assert.notNull(tmOrderEntity, "订单号对应的订单不存在!");
+        List<TmPurchaseEntity> purchaseEntityList = this.tmPurchaseMapper.queryByOrderNo(tmOrderEntity.getOrderNo());
+        Assert.isTrue(purchaseEntityList.size()==SortConstant.ZERO, "订单已经生成采购单,请选择其他订单!");
         entity.setOrderNo(tmOrderEntity.getOrderNo());
         entity.setPurchaseNo(P + tmOrderEntity.getOrderNo());
         entity.setCreateTime(new Date());
