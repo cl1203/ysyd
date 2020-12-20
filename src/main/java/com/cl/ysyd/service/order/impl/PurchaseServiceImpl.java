@@ -164,9 +164,10 @@ public class PurchaseServiceImpl implements IPurchaseService {
     public int createPurchase(TmPurchaseReqDto reqDto) {
         log.info("Service createPurchase start. reqDto=【{}】",reqDto);
         TmPurchaseEntity entity = this.purchaseHelper.editEntity(reqDto);
-        TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(reqDto.getOrderNo());
+        TmOrderEntity tmOrderEntity = this.tmOrderMapper.selectByPrimaryKey(reqDto.getOrderId());
         Assert.notNull(tmOrderEntity, "订单号对应的订单不存在!");
-        entity.setPurchaseNo(P + reqDto.getOrderNo());
+        entity.setOrderNo(tmOrderEntity.getOrderNo());
+        entity.setPurchaseNo(P + tmOrderEntity.getOrderNo());
         entity.setCreateTime(new Date());
         entity.setPkId(UuidUtil.getUuid());
         //新增采购单

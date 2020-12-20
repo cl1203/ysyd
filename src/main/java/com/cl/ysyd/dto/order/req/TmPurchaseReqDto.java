@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -31,10 +30,15 @@ public class TmPurchaseReqDto {
     private String purchaseNo;
 
     /**
+     * 订单ID
+     */
+    @ApiModelProperty(value="订单ID" )
+    private String orderId;
+
+    /**
      * 订单号
      */
     @ApiModelProperty(value="订单号" )
-    @NotBlank(message="订单号不能为空")
     @Length(max=50,message="订单号字段过长, 最大长度为50")
     private String orderNo;
 

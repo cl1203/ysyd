@@ -113,7 +113,7 @@ public class PurchaseHelper {
         }
         TmPurchaseEntity entity = new TmPurchaseEntity();
         //entity.setPurchaseNo(P + reqDto.getOrderNo());
-        entity.setOrderNo(reqDto.getOrderNo());
+
         if(StringUtils.isNotBlank(reqDto.getPurchaseStatus())){
             String purchaseStatusText = this.iTcDictService.getTextByBizCode(DictType.PURCHASE_STATUS.getCode(), reqDto.getPurchaseStatus());
             Assert.hasText(purchaseStatusText, "采购状态不存在, 请修改!");
