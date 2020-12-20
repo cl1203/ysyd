@@ -13,7 +13,7 @@
         <if test="orderNo != null and orderNo != '' ">
             and p.order_no = #{orderNo}
         </if>
-        <if test="purchaseNo != null and orderNo != '' ">
+        <if test="purchaseNo != null and purchaseNo != '' ">
             and p.purchase_no = #{purchaseNo}
         </if>
         <if test="purchaseStatus != null and purchaseStatus != '' ">
