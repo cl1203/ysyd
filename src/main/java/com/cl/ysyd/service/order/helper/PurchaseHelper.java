@@ -7,6 +7,7 @@
 package com.cl.ysyd.service.order.helper;
 
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.enums.IsValidEnum;
 import com.cl.ysyd.common.enums.PurchaseStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.LoginUtil;
@@ -133,9 +134,9 @@ public class PurchaseHelper {
             }*/
             entity.setTotalAmount(reqDto.getTotalAmount());
         }
-        entity.setStatus(reqDto.getStatus());
-        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
-        Assert.hasText(statusText, "所选状态不存在, 请修改!");
+        entity.setStatus(IsValidEnum.VALID.getCode().byteValue());
+        /*String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
+        Assert.hasText(statusText, "所选状态不存在, 请修改!");*/
         entity.setRemarks(reqDto.getRemarks());
         entity.setCreateUser(LoginUtil.getUserId());
         entity.setLastUpdateTime(new Date());
