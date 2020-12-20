@@ -57,6 +57,11 @@ public class PurchaseHelper {
         resDto.setOrderNo(TmPurchase.getOrderNo());
         TmOrderEntity tmOrderEntity = this.orderMapper.queryByOrderNo(TmPurchase.getOrderNo());
         Assert.notNull(tmOrderEntity, "采购单对应的订单不存在!");
+        resDto.setOrderStatus(tmOrderEntity.getOrderStatus());
+        String orderStatusText = this.iTcDictService.getTextByBizCode(DictType.ORDER_STATUS.getCode(), tmOrderEntity.getOrderStatus());
+        if(StringUtils.isNotBlank(orderStatusText)){
+            resDto.setOrderStatusText(orderStatusText);
+        }
         resDto.setOrderImg(tmOrderEntity.getImgUrl());
         resDto.setPurchaseNo(TmPurchase.getPurchaseNo());
         resDto.setTotalAmount(TmPurchase.getTotalAmount());

@@ -41,6 +41,12 @@ public class TmPurchaseResDto {
     @ApiModelProperty(value="订单图片" )
     private String orderImg;
 
+    @ApiModelProperty(value="订单状态" )
+    private String orderStatus;
+
+    @ApiModelProperty(value="订单状态文本" )
+    private String orderStatusText;
+
     /**
      * 采购状态
      */
