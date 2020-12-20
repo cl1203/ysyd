@@ -12,7 +12,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 采购单明细输出Dto类
@@ -118,7 +117,7 @@ public class TmPurchaseDetailReqDto {
      * 默认值:CURRENT_TIMESTAMP
      */
     @ApiModelProperty(value="创建时间" )
-    private Date createTime;
+    private String createTime;
 
     /**
      * 创建人
@@ -132,7 +131,7 @@ public class TmPurchaseDetailReqDto {
      * 默认值:CURRENT_TIMESTAMP
      */
     @ApiModelProperty(value="最后修改时间" )
-    private Date lastUpdateTime;
+    private String lastUpdateTime;
 
     /**
      * 最后修改人
