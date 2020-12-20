@@ -29,6 +29,7 @@ public class TokenAdvice {
     //不需要登录就可以访问的路径(比如:登录等)
     private String[] includeUrls = new String[]{
             "/ysyd/v1/user/login",   //登录
+            "/ftpFile/uploadImg",
             "/v1/user/ajax",    //校验用户名
             "/v1/user/register",   //注册
             "/v1/purchase/app/complete",   //公众号完成采购单
