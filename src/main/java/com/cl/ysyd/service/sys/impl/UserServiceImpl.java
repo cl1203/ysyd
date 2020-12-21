@@ -318,6 +318,9 @@ public class UserServiceImpl implements IUserService {
         List<TsUserEntity> userEntityList = this.checkUser(reqDto.getUserName(), reqDto.getPassword());
         String newPassword = reqDto.getNewPassword();
         Assert.hasText(newPassword , "新密码不能为空!");
+        String newPasswordConfirm = reqDto.getNewPasswordConfirm();
+        Assert.hasText(newPasswordConfirm , "确认密码不能为空!");
+        Assert.isTrue(newPassword.equals(newPasswordConfirm), "两次输入的密码不一致, 请修改!");
         boolean flag = CheckMatchAndSpaceUtil.checkBlankSpace(newPassword);
         Assert.isTrue(flag , "新密码不能包含空格!");
         String regex = "^[a-z0-9A-Z]+$";

@@ -45,6 +45,9 @@ public class TsUserReqDto {
     @ApiModelProperty(value = "新密码")
     private String newPassword;
 
+    @ApiModelProperty(value = "确认新密码")
+    private String newPasswordConfirm;
+
     /**
      * 真实姓名
      */
