@@ -388,23 +388,23 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 Cell cell3 = row.createCell(3);
                 if(null != resDto.getGramWeight()){
                     cell3.setCellValue(resDto.getGramWeight().toString());
-                    cell3.setCellStyle(headerStyle);
                 }
+                cell3.setCellStyle(headerStyle);
                 Cell cell4 = row.createCell(4);
                 if(null != resDto.getWidthOfCloth()){
                     cell4.setCellValue(resDto.getWidthOfCloth().toString());
-                    cell4.setCellStyle(headerStyle);
                 }
+                cell4.setCellStyle(headerStyle);
                 Cell cell5 = row.createCell(5);
                 if(null != resDto.getUnitPrice()){
                     cell5.setCellValue(resDto.getUnitPrice().toString());
-                    cell5.setCellStyle(headerStyle);
                 }
+                cell5.setCellStyle(headerStyle);
                 Cell cell6 = row.createCell(6);
                 if(null != resDto.getQuantity()){
                     cell6.setCellValue(resDto.getQuantity().toString());
-                    cell6.setCellStyle(headerStyle);
                 }
+                cell6.setCellStyle(headerStyle);
                 Cell cell7 = row.createCell(7);
                 cell7.setCellValue(resDto.getUnit());
                 cell7.setCellStyle(headerStyle);
@@ -417,8 +417,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 Cell cell10 = row.createCell(10);
                 if(null != resDto.getTotalAmount()){
                     cell10.setCellValue(resDto.getTotalAmount().toString());
-                    cell10.setCellStyle(headerStyle);
                 }
+                cell10.setCellStyle(headerStyle);
                 Cell cell11 = row.createCell(11);
                 cell11.setCellValue(resDto.getPurchaseDate());
                 cell11.setCellStyle(headerStyle);
@@ -490,6 +490,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
                     cell4.setCellStyle(headerStyle);
                 }else{
                     cell4.setCellValue("");
+                    cell4.setCellStyle(headerStyle);
                 }
                 Cell cell5 = row.createCell(5);
                 cell5.setCellValue(resDto.getStatusText());

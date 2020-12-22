@@ -53,8 +53,8 @@ public class TmOrderResDto {
     @ApiModelProperty(value="订单所属用户姓名(接单人姓名)" )
     private String orderUserName;
 
-    @ApiModelProperty(value="订单所属用户类型" )
-    private String userType;
+    @ApiModelProperty(value="订单所属用户类型文本" )
+    private String userTypeText;
 
     /**
      * 单价
