@@ -181,4 +181,11 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         return pageInfo;
     }
 
+    default int examineOrder(String pkId, String examineStatus){
+        TmOrderEntity orderEntity = new TmOrderEntity();
+        orderEntity.setPkId(pkId);
+        orderEntity.setExamineStatus(examineStatus);
+        return this.updateByPrimaryKeySelective(orderEntity);
+    }
+
 }

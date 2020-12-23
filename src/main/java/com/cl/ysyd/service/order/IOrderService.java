@@ -133,4 +133,12 @@ public interface IOrderService {
      * @param pkId 主键订单ID
      */
     void returnOrder(String pkId);
+
+    /**
+     *  审核订单状态
+     * @param pkId 订单ID
+     * @param examineStatus 审核状态
+     * @return 结果
+     */
+    void examineOrder(String pkId, String examineStatus);
 }

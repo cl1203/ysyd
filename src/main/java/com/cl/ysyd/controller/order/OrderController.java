@@ -257,4 +257,20 @@ public class OrderController {
         return new ResponseData<>("退回订单成功!");
     }
 
+    /**
+     *  审核订单状态
+     * @param pkId 订单ID
+     * @param examineStatus 审核状态
+     * @return 结果
+     */
+    @ApiOperation(value = "审核订单状态")
+    @PutMapping(path = "/examineOrder/{pkId}/{examineStatus}")
+    @LoggerManage(description = "审核订单状态")
+    public ResponseData<String> examineOrder(@PathVariable String pkId, @PathVariable String examineStatus){
+        log.info("Controller updateOrderStatus start.");
+        this.iOrderService.examineOrder(pkId, examineStatus);
+        log.info("Controller updateOrderStatus end.");
+        return new ResponseData<>("审核订单状态成功!");
+    }
+
 }

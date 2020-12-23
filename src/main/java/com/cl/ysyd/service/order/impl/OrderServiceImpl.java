@@ -467,6 +467,18 @@ public class OrderServiceImpl implements IOrderService {
         Assert.isTrue(i == SortConstant.ONE, "退单失败!");
     }
 
+    @Override
+    public void examineOrder(String pkId, String examineStatus) {
+        Assert.hasText(pkId, "订单ID不能为空!");
+        TmOrderEntity orderEntity = this.tmOrderMapper.selectByPrimaryKey(pkId);
+        Assert.notNull(orderEntity, "订单ID对应的订单数据不存在!");
+        Assert.hasText(examineStatus, "审核状态不能为空!");
+        String examinesStatusText = this.iTcDictService.getTextByBizCode(DictType.EXAMINE_STATUS.getCode(), examineStatus);
+        Assert.hasText(examinesStatusText, "审核状态不存在,请重新选择!");
+        int i = this.tmOrderMapper.examineOrder(pkId, examineStatus);
+        Assert.isTrue(i==SortConstant.ONE, "修改订单审核状态失败!");
+    }
+
     /**
      * 分配订单
      * @param tmOrderEntity 订单对象
