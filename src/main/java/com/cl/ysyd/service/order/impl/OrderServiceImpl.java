@@ -189,7 +189,7 @@ public class OrderServiceImpl implements IOrderService {
                                                     String deliveryDate, String establishDate, String completeDate, String examineStatus) {
         //查询当前用户是否拥有全部权限
         String isAll = this.getIsAll();
-        PageHelper.orderBy("CREATE_TIME DESC");
+        PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll);
         List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
@@ -217,7 +217,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public PageInfo<TmOrderResDto> queryOrderBillByPage(Integer pageNum, Integer pageSize, String orderUser, String deliveryDate, String establishDate, String completeDate) {
         String isAll = this.getIsAll();
-        PageHelper.orderBy("CREATE_TIME DESC");
+        PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser,  deliveryDate, establishDate, completeDate, isAll);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
