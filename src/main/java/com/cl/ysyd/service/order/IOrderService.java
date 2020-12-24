@@ -84,11 +84,10 @@ public interface IOrderService {
 
     /**
      * 操作订单状态
-     * @param orderId 订单ID
-     * @param orderStatus 订单状态
+     * @param pkId 订单ID
      * @return 结果
      */
-    void updateOrderStatus(String orderId, String orderStatus);
+    void updateOrderStatus(String pkId);
 
     /**
      * 导出

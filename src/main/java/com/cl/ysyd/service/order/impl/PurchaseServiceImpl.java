@@ -44,6 +44,7 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,6 +129,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     private static final String ENCODING = "utf-8";
 
+    private static final String[] HEADERS_BILL = {"订单号", "采购单号", "采购编号", "采购人员","物料名称", "克重", "幅宽", "采购单价", "单位", "供应商", "采购日期"};
+    private static final String FILE_NAME_BILL = "订单对账单数据";
+    private static final String SHEET_NAME = "订单对账单";
     private static final String FILE_NAME = "采购数据";
 
     @Override
@@ -203,7 +207,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
             //订单状态 采购中
             TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(checkEntity.getOrderNo());
             //修改订单状态
-            this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.PURCHASING.getCode());
+            this.tmOrderMapper.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.PURCHASING.getCode());
             //purchaseDetailReqDtoList.forEach(tmPurchaseDetailReqDto -> {
             for(TmPurchaseDetailReqDto tmPurchaseDetailReqDto :  purchaseDetailReqDtoList){
                 tmPurchaseDetailReqDto.setPurchaseNo(reqDto.getPurchaseNo());
@@ -288,7 +292,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
         if(CollectionUtils.isNotEmpty(resDtoList)){
             for(TmPurchaseBillResDto resDto : resDtoList){
-                totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);;
+                totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
             }
             resDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());
         }
@@ -315,6 +319,125 @@ public class PurchaseServiceImpl implements IPurchaseService {
     public void exportPurchaseBill(HttpServletResponse response, String purchasePersonnel, String supplier, String purchaseDate) throws IOException {
         //查询采购对账单
         List<TmPurchaseBillResDto> list = this.queryPurchaseBillByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, purchasePersonnel, supplier, purchaseDate).getList();
+        //实例化HSSFWorkbook
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        //sheet1
+        this.createSheet(list, workbook);
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(CONTENT_TYPE);
+        response.setCharacterEncoding(ENCODING);
+        //这后面可以设置导出Excel的名称，此例中名为student.xls（解决文件名称乱码问题）
+        response.setHeader("content-disposition", "attachment;filename=" + new String(FILE_NAME_BILL.getBytes(), "ISO8859-1") + ".xls" );
+        //刷新缓冲
+        response.flushBuffer();
+        //workbook将Excel写入到response的输出流中，供页面下载
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+
+    private void createSheet(List<TmPurchaseBillResDto> list, HSSFWorkbook workbook){
+        //创建sheet
+        HSSFSheet sheet = workbook.createSheet(SHEET_NAME);
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(SortConstant.TWENTY);
+        //创建第一行表头
+        HSSFRow headrow = sheet.createRow(SortConstant.ZERO);
+        //高度
+        headrow.setHeight(SortConstant.HEAD_HEIGHT);
+        //添加标题
+        for(int i = 0; i < HEADERS_BILL.length; i++){
+            //标题的显示样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.HEAD_FONT);
+            //创建单元格
+            HSSFCell cell = headrow.createCell(i);
+            //标题写入单元格
+            cell.setCellValue(HEADERS_BILL[i]);
+            headerStyle.setFont(font);
+            cell.setCellStyle(headerStyle);
+        }
+        //添加数据
+        for(int i = 0; i< list.size(); i++){
+            int j = i + SortConstant.ONE;
+            //创建行
+            HSSFRow row = sheet.createRow(j);
+            //高度
+            row.setHeight(SortConstant.ROW_HEIGHT);
+            //内容样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            //设置样式
+            HSSFFont font = this.getHssfFont(workbook, headerStyle);
+            //字体大小
+            font.setFontHeightInPoints(SortConstant.ROW_FONT);
+            headerStyle.setFont(font);
+            TmPurchaseBillResDto resDto = list.get(i);
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(resDto.getOrderNo());
+            cell0.setCellStyle(headerStyle);
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(resDto.getPurchaseNo());
+            cell1.setCellStyle(headerStyle);
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(resDto.getPurchaseNumber());
+            cell2.setCellStyle(headerStyle);
+            Cell cell3 = row.createCell(3);
+            cell3.setCellValue(resDto.getPurchasePersonnelName());
+            cell3.setCellStyle(headerStyle);
+            Cell cell4 = row.createCell(4);
+            cell4.setCellValue(resDto.getMaterielName());
+            cell4.setCellStyle(headerStyle);
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(resDto.getGramWeight());
+            cell5.setCellStyle(headerStyle);
+            Cell cell6 = row.createCell(6);
+            cell6.setCellValue(resDto.getWidthOfCloth());
+            cell6.setCellStyle(headerStyle);
+            Cell cell7 = row.createCell(7);
+            cell7.setCellValue(resDto.getUnitPrice());
+            cell7.setCellStyle(headerStyle);
+            Cell cell8 = row.createCell(8);
+            cell8.setCellValue(resDto.getUnit());
+            cell8.setCellStyle(headerStyle);
+            Cell cell9 = row.createCell(9);
+            cell9.setCellValue(resDto.getSupplier());
+            cell9.setCellStyle(headerStyle);
+            Cell cell10 = row.createCell(10);
+            cell10.setCellValue(resDto.getPurchaseDate());
+            cell10.setCellStyle(headerStyle);
+        }
+        String totalMoney = "";
+        if(CollectionUtils.isNotEmpty(list)){
+            totalMoney = list.get(SortConstant.ZERO).getTotalMoney();
+        }
+        int length = HEADERS_BILL.length;
+        int size = list.size();
+        //创建行
+        HSSFRow row = sheet.createRow(size + SortConstant.ONE);
+        //高度
+        HSSFCell cellText = row.createCell(length - SortConstant.TWO);
+        HSSFCell cellMoney = row.createCell(length - SortConstant.ONE);
+
+        //标题的显示样式
+        HSSFCellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);//水平居中
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setBold(true);
+        font.setFontHeightInPoints(SortConstant.HEAD_FONT);
+        headerStyle.setFont(font);
+        sheet.addMergedRegion(new CellRangeAddress(size + SortConstant.ONE, size + SortConstant.THREE, length - SortConstant.TWO, length - SortConstant.TWO));
+        sheet.addMergedRegion(new CellRangeAddress(size + SortConstant.ONE, size + SortConstant.THREE, length - SortConstant.ONE , length - SortConstant.ONE));
+        cellText.setCellStyle(headerStyle);
+        cellText.setCellValue("合计: ");
+
+        cellMoney.setCellStyle(headerStyle);
+        cellMoney.setCellValue(totalMoney);
+
     }
 
     private void exportExcel(List<TmPurchaseResDto> purchaseResDtoList, List<TmPurchaseDetailResDto> purchaseDetailResDtoList, HttpServletResponse response) throws IOException {
@@ -543,7 +666,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         //修改订单状态
         TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(checkEntity.getOrderNo());
         Assert.notNull(tmOrderEntity, "采购单对应的订单不存在!");
-        this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
+        this.tmOrderMapper.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
         return i;
     }
 
@@ -562,7 +685,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         //修改订单状态
         TmOrderEntity tmOrderEntity = this.tmOrderMapper.queryByOrderNo(checkEntity.getOrderNo());
         Assert.notNull(tmOrderEntity, "采购单对应的订单不存在!");
-        this.iOrderService.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
+        this.tmOrderMapper.updateOrderStatus(tmOrderEntity.getPkId(), OrderStatusEnum.CUTTING.getCode());
         return i;
     }
 

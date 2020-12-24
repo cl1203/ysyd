@@ -181,11 +181,31 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         return pageInfo;
     }
 
+    /**
+     * 修改审核状态
+     * @param pkId 订单ID
+     * @param examineStatus 审核状态
+     * @return 修改结果
+     */
     default int examineOrder(String pkId, String examineStatus){
         TmOrderEntity orderEntity = new TmOrderEntity();
         orderEntity.setPkId(pkId);
         orderEntity.setExamineStatus(examineStatus);
         return this.updateByPrimaryKeySelective(orderEntity);
     }
+
+    /**
+     * 根据主键和订单状态修改订单状态
+     * @param pkId 订单ID
+     * @param orderStatus 订单状态
+     * @return 修改结果
+     */
+    default int updateOrderStatus(String pkId , String orderStatus){
+        TmOrderEntity orderEntity = new TmOrderEntity();
+        orderEntity.setPkId(pkId);
+        orderEntity.setOrderStatus(orderStatus);
+        return this.updateByPrimaryKeySelective(orderEntity);
+    }
+
 
 }

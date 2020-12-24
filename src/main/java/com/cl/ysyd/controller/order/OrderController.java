@@ -161,16 +161,15 @@ public class OrderController {
 
     /**
      * 操作订单状态
-     * @param orderId 订单ID
-     * @param orderStatus 订单状态
+     * @param pkId 订单ID
      * @return 结果
      */
     @ApiOperation(value = "操作订单状态")
-    @PutMapping(path = "/updateStatus/{orderId}/{orderStatus}")
+    @PutMapping(path = "/updateStatus/{pkId}")
     @LoggerManage(description = "操作订单状态")
-    public ResponseData<String> updateOrderStatus(@PathVariable String orderId, @PathVariable String orderStatus){
+    public ResponseData<String> updateOrderStatus(@PathVariable String pkId){
         log.info("Controller updateOrderStatus start.");
-        this.iOrderService.updateOrderStatus(orderId, orderStatus);
+        this.iOrderService.updateOrderStatus(pkId);
         log.info("Controller updateOrderStatus end.");
         return new ResponseData<>("修改订单状态成功!");
     }

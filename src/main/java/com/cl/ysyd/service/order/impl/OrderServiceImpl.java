@@ -21,6 +21,7 @@ import com.cl.ysyd.entity.order.TmOrderEntity;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.order.TmOrderMapper;
+import com.cl.ysyd.mapper.sys.TcBizDictionaryMapper;
 import com.cl.ysyd.mapper.sys.TsRoleMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.order.IOrderService;
@@ -68,6 +69,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private IBizDictionaryService iTcDictService;
+
+    @Autowired
+    private TcBizDictionaryMapper bizDictionaryMapper;
 
     @Autowired
     private TsRoleMapper roleMapper;
@@ -262,11 +266,13 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void updateOrderStatus(String orderId, String orderStatus) {
+    public void updateOrderStatus(String pkId) {
         //根据主键ID检验订单数据
-        TmOrderEntity checkEntity = this.getTmOrderEntity(orderId);
-        String orderStatusText = this.iTcDictService.getTextByBizCode(DictType.ORDER_STATUS.getCode(), orderStatus);
-        Assert.hasText(orderStatusText, "选择的订单状态不存在!");
+        TmOrderEntity checkEntity = this.getTmOrderEntity(pkId);
+        /*String orderStatusText = this.iTcDictService.getTextByBizCode(DictType.ORDER_STATUS.getCode(), orderStatus);
+        Assert.hasText(orderStatusText, "选择的订单状态不存在!");*/
+        //根据当前订单状态获取下一个订单状态
+        String orderStatus = this.bizDictionaryMapper.getOrderStatusNext(checkEntity.getOrderStatus());
         checkEntity.setOrderStatus(orderStatus);
         checkEntity.setLastUpdateTime(new Date());
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());

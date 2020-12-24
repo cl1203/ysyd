@@ -93,7 +93,7 @@ public class OrderHelper {
             String type = userEntity.getType();
             String userTypeText = this.iTcDictService.getTextByBizCode(DictType.USER_TYPE.getCode(), type);
             if(StringUtils.isNotBlank(userTypeText)){
-                resDto.setUserType(userTypeText);
+                resDto.setUserTypeText(userTypeText);
             }
         }
         //根据订单号查询是否已经生成采购单
