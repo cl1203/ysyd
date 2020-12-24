@@ -206,7 +206,7 @@ public class OrderServiceImpl implements IOrderService {
         String userId = LoginUtil.getUserId();
         Assert.hasText(userId, "用户ID为空!");
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
-        Assert.notNull(userEntity, "userId对应的用户不存在");
+        Assert.notNull(userEntity, "userId对应的用户不存在!");
 
         //根据用户ID查询对应角色是否拥有所有数据权限
         TsRoleEntity tsRoleEntity = this.roleMapper.queryByUserId(userId);
