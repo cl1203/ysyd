@@ -245,6 +245,7 @@ public class OrderServiceImpl implements IOrderService {
         if(StringUtils.isNotBlank(orderUser)){
             throw new BusiException("订单已经分配用户!");
         }
+        Assert.isTrue(checkEntity.getOrderStatus().equals(OrderStatusEnum.WAITING.getCode()), "订单不属于待接单状态,不能分配!");
         TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(orderUserId);
         if(null == userEntity){
             throw new BusiException("选择的用户不存在!");
