@@ -10,6 +10,8 @@ import com.cl.ysyd.dto.order.res.FileResDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,13 +26,14 @@ import java.util.Date;
 @Api(tags = "ftp上传")
 public class FtpFileUploadController {
 
-    private static final String SUFFIXLIST = "jpg,png,pdf,jpeg,zip,7z,rar";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FtpFileUploadController.class);
 
-    private static String filePath = "http://47.106.34.32/img/";
+    private static final String SUFFIXLIST = "jpg,png,pdf,jpeg,zip,7z,rar";
 
     @PostMapping("/uploadImg")
     @ApiOperation(value = "上传图片")
     public ResponseData<FileResDto> uploadImgs(@RequestParam("file")MultipartFile file) {
+        String filePath = "http://47.106.34.32/img/";
         FileResDto fileResDto = new FileResDto();
         //判断导入文件是否为空
         if(file.isEmpty()) {
@@ -52,10 +55,10 @@ public class FtpFileUploadController {
         if (fileName.indexOf(" ") > 0) {
             throw new BusiException("文件名不能包含空格！请修改图片名称后重新上传！");
         }
-
         boolean flag= FtpFileUtil.uploadFile(file , fileName);
         if(flag){
             filePath = filePath + fileName;
+            LOGGER.info("fileName: ----------------------" + fileName);
             fileResDto.setFileName(fileName);
             fileResDto.setFileUrl(filePath);
             return new ResponseData<>(fileResDto);//该路径图片名称，前端框架可用ngnix指定的路径+filePath,即可访问到ngnix图片服务器中的图片
