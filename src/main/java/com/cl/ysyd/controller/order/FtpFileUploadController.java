@@ -6,6 +6,7 @@ import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.FtpFileUtil;
+import com.cl.ysyd.dto.order.res.FileResDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,8 @@ public class FtpFileUploadController {
 
     @PostMapping("/uploadImg")
     @ApiOperation(value = "上传图片")
-    public ResponseData<String> uploadImgs(@RequestParam("file")MultipartFile file) {
+    public ResponseData<FileResDto> uploadImgs(@RequestParam("file")MultipartFile file) {
+        FileResDto fileResDto = new FileResDto();
         //判断导入文件是否为空
         if(file.isEmpty()) {
             throw new BusiException("文件不能为空!");
@@ -46,9 +48,11 @@ public class FtpFileUploadController {
         boolean flag= FtpFileUtil.uploadFile(file , fileName);
         if(flag){
             filePath = filePath + fileName;
+            fileResDto.setFileName(fileName);
+            fileResDto.setFileUrl(filePath);
         }else{
             throw new BusiException("上传失败!");
         }
-        return new ResponseData<>(filePath);  //该路径图片名称，前端框架可用ngnix指定的路径+filePath,即可访问到ngnix图片服务器中的图片
+        return new ResponseData<>(fileResDto);  //该路径图片名称，前端框架可用ngnix指定的路径+filePath,即可访问到ngnix图片服务器中的图片
     }
 }

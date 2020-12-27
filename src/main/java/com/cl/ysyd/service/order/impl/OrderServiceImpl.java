@@ -467,6 +467,8 @@ public class OrderServiceImpl implements IOrderService {
     public void returnOrder(String pkId) {
         //根据主键ID检验订单数据
         TmOrderEntity checkEntity = this.getTmOrderEntity(pkId);
+        boolean equals = checkEntity.getOrderStatus().equals(OrderStatusEnum.ORDERING.getCode());
+        Assert.isTrue(equals, "订单不是接单中, 不能进行退单!");
         checkEntity.setOrderUser("");
         checkEntity.setLastUpdateTime(new Date());
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());

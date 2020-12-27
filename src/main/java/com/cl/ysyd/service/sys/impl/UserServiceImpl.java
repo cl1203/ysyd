@@ -21,6 +21,7 @@ import com.cl.ysyd.entity.sys.TrUserRoleEntity;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.entity.sys.TsUserEntityExample;
+import com.cl.ysyd.mapper.order.TmOrderMapper;
 import com.cl.ysyd.mapper.sys.TrUserRoleMapper;
 import com.cl.ysyd.mapper.sys.TsRoleMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
@@ -70,6 +71,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private RoleHelper roleHelper;
+
+    @Autowired
+    private TmOrderMapper orderMapper;
 
     /**
      * 初始密码，由MD5加密签名。
@@ -236,6 +240,11 @@ public class UserServiceImpl implements IUserService {
             log.info("用户名不能修改 userName【{}】", reqDto.getUserName());
             throw new BusiException("用户名不能修改!");
         }
+        if(reqDto.getStatus().equals(SortConstant.ZERO.toString())){
+            int i = this.orderMapper.queryNumByUserId(pkId);
+            Assert.isTrue(i==0, "用户存在未完成订单, 不能禁用!");
+        }
+
         //校验手机号码和邮箱
         this.checkMobileAndEmain(reqDto);
         TsUserEntity entity = this.userHelper.editEntity(reqDto);
