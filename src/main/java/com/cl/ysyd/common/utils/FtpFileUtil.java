@@ -25,7 +25,7 @@ public class FtpFileUtil {
     //密码
     private static final String FTP_PASSWORD = "ftp999!@#";
     //图片路径
-    private static String FTP_BASEPATH = "/var/ftp/source/img";
+    private static String FTP_BASEPATH = "/img";
 
     private static FTPClient ftp;
 
@@ -52,7 +52,7 @@ public class FtpFileUtil {
             if(!success){
                 createDir(FTP_BASEPATH);
                 success = ftp.changeWorkingDirectory(FTP_BASEPATH);
-                Assert.isTrue(!success , "切换目录失败!");
+                Assert.isTrue(success , "切换目录失败!");
             }
 
             fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
