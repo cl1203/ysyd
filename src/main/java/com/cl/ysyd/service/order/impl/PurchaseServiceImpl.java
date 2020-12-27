@@ -292,7 +292,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
         if(CollectionUtils.isNotEmpty(resDtoList)){
             for(TmPurchaseBillResDto resDto : resDtoList){
-                totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+                if(resDto.getUnitPrice() != null){
+                    totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+                }
             }
             resDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());
         }
