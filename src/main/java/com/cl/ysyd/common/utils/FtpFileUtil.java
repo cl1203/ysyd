@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class FtpFileUtil {
     //密码
     private static final String FTP_PASSWORD = "ftp999!@#";
     //图片路径
-    private static String FTP_BASEPATH = "/var/ftp/source";
+    private static String FTP_BASEPATH = "/var/ftp/source/img";
 
     private static FTPClient ftp;
 
@@ -43,15 +44,15 @@ public class FtpFileUtil {
             reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
-                return success;
+                throw new BusiException("连接失败!");
             }
             FTP_BASEPATH = new String(FTP_BASEPATH.getBytes(StandardCharsets.UTF_8) , StandardCharsets.UTF_8);
-            ftp.makeDirectory(FTP_BASEPATH );// 不存在才会执行这行代码 创建
+            //ftp.makeDirectory(FTP_BASEPATH );// 不存在才会执行这行代码 创建
             success = ftp.changeWorkingDirectory(FTP_BASEPATH );//切换到path下的文件夹下
-
             if(!success){
                 createDir(FTP_BASEPATH);
                 success = ftp.changeWorkingDirectory(FTP_BASEPATH);
+                Assert.isTrue(!success , "切换目录失败!");
             }
 
             fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
