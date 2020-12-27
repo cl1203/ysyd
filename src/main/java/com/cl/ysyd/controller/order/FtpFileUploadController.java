@@ -26,8 +26,6 @@ import java.util.Date;
 @Api(tags = "ftp上传")
 public class FtpFileUploadController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FtpFileUploadController.class);
-
     private static final String SUFFIXLIST = "jpg,png,pdf,jpeg,zip,7z,rar";
 
     @PostMapping("/uploadImg")
@@ -58,7 +56,6 @@ public class FtpFileUploadController {
         boolean flag= FtpFileUtil.uploadFile(file , fileName);
         if(flag){
             filePath = filePath + fileName;
-            LOGGER.info("fileName: ----------------------" + fileName);
             fileResDto.setFileName(fileName);
             fileResDto.setFileUrl(filePath);
             return new ResponseData<>(fileResDto);//该路径图片名称，前端框架可用ngnix指定的路径+filePath,即可访问到ngnix图片服务器中的图片
