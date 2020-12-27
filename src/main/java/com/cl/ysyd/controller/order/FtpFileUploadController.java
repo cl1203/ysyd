@@ -46,7 +46,7 @@ public class FtpFileUploadController {
             throw new BusiException("只能上传jpg、png、pdf、jpeg、zip、7z、rar格式的文件！");
         }
         //重命名图片
-        fileName = fileName + DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT);
+        fileName = fileName + DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT5);
         if (fileName.indexOf(" ") > 0) {
             throw new BusiException("文件名不能包含空格！请修改图片名称后重新上传！");
         }
