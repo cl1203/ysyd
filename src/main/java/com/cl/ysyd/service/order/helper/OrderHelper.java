@@ -10,6 +10,8 @@ import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.enums.ExamineStatusEnum;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
+import com.cl.ysyd.common.exception.BusiException;
+import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
@@ -139,6 +141,9 @@ public class OrderHelper {
         entity.setOrderNo(reqDto.getOrderNo());
         entity.setImgUrl(reqDto.getImgUrl());
         entity.setDeliveryDate(DateUtil.getDateToString(reqDto.getDeliveryDate(), DateUtil.DATESHOWFORMAT));
+        if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
+            throw new BusiException("单价不符合规则, 整数位最多8位, 小数位最多2位!");
+        }
         entity.setUnitPrice(new BigDecimal(reqDto.getUnitPrice()));
         entity.setEstablishDate(DateUtil.dateToDate(new Date(), DateUtil.DATESHOWFORMAT));
         if(StringUtils.isNotBlank(reqDto.getCompleteDate())){

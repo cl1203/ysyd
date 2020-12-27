@@ -224,6 +224,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 }
                 if(StringUtils.isNotBlank(tmPurchaseDetailReqDto.getUnitPrice()) && StringUtils.isNotBlank(tmPurchaseDetailReqDto.getQuantity())){
                     BigDecimal totalAmountDetail = new BigDecimal(tmPurchaseDetailReqDto.getUnitPrice()).multiply(new BigDecimal(tmPurchaseDetailReqDto.getQuantity())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+                    if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, totalAmountDetail.toString())) {
+                        throw new BusiException("单价或者数量数值太大, 已经超过限制!");
+                    }
                     tmPurchaseDetailReqDto.setTotalAmountDetail(totalAmountDetail);
                     totalAmount = totalAmount.add(totalAmountDetail);
                 }

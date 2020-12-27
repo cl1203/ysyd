@@ -10,7 +10,7 @@ import com.cl.ysyd.dto.order.res.FileResDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +24,7 @@ import java.util.Date;
 @Api(tags = "ftp上传")
 public class FtpFileUploadController {
 
+    private static final String SUFFIXLIST = "jpg,png,pdf,jpeg,zip,7z,rar";
 
     @PostMapping("/uploadImg")
     @ApiOperation(value = "上传图片")
@@ -35,12 +36,17 @@ public class FtpFileUploadController {
         }
         //判断导入文件大小
         if (file.getSize() > Long.parseLong(SortConstant.MAX_IMG_SIZE)) {
-            throw new BusiException("文件大小不能超过10M！");
+            throw new BusiException("文件大小不能超过50M！");
         }
         String fileName = file.getOriginalFilename();
-        if(StringUtils.isBlank(fileName)){
-            fileName = DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT);
+        //获取文件后缀
+        Assert.hasText(fileName, "文件名不能为空!");
+        String suffix=fileName.substring(fileName.lastIndexOf(".")+1);
+        if(!SUFFIXLIST.contains(suffix.trim().toLowerCase())){
+            throw new BusiException("只能上传jpg、png、pdf、jpeg、zip、7z、rar格式的文件！");
         }
+        //重命名图片
+        fileName = fileName + DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT);
         if (fileName.indexOf(" ") > 0) {
             throw new BusiException("文件名不能包含空格！请修改图片名称后重新上传！");
         }
