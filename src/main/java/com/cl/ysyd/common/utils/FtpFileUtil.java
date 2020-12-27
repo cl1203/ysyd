@@ -24,7 +24,7 @@ public class FtpFileUtil {
     //密码
     private static final String FTP_PASSWORD = "ftp999!@#";
     //图片路径
-    private static String FTP_BASEPATH = "/var/ftp/source/img";
+    private static String FTP_BASEPATH = "//var//ftp//source//img";
 
     private static FTPClient ftp;
 
