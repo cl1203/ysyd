@@ -46,7 +46,7 @@ public class FtpFileUploadController {
             throw new BusiException("只能上传jpg、png、pdf、jpeg、zip、7z、rar格式的文件！");
         }
         //重命名图片
-        fileName = fileName + DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT5);
+        fileName = fileName.substring(SortConstant.ZERO, fileName.lastIndexOf(".")) + DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT5);
         if (fileName.indexOf(" ") > 0) {
             throw new BusiException("文件名不能包含空格！请修改图片名称后重新上传！");
         }
@@ -61,4 +61,5 @@ public class FtpFileUploadController {
         }
         return new ResponseData<>(fileResDto);  //该路径图片名称，前端框架可用ngnix指定的路径+filePath,即可访问到ngnix图片服务器中的图片
     }
+
 }
