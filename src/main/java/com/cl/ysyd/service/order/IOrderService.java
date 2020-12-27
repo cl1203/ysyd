@@ -58,8 +58,8 @@ public interface IOrderService {
      * @param completeDate 完成日期
      * @return 列表结果集
      */
-    PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus,
-                                             String deliveryDate, String establishDate, String completeDate, String examineStatus);
+    PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus, String deliveryDate,
+                                             String establishDate, String completeDate, String examineStatus, String status);
 
     /**
      *
@@ -100,7 +100,7 @@ public interface IOrderService {
      * @throws IOException IO异常
      */
     void export(HttpServletResponse response , String orderUser, String orderStatus,
-                String deliveryDate, String establishDate, String completeDate)throws IOException;
+                String deliveryDate, String establishDate, String completeDate, String status)throws IOException;
 
     /**
      *

@@ -114,9 +114,9 @@ public class OrderController {
     @GetMapping(path = "/query/{pageNum}/{pageSize}")
     @LoggerManage(description = "查询订单列表")
     public ResponseData<PageInfo<TmOrderResDto>> queryOrderByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderUser, String orderStatus,
-                                                                  String deliveryDate, String establishDate, String completeDate, String examineStatus){
+                                                                  String deliveryDate, String establishDate, String completeDate, String examineStatus, String status){
         log.info("Controller queryOrderByPage start.");
-        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus);
+        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, status);
         log.info("Controller queryOrderByPage end.");
         return new ResponseData<>(resDto);
     }
@@ -188,9 +188,9 @@ public class OrderController {
     @ApiOperation(value = "导出订单列表数据")
     @LoggerManage(description = "导出订单列表数据")
     public void exportOrder(HttpServletResponse response , String orderUser, String orderStatus,
-                              String deliveryDate, String establishDate, String completeDate)throws IOException {
+                              String deliveryDate, String establishDate, String completeDate, String status)throws IOException {
         log.info("Controller exportOrder start.");
-        this.iOrderService.export(response ,orderUser , orderStatus, deliveryDate, establishDate, completeDate);
+        this.iOrderService.export(response ,orderUser , orderStatus, deliveryDate, establishDate, completeDate, status);
         log.info("Controller exportOrder end.");
     }
 

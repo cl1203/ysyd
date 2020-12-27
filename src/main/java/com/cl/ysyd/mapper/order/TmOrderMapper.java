@@ -60,7 +60,7 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
      * @return 列表结果集
      */
     default List<TmOrderEntity> queryOrderList(String orderUser, String orderStatus,String deliveryDate, String establishDate,
-                                               String completeDate, String examineStatus, String isAll){
+                                               String completeDate, String examineStatus, String isAll, String status){
         //查询
         TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
         TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
@@ -90,6 +90,9 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
             examineStatusList.add(ExamineStatusEnum.ADOPT.getCode());
             examineStatusList.add(ExamineStatusEnum.NOT.getCode());
             criteria.andExamineStatusIn(examineStatusList);
+        }
+        if(StringUtils.isNotBlank(status)){
+            criteria.andStatusEqualTo(Byte.valueOf(status));
         }
         return this.selectByExample(orderEntityExample);
     }
