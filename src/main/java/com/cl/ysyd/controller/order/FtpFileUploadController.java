@@ -25,7 +25,7 @@ public class FtpFileUploadController {
 
 
     @PostMapping("/uploadImg")
-    @ApiOperation(value = "上传图片" , notes = "上传图片")
+    @ApiOperation(value = "上传图片")
     public ResponseData<String> uploadImgs(@RequestParam("file")MultipartFile file) {
         //判断导入文件是否为空
         if(file.isEmpty()) {
