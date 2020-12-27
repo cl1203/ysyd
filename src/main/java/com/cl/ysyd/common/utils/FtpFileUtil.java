@@ -42,7 +42,7 @@ public class FtpFileUtil {
             ftp.login(FTP_USERNAME, FTP_PASSWORD);// 登录
             ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
             reply = ftp.getReplyCode();
-            LOGGER.info("111111111111111111111111111111" + "变量: reply = " + reply);
+            LOGGER.info("111111111111111111111111111111" + "reply = " + reply);
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
                 throw new BusiException("连接失败!");
@@ -50,22 +50,23 @@ public class FtpFileUtil {
             FTP_BASEPATH = new String(FTP_BASEPATH.getBytes(StandardCharsets.UTF_8) , StandardCharsets.UTF_8);
             //ftp.makeDirectory(FTP_BASEPATH );// 不存在才会执行这行代码 创建
             success = ftp.changeWorkingDirectory(FTP_BASEPATH );//切换到path下的文件夹下
-            LOGGER.info("222222222222222222222222222222" + "变量: success= " +success);
+            LOGGER.info("222222222222222222222222222222" + "success= " +success);
             if(!success){
                 createDir(FTP_BASEPATH);
                 success = ftp.changeWorkingDirectory(FTP_BASEPATH);
-                LOGGER.info("33333333333333333333333333333333" + "变量: success= " +success);
+                LOGGER.info("33333333333333333333333333333333" + "success= " +success);
                 Assert.isTrue(success , "切换目录失败!");
             }
 
             fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+            ftp.enterLocalPassiveMode();
             boolean flag  = ftp.storeFile(fileName,input);
-            LOGGER.info("444444444444444444444444444444444444" + "变量: flag= " +flag);
+            LOGGER.info("444444444444444444444444444444444444" + "flag= " +flag);
             LOGGER.info("upload file: " + flag);
             input.close();
             ftp.logout();
-            LOGGER.info("5555555555555555555555555555555555555555555555" + "变量: success= " +success);
-            //success = true;
+            LOGGER.info("5555555555555555555555555555555555555555555555" + "success= " +success);
+            success = flag;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
