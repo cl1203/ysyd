@@ -309,6 +309,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     public void export(HttpServletResponse response, String orderNo, String purchaseNo, String purchaseStatus, String purchasePersonnel, String orderStatus) throws IOException {
         //获取采购列表信息
+
         List<TmPurchaseResDto> purchaseResDtoList = this.queryPurchaseByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, orderNo, purchaseNo, purchaseStatus, purchasePersonnel, orderStatus).getList();
         if(CollectionUtils.isNotEmpty(purchaseResDtoList)){
             List<String> purchaseNoList = purchaseResDtoList.stream().map(TmPurchaseResDto::getPurchaseNo).collect(Collectors.toList());
@@ -599,35 +600,33 @@ public class PurchaseServiceImpl implements IPurchaseService {
             //字体大小
             font.setFontHeightInPoints(SortConstant.ROW_FONT);
             headerStyle.setFont(font);
-            purchaseResDtoList.forEach(resDto -> {
-                Cell cell0 = row.createCell(0);
-                cell0.setCellValue(resDto.getPurchaseNo());
-                cell0.setCellStyle(headerStyle);
-                Cell cell1 = row.createCell(1);
-                cell1.setCellValue(resDto.getOrderNo());
-                cell1.setCellStyle(headerStyle);
-                Cell cell2 = row.createCell(2);
-                cell2.setCellValue(resDto.getPurchaseStatusText());
-                cell2.setCellStyle(headerStyle);
-                Cell cell3 = row.createCell(3);
-                cell3.setCellValue(resDto.getPurchasePersonnelName());
-                cell3.setCellStyle(headerStyle);
-                Cell cell4 = row.createCell(4);
-                if(null != resDto.getTotalAmount()){
-                    cell4.setCellValue(resDto.getTotalAmount().toString());
-                    cell4.setCellStyle(headerStyle);
-                }else{
-                    cell4.setCellValue("");
-                    cell4.setCellStyle(headerStyle);
-                }
-                Cell cell5 = row.createCell(5);
-                cell5.setCellValue(resDto.getStatusText());
-                cell5.setCellStyle(headerStyle);
-                Cell cell6 = row.createCell(6);
-                cell6.setCellValue(resDto.getRemarks());
-                cell6.setCellStyle(headerStyle);
-            });
-
+            TmPurchaseResDto resDto = purchaseResDtoList.get(i);
+            Cell cell0 = row.createCell(0);
+            cell0.setCellValue(resDto.getPurchaseNo());
+            cell0.setCellStyle(headerStyle);
+            Cell cell1 = row.createCell(1);
+            cell1.setCellValue(resDto.getOrderNo());
+            cell1.setCellStyle(headerStyle);
+            Cell cell2 = row.createCell(2);
+            cell2.setCellValue(resDto.getPurchaseStatusText());
+            cell2.setCellStyle(headerStyle);
+            Cell cell3 = row.createCell(3);
+            cell3.setCellValue(resDto.getPurchasePersonnelName());
+            cell3.setCellStyle(headerStyle);
+            Cell cell4 = row.createCell(4);
+            if(null != resDto.getTotalAmount()){
+                cell4.setCellValue(resDto.getTotalAmount().toString());
+                cell4.setCellStyle(headerStyle);
+            }else{
+                cell4.setCellValue("");
+                cell4.setCellStyle(headerStyle);
+            }
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(resDto.getStatusText());
+            cell5.setCellStyle(headerStyle);
+            Cell cell6 = row.createCell(6);
+            cell6.setCellValue(resDto.getRemarks());
+            cell6.setCellStyle(headerStyle);
         }
     }
 

@@ -90,7 +90,7 @@ public class OrderServiceImpl implements IOrderService {
 
 
     //订单导出表头 fileName
-    private static final String[] HEADERS = {"订单号(orderNo)" , "交货日期(deliveryDate)" , "订单单价(unitPrice)" , "所属用户(orderUserName)" ,"用户类型(userType)",
+    private static final String[] HEADERS = {"订单号(orderNo)" , "交货日期(deliveryDate)" , "订单单价(unitPrice)" , "所属用户(orderUserName)" ,"用户类型(userTypeText)",
             "创建日期(establishDate)" , "完成日期(completeDate)", "订单状态(orderStatusText)" , "SKU(sku)",
             "下单人(orderPeople)" , "尺码(orderSize)", "类型(orderTypeText)" , "状态(statusText)",};
     private static final String FILE_NAME = "订单列表信息";
