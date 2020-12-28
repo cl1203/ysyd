@@ -471,6 +471,7 @@ public class OrderServiceImpl implements IOrderService {
         Assert.isTrue(equals, "订单不是接单中, 不能进行退单!");
         checkEntity.setOrderUser("");
         checkEntity.setLastUpdateTime(new Date());
+        checkEntity.setOrderStatus(OrderStatusEnum.WAITING.getCode());
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());
         int i = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);
         Assert.isTrue(i == SortConstant.ONE, "退单失败!");
