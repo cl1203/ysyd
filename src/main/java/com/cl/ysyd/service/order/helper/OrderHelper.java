@@ -149,7 +149,14 @@ public class OrderHelper {
         if(StringUtils.isNotBlank(reqDto.getCompleteDate())){
             entity.setCompleteDate(DateUtil.getDateToString(reqDto.getCompleteDate(), DateUtil.DATESHOWFORMAT));
         }
-        entity.setOrderStatus(OrderStatusEnum.WAITING.getCode());
+        entity.setOrderUser(reqDto.getOrderUser());
+        if(StringUtils.isNotBlank(reqDto.getOrderUser())){
+            TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(reqDto.getOrderUser());
+            Assert.notNull(userEntity, "接单人不存在!");
+            entity.setOrderStatus(OrderStatusEnum.ORDERING.getCode());
+        }else{
+            entity.setOrderStatus(OrderStatusEnum.WAITING.getCode());
+        }
         entity.setFolderUrl(reqDto.getFolderUrl());
         entity.setSku(reqDto.getSku());
         entity.setOrderPeople(reqDto.getOrderPeople());
@@ -178,7 +185,6 @@ public class OrderHelper {
         entity.setCreateUser(LoginUtil.getUserId());
         entity.setLastUpdateTime(new Date());
         entity.setLastUpdateUser(LoginUtil.getUserId());
-        entity.setOrderUser(reqDto.getOrderUser());
         return entity;
     }
 

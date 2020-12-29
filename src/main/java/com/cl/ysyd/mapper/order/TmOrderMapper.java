@@ -23,6 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,23 +68,52 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
         if(isAll.equals(AuditStatusEnum.REVIEWED.getCode())){
             if(StringUtils.isNotBlank(orderUser)){
-                criteria.andOrderUserEqualTo(orderUser);
+                if(orderUser.contains(",")){
+                    List<String> orderUserList = Arrays.asList(orderUser.split(","));
+                    criteria.andOrderUserIn(orderUserList);
+                }else{
+                    criteria.andOrderUserEqualTo(orderUser);
+                }
             }
         }else{
             criteria.andOrderUserEqualTo(LoginUtil.getUserId());
         }
         if(StringUtils.isNotBlank(orderStatus)){
-            criteria.andOrderStatusEqualTo(orderStatus);
+            if(orderStatus.contains(",")){
+                List<String> orderStatusList = Arrays.asList(orderStatus.split(","));
+                criteria.andOrderStatusIn(orderStatusList);
+            }else{
+                criteria.andOrderStatusEqualTo(orderStatus);
+            }
         }
         if(StringUtils.isNotBlank(deliveryDate)){
-            criteria.andDeliveryDateEqualTo(DateUtil.getDateToString(deliveryDate, DateUtil.DATESHOWFORMAT));
+            if(deliveryDate.contains(",")){
+                List<String> deliveryDateList = Arrays.asList(deliveryDate.split(","));
+                Date deliveryDateStart = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+                Date deliveryDateEnd = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+                criteria.andDeliveryDateBetween(deliveryDateStart, deliveryDateEnd);
+            }
+            //criteria.andDeliveryDateEqualTo(DateUtil.getDateToString(deliveryDate, DateUtil.DATESHOWFORMAT));
         }
         if(StringUtils.isNotBlank(establishDate)){
-            criteria.andEstablishDateEqualTo(DateUtil.getDateToString(establishDate, DateUtil.DATESHOWFORMAT));
+            if(establishDate.contains(",")){
+                List<String> establishDateList = Arrays.asList(establishDate.split(","));
+                Date establishDateStart = DateUtil.getDateToString(establishDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+                Date establishDateEnd = DateUtil.getDateToString(establishDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+                criteria.andEstablishDateBetween(establishDateStart, establishDateEnd);
+            }
+            //criteria.andEstablishDateEqualTo(DateUtil.getDateToString(establishDate, DateUtil.DATESHOWFORMAT));
         }
         if(StringUtils.isNotBlank(completeDate)){
-            criteria.andCompleteDateEqualTo(DateUtil.getDateToString(completeDate, DateUtil.DATESHOWFORMAT));
+            if(completeDate.contains(",")){
+                List<String> completeDateList = Arrays.asList(completeDate.split(","));
+                Date completeDateStart = DateUtil.getDateToString(completeDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+                Date completeDateEnd = DateUtil.getDateToString(completeDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+                criteria.andCompleteDateBetween(completeDateStart, completeDateEnd);
+            }
+            //criteria.andCompleteDateEqualTo(DateUtil.getDateToString(completeDate, DateUtil.DATESHOWFORMAT));
         }
+
         if(StringUtils.isNotBlank(examineStatus)){
             criteria.andExamineStatusEqualTo(examineStatus);
         }else{
