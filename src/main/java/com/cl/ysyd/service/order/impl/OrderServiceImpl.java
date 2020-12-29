@@ -97,7 +97,7 @@ public class OrderServiceImpl implements IOrderService {
 
     //对账单导出表头 fileName sheetName
     private static final String[] HEADERS_BILL = {"订单号" , "交货日期" , "订单状态" , "订单单价" ,"接单人", "创建日期" , "完成日期"};
-    private static final String FILE_NAME_BILL = "订单对账单数据";
+    private static final String FILE_NAME_BILL = "订单对账单信息";
     private static final String SHEET_NAME = "订单对账单";
 
     @Override

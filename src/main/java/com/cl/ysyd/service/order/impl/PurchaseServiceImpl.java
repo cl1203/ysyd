@@ -130,9 +130,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
     private static final String ENCODING = "utf-8";
 
     private static final String[] HEADERS_BILL = {"订单号", "采购单号", "采购编号", "采购人员","物料名称", "克重", "幅宽", "采购单价", "单位", "供应商", "采购日期"};
-    private static final String FILE_NAME_BILL = "订单对账单数据";
-    private static final String SHEET_NAME = "订单对账单";
-    private static final String FILE_NAME = "采购数据";
+    private static final String FILE_NAME_BILL = "采购对账单信息";
+    private static final String SHEET_NAME = "采购对账单";
+    private static final String FILE_NAME = "采购列表信息";
 
     @Override
     public int deleteByPrimaryKey(String pkId) {

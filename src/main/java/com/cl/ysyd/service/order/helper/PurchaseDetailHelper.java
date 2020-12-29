@@ -110,13 +110,13 @@ public class PurchaseDetailHelper {
             if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getWidthOfCloth())) {
                 throw new BusiException("幅宽不符合规则, 整数位最多8位, 小数位最多2位!");
             }
-            entity.setGramWeight(new BigDecimal(reqDto.getWidthOfCloth()));
+            entity.setWidthOfCloth(new BigDecimal(reqDto.getWidthOfCloth()));
         }
         if(StringUtils.isNotBlank(reqDto.getUnitPrice())){
             /*if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
                 throw new BusiException("采购单价不符合规则, 整数位最多8位, 小数位最多2位!");
             }*/
-            entity.setGramWeight(new BigDecimal(reqDto.getUnitPrice()));
+            entity.setUnitPrice(new BigDecimal(reqDto.getUnitPrice()));
         }
         entity.setUnit(reqDto.getUnit());
         entity.setSupplier(reqDto.getSupplier());
