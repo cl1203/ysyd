@@ -220,6 +220,7 @@ public class OrderServiceImpl implements IOrderService {
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser,  deliveryDate, establishDate, completeDate, isAll);
+        PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
         if(CollectionUtils.isNotEmpty(orderEntityList)){
             for(TmOrderEntity orderEntity : orderEntityList){
@@ -228,11 +229,10 @@ public class OrderServiceImpl implements IOrderService {
             }
             List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
             orderResDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());
-            PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
             pageInfo.setList(orderResDtoList);
             return pageInfo;
         }
-        return null;
+        return pageInfo;
     }
 
     @Override
