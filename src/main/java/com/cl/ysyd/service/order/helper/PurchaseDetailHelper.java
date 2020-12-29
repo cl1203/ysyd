@@ -8,6 +8,7 @@ package com.cl.ysyd.service.order.helper;
 
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.DictType;
+import com.cl.ysyd.common.enums.IsValidEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
 import com.cl.ysyd.common.utils.DateUtil;
@@ -19,7 +20,6 @@ import com.cl.ysyd.service.sys.IBizDictionaryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -138,9 +138,9 @@ public class PurchaseDetailHelper {
         }else{
             entity.setPurchaseDate(DateUtil.dateToDate(new Date(), DateUtil.DATESHOWFORMAT));
         }
-        String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
-        Assert.hasText(statusText, "所选状态不存在, 请修改!");
-        entity.setStatus(reqDto.getStatus());
+        /*String statusText = this.iTcDictService.getTextByBizCode(DictType.VALID_STATUS.getCode(), reqDto.getStatus().toString());
+        Assert.hasText(statusText, "所选状态不存在, 请修改!");*/
+        entity.setStatus(IsValidEnum.VALID.getCode().byteValue());
         entity.setRemarks(reqDto.getRemarks());
         entity.setCreateUser(LoginUtil.getUserId());
         entity.setLastUpdateTime(new Date());
