@@ -127,12 +127,12 @@ public class PurchaseDetailHelper {
             }*/
             entity.setQuantity(Integer.valueOf(reqDto.getQuantity()));
         }
-        /*if(null != reqDto.getTotalAmountDetail()){
-            if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getTotalAmountDetail())) {
+        if(null != reqDto.getTotalAmountDetail()){
+            /*if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getTotalAmountDetail())) {
                 throw new BusiException("采购明细总价不符合规则, 整数位最多8位, 小数位最多2位!");
-            }
+            }*/
             entity.setGramWeight(reqDto.getTotalAmountDetail());
-        }*/
+        }
         if(StringUtils.isNotBlank(reqDto.getPurchaseDate())){
             entity.setPurchaseDate(DateUtil.getDateToString(reqDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
         }else{
