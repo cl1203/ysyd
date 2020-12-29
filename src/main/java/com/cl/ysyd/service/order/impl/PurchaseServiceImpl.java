@@ -660,6 +660,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
             log.info("根据主键 pkId【{}】查询信息不存在",pkId);
             throw new BusiException("数据不存在");
         }
+        boolean equals = checkEntity.getPurchaseStatus().equals(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
+        Assert.isTrue(equals, "采购单是已完成状态, 请勿重复操作!");
         //采购单完成
         checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
         checkEntity.setPurchasePersonnel(userId);
@@ -679,6 +681,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
         Assert.hasText(pkId, "采购单ID不能为空!");
         TmPurchaseEntity checkEntity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
         Assert.notNull(checkEntity, "采购单信息不存在!");
+        boolean equals = checkEntity.getPurchaseStatus().equals(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
+        Assert.isTrue(equals, "采购单是已完成状态, 请勿重复操作!");
         //采购单完成
         checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
         checkEntity.setPurchasePersonnel(LoginUtil.getUserId());
