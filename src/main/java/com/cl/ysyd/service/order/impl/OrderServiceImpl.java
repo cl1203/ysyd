@@ -275,6 +275,9 @@ public class OrderServiceImpl implements IOrderService {
         //根据当前订单状态获取下一个订单状态
         String orderStatus = this.bizDictionaryMapper.getOrderStatusNext(checkEntity.getOrderStatus());
         checkEntity.setOrderStatus(orderStatus);
+        if(orderStatus.equals(OrderStatusEnum.COMPLETED.getCode())){
+            checkEntity.setCompleteDate(DateUtil.dateToDate(new Date(), DateUtil.DATESHOWFORMAT));
+        }
         checkEntity.setLastUpdateTime(new Date());
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());
         int ret = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);

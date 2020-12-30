@@ -682,7 +682,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         TmPurchaseEntity checkEntity = this.tmPurchaseMapper.selectByPrimaryKey(pkId);
         Assert.notNull(checkEntity, "采购单信息不存在!");
         boolean equals = checkEntity.getPurchaseStatus().equals(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
-        Assert.isTrue(equals, "采购单是已完成状态, 请勿重复操作!");
+        Assert.isTrue(!equals, "采购单是已完成状态, 请勿重复操作!");
         //采购单完成
         checkEntity.setPurchaseStatus(PurchaseStatusEnum.PURCHASE_COMPLETED.getCode());
         checkEntity.setPurchasePersonnel(LoginUtil.getUserId());
