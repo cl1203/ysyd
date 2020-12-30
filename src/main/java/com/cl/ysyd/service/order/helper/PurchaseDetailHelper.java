@@ -67,6 +67,7 @@ public class PurchaseDetailHelper {
         resDto.setPurchaseDate(DateUtil.getDateString(TmPurchaseDetail.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
         resDto.setUnit(TmPurchaseDetail.getUnit());
         resDto.setUnitPrice(TmPurchaseDetail.getUnitPrice());
+        resDto.setPurchaseImg(TmPurchaseDetail.getPurchaseImg());
         return resDto;
     }
 
@@ -145,6 +146,7 @@ public class PurchaseDetailHelper {
         entity.setCreateUser(LoginUtil.getUserId());
         entity.setLastUpdateTime(new Date());
         entity.setLastUpdateUser(LoginUtil.getUserId());
+        entity.setPurchaseImg(reqDto.getPurchaseImg());
         return entity;
     }
 
