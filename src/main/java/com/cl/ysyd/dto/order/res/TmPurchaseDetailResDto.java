@@ -138,4 +138,7 @@ public class TmPurchaseDetailResDto {
      */
     @ApiModelProperty(value="最后修改人" )
     private String lastUpdateUser;
+
+    @ApiModelProperty(value="图片rul" )
+    private String purchaseImg;
 }

@@ -117,6 +117,16 @@ public class TmPurchaseDetailEntity implements Serializable {
      */
     private String lastUpdateUser;
 
+    private String purchaseImg;
+
+    public String getPurchaseImg() {
+        return purchaseImg;
+    }
+
+    public void setPurchaseImg(String purchaseImg) {
+        this.purchaseImg = purchaseImg;
+    }
+
     /**
      * 返回字段:主键
      */

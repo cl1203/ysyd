@@ -1293,6 +1293,76 @@ public class TmPurchaseDetailEntityExample {
             return (Criteria) this;
         }
 
+        public Criteria andPurchaseImgIsNull() {
+            addCriterion("purchase_img is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgIsNotNull() {
+            addCriterion("purchase_img is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgEqualTo(String value) {
+            addCriterion("purchase_img =", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgNotEqualTo(String value) {
+            addCriterion("purchase_img <>", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgrGreaterThan(String value) {
+            addCriterion("purchase_img >", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgGreaterThanOrEqualTo(String value) {
+            addCriterion("purchase_img >=", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgLessThan(String value) {
+            addCriterion("purchase_img <", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgLessThanOrEqualTo(String value) {
+            addCriterion("purchase_img <=", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgLike(String value) {
+            addCriterion("purchase_img like", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgNotLike(String value) {
+            addCriterion("purchase_img not like", value, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgIn(List<String> values) {
+            addCriterion("purchase_img in", values, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgNotIn(List<String> values) {
+            addCriterion("purchase_img not in", values, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgBetween(String value1, String value2) {
+            addCriterion("purchase_img between", value1, value2, "purchaseImg");
+            return (Criteria) this;
+        }
+
+        public Criteria andPurchaseImgNotBetween(String value1, String value2) {
+            addCriterion("purchase_img not between", value1, value2, "purchaseImg");
+            return (Criteria) this;
+        }
+
         public Criteria andLastUpdateTimeIsNull() {
             addCriterion("last_update_time is null");
             return (Criteria) this;

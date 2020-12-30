@@ -6,6 +6,7 @@
     <result column="purchase_no" jdbcType="VARCHAR" property="purchaseNo" />
     <result column="purchase_number" jdbcType="VARCHAR" property="purchaseNumber" />
     <result column="materiel_name" jdbcType="VARCHAR" property="materielName" />
+    <result column="purchase_img" jdbcType="VARCHAR" property="purchaseImg" />
     <result column="gram_weight" jdbcType="DECIMAL" property="gramWeight" />
     <result column="width_of_cloth" jdbcType="DECIMAL" property="widthOfCloth" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
@@ -81,7 +82,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    pk_id, purchase_no, purchase_number, materiel_name, gram_weight, width_of_cloth, 
+    pk_id, purchase_no, purchase_number, materiel_name, purchase_img, gram_weight, width_of_cloth,
     unit_price, unit, supplier, colour, quantity, total_amount, purchase_date, status, 
     remarks, create_time, create_user, last_update_time, last_update_user
   </sql>
@@ -117,14 +118,14 @@
   </delete>
   <insert id="insert" parameterType="com.cl.ysyd.entity.order.TmPurchaseDetailEntity">
     insert into tm_purchase_detail (pk_id, purchase_no, purchase_number, 
-      materiel_name, gram_weight, width_of_cloth, 
+      materiel_name, purchase_img, gram_weight, width_of_cloth,
       unit_price, unit, supplier, 
       colour, quantity, total_amount, 
       purchase_date, status, remarks, 
       create_time, create_user, last_update_time, 
       last_update_user)
     values (#{pkId,jdbcType=VARCHAR}, #{purchaseNo,jdbcType=VARCHAR}, #{purchaseNumber,jdbcType=VARCHAR}, 
-      #{materielName,jdbcType=VARCHAR}, #{gramWeight,jdbcType=DECIMAL}, #{widthOfCloth,jdbcType=DECIMAL}, 
+      #{materielName,jdbcType=VARCHAR}, #{purchaseImg, jdbcType=VARCHAR} #{gramWeight,jdbcType=DECIMAL}, #{widthOfCloth,jdbcType=DECIMAL},
       #{unitPrice,jdbcType=DECIMAL}, #{unit,jdbcType=VARCHAR}, #{supplier,jdbcType=VARCHAR}, 
       #{colour,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{totalAmount,jdbcType=DECIMAL}, 
       #{purchaseDate,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, 
@@ -145,6 +146,9 @@
       </if>
       <if test="materielName != null">
         materiel_name,
+      </if>
+      <if test="purchaseImg != null">
+        purchase_img,
       </if>
       <if test="gramWeight != null">
         gram_weight,
@@ -204,6 +208,9 @@
       </if>
       <if test="materielName != null">
         #{materielName,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseImg != null">
+        #{purchaseImg,jdbcType=VARCHAR},
       </if>
       <if test="gramWeight != null">
         #{gramWeight,jdbcType=DECIMAL},
@@ -273,6 +280,9 @@
       <if test="record.materielName != null">
         materiel_name = #{record.materielName,jdbcType=VARCHAR},
       </if>
+      <if test="record.purchaseImg != null">
+        purchase_img = #{record.purchaseImg,jdbcType=VARCHAR},
+      </if>
       <if test="record.gramWeight != null">
         gram_weight = #{record.gramWeight,jdbcType=DECIMAL},
       </if>
@@ -329,6 +339,7 @@
       purchase_no = #{record.purchaseNo,jdbcType=VARCHAR},
       purchase_number = #{record.purchaseNumber,jdbcType=VARCHAR},
       materiel_name = #{record.materielName,jdbcType=VARCHAR},
+      purchase_img = #{record.purchaseImg,jdbcType=VARCHAR},
       gram_weight = #{record.gramWeight,jdbcType=DECIMAL},
       width_of_cloth = #{record.widthOfCloth,jdbcType=DECIMAL},
       unit_price = #{record.unitPrice,jdbcType=DECIMAL},
@@ -359,6 +370,9 @@
       </if>
       <if test="materielName != null">
         materiel_name = #{materielName,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseImg != null">
+        purchase_img = #{purchaseImg,jdbcType=VARCHAR},
       </if>
       <if test="gramWeight != null">
         gram_weight = #{gramWeight,jdbcType=DECIMAL},
@@ -413,6 +427,7 @@
     set purchase_no = #{purchaseNo,jdbcType=VARCHAR},
       purchase_number = #{purchaseNumber,jdbcType=VARCHAR},
       materiel_name = #{materielName,jdbcType=VARCHAR},
+      purchase_img = #{purchaseImg,jdbcType=VARCHAR},
       gram_weight = #{gramWeight,jdbcType=DECIMAL},
       width_of_cloth = #{widthOfCloth,jdbcType=DECIMAL},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
