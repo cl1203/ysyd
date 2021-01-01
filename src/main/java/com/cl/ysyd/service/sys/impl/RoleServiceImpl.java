@@ -131,6 +131,7 @@ public class RoleServiceImpl implements IRoleService {
                     List<TsMenuEntity> menuEntityListButton = this.menuMapper.queryMenuListByRoleIdAndMenuId(pkId, tsMenuEntityOne.getPkId(), PowerTypeEnum.BUTTON.getCode());
                     List<TsMenuResDto> menuResDtoListButton = this.menuHelper.editResDtoList(menuEntityListButton);
                     menuResDtoOne.setButtonResDtoList(menuResDtoListButton);
+                    menuResDtoOne.setMenuResDtoList(menuResDtoListTwo);
                 }
                 //添加所有的一级菜单
                 menuResDtoListOne.add(menuResDtoOne);
