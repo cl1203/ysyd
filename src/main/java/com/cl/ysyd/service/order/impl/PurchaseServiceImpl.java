@@ -11,6 +11,7 @@ import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.enums.PurchaseStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
 import com.cl.ysyd.common.utils.CheckMatchAndSpaceUtil;
+import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmPurchaseDetailReqDto;
@@ -295,6 +296,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
         if(CollectionUtils.isNotEmpty(resDtoList)){
             for(TmPurchaseBillResDto resDto : resDtoList){
+                if(null != resDto.getPurchaseDate()){
+                    resDto.setPurchaseDate(DateUtil.getDateString(resDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
+                }
                 if(resDto.getUnitPrice() != null){
                     totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
                 }
