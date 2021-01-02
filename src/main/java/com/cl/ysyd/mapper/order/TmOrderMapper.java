@@ -62,10 +62,13 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
      * @return 列表结果集
      */
     default List<TmOrderEntity> queryOrderList(String orderUser, String orderStatus,String deliveryDate, String establishDate,
-                                               String completeDate, String examineStatus, String isAll, String status){
+                                               String completeDate, String examineStatus, String isAll, String status, String orderNo){
         //查询
         TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
         TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
+        if(StringUtils.isNotBlank(orderNo)){
+            criteria.andOrderNoEqualTo(orderNo);
+        }
         if(isAll.equals(AuditStatusEnum.REVIEWED.getCode())){
             if(StringUtils.isNotBlank(orderUser)){
                 if(orderUser.contains(",")){

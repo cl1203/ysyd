@@ -114,9 +114,9 @@ public class OrderController {
     @GetMapping(path = "/query/{pageNum}/{pageSize}")
     @LoggerManage(description = "查询订单列表")
     public ResponseData<PageInfo<TmOrderResDto>> queryOrderByPage(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String orderUser, String orderStatus,
-                                                                  String deliveryDate, String establishDate, String completeDate, String examineStatus, String status){
+                                                                  String deliveryDate, String establishDate, String completeDate, String examineStatus, String status, String orderNo){
         log.info("Controller queryOrderByPage start.");
-        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, status);
+        PageInfo<TmOrderResDto> resDto = this.iOrderService.queryOrderByPage(pageNum, pageSize, orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, status, orderNo);
         log.info("Controller queryOrderByPage end.");
         return new ResponseData<>(resDto);
     }

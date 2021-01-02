@@ -59,7 +59,7 @@ public interface IOrderService {
      * @return 列表结果集
      */
     PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus, String deliveryDate,
-                                             String establishDate, String completeDate, String examineStatus, String status);
+                                             String establishDate, String completeDate, String examineStatus, String status, String orderNo);
 
     /**
      *

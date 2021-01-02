@@ -186,12 +186,12 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus, String deliveryDate,
-                                                    String establishDate, String completeDate, String examineStatus,String status) {
+                                                    String establishDate, String completeDate, String examineStatus,String status,String orderNo) {
         //查询当前用户是否拥有全部权限
         String isAll = this.getIsAll();
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
-        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll ,status);
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll ,status, orderNo);
         List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(orderResDtoList);
@@ -287,7 +287,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public void export(HttpServletResponse response, String orderUser, String orderStatus, String deliveryDate, String establishDate, String completeDate, String status) {
         //查询结果
-        List<TmOrderResDto> list = this.queryOrderByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, orderUser, orderStatus, deliveryDate, establishDate, completeDate, null, status).getList();
+        List<TmOrderResDto> list = this.queryOrderByPage(SortConstant.ONE, SortConstant.PAGE_SIZE, orderUser, orderStatus, deliveryDate, establishDate, completeDate, null, status, null).getList();
         //导出
         ExcelUtils.exportExcel( FILE_NAME, HEADERS , list , response , DateUtil.DATESHOWFORMAT);
     }
