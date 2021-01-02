@@ -167,7 +167,7 @@ public class UserServiceImpl implements IUserService {
         TsUserEntity entity = this.userHelper.editEntity(reqDto);
         String password = reqDto.getPassword();
         Assert.hasText(password, "密码不能为空!");
-        password = MD5Util.getInstance().encrypt(password);
+        //password = MD5Util.getInstance().encrypt(password);
         password = MD5Util.getInstance().encryptBySalt(password);
         entity.setPassword(password);
         entity.setCreateTime(new Date());

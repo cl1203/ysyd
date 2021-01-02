@@ -93,4 +93,5 @@ public class LoginServiceImpl implements ILoginService {
         Assert.isTrue(flag , "用户名和密码不匹配!");
         return userEntity;
     }
+
 }
