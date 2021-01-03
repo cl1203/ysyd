@@ -81,7 +81,7 @@
             and tpd.purchase_date = #{purchaseDate}
         </if>
         <if test='isAll != "Y"'>
-            and o.order_user = #{userId}
+            and t.order_user = #{userId}
         </if>
         order by tp.create_time DESC
     </select>

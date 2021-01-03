@@ -217,12 +217,22 @@ public class UserServiceImpl implements IUserService {
         }
         if(StringUtils.isNotBlank(email)){
             String mobileRegex = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-            if(!CheckMatchAndSpaceUtil.match(mobileRegex , mobile)) {
+            if(!CheckMatchAndSpaceUtil.match(mobileRegex , email)) {
                 throw new BusiException("邮箱号不符合规则,请修改! ");
             }
         }
     }
 
+
+    public static void main(String[] args) {
+        String a = "77261307@qq.com";
+        String mobileRegex = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        if(!CheckMatchAndSpaceUtil.match(mobileRegex , a)) {
+            throw new BusiException("邮箱号不符合规则,请修改! ");
+        }else {
+            System.out.println("11111111111111");
+        }
+    }
 
     @Override
     public int updateByPrimaryKey(String pkId, TsUserReqDto reqDto) {
