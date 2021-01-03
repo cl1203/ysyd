@@ -276,4 +276,6 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
 
     List<SectorResDto> querySector(@Param("ym")String ym);
 
+    List<SectorResDto> queryColumnar(@Param("ym")String ym);
+
 }

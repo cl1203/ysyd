@@ -66,12 +66,26 @@ public class NoticeController {
      * @return 查询结果
      */
     @ApiOperation(value = "查询首页&看板 扇形部分内容")
-    @GetMapping(value = "/querySector/{year}/{month}")
+    @GetMapping(value = "/querySector/{year}")
     @LoggerManage(description = "查询首页&查询首页&看板 扇形部分内容")
-    public ResponseData<List<SectorResDto>> querySector(@PathVariable String year, @PathVariable String month){
+    public ResponseData<List<SectorResDto>> querySector(@PathVariable String year, String month){
         log.info("NoticeController queryCurve start.");
         List<SectorResDto> list =  this.iOrderService.querySector(year, month);
         log.info("NoticeController queryCurve end.");
+        return new ResponseData<>(list);
+    }
+
+    /**
+     * 查询首页&看板 曲线部分内容
+     * @return 查询结果
+     */
+    @ApiOperation(value = "查询首页&看板 柱形部分内容")
+    @GetMapping(value = "/queryColumnar/{year}")
+    @LoggerManage(description = "查询首页&查询首页&看板 柱形部分内容")
+    public ResponseData<List<Integer>> queryColumnar(@PathVariable String year, String month){
+        log.info("NoticeController queryColumnar start.");
+        List<Integer> list =  this.iOrderService.queryColumnar(year, month);
+        log.info("NoticeController queryColumnar end.");
         return new ResponseData<>(list);
     }
 

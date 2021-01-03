@@ -102,4 +102,22 @@
         GROUP BY
             order_status
     </select>
+
+    <resultMap id="ColumnarMap" type="com.cl.ysyd.dto.order.res.SectorResDto">
+        <result column="orderNum" jdbcType="VARCHAR" property="value" />
+        <result column="order_type" jdbcType="INTEGER" property="name" />
+    </resultMap>
+    <select id="queryColumnar" resultMap="ColumnarMap">
+        SELECT
+            order_type order_type,
+	        count( 1 ) orderNum
+        FROM
+            tm_order
+        WHERE
+            establish_date LIKE CONCAT(CONCAT(#{ym}), '%')
+        AND status = 1
+        AND order_type IS NOT NULL
+        GROUP BY
+            order_type
+    </select>
 </mapper>

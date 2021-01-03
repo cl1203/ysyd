@@ -558,34 +558,61 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public List<SectorResDto> querySector(String year, String month) {
         //按订单状态分组 根据年月条件查询
-        String ym = year + "-" + month;
+        String ym = year;
+        if(StringUtils.isNotBlank(month)){
+            ym = ym + "-" + month;
+        }
+        String code = DictType.ORDER_STATUS.getCode();
         List<SectorResDto> resDto = this.tmOrderMapper.querySector(ym);
         if(CollectionUtils.isNotEmpty(resDto)){
-            for(SectorResDto sectorResDto : resDto){
-                String bizText = this.bizDictionaryMapper.getTextByBizCode(DictType.ORDER_STATUS.getCode(), sectorResDto.getName());
-                sectorResDto.setName(bizText);
-                int seq = this.bizDictionaryMapper.querySeq(DictType.ORDER_STATUS.getCode(), bizText);
-                sectorResDto.setSeq(seq);
-            }
-            //对象中所有的状态
-            List<String> nameList = resDto.stream().map(SectorResDto::getName).collect(Collectors.toList());
-            //获取所有订单状态
-            List<TcBizDictionaryEntity> listByBizType = this.bizDictionaryMapper.getListByBizType(DictType.ORDER_STATUS.getCode());
-            List<String> list = listByBizType.stream().map(TcBizDictionaryEntity::getBizText).collect(Collectors.toList());
-            for(String orderStatus : list){
-                boolean contains = nameList.contains(orderStatus);
-                if(!contains){
-                    SectorResDto sectorResDto = new SectorResDto();
-                    sectorResDto.setName(orderStatus);
-                    sectorResDto.setValue(0);
-                    sectorResDto.setSeq(this.bizDictionaryMapper.querySeq(DictType.ORDER_STATUS.getCode(), orderStatus));
-                    resDto.add(sectorResDto);
-                }
-            }
+            this.getText(code, resDto);
         }
         Comparator<SectorResDto> netTypeComparator = Comparator.comparingInt(SectorResDto::getSeq);
         resDto.sort(netTypeComparator);
         return resDto;
+    }
+
+    @Override
+    public List<Integer> queryColumnar(String year, String month) {
+        //按订单状态分组 根据年月条件查询
+        String ym = year;
+        if(StringUtils.isNotBlank(month)){
+            ym = ym + "-" + month;
+        }
+        String code = DictType.ORDER_TYPE.getCode();
+        //按订单类型分组 根据年月条件查询
+        List<SectorResDto> resDto = this.tmOrderMapper.queryColumnar(ym);
+        if(CollectionUtils.isNotEmpty(resDto)){
+            this.getText(code, resDto);
+        }
+        Comparator<SectorResDto> netTypeComparator = Comparator.comparingInt(SectorResDto::getSeq);
+        resDto.sort(netTypeComparator);
+        List<Integer> list = resDto.stream().map(SectorResDto::getValue).collect(Collectors.toList());
+        return list;
+    }
+
+    private void getText(String code, List<SectorResDto> resDto) {
+        for (SectorResDto sectorResDto : resDto) {
+            String bizText = this.bizDictionaryMapper.getTextByBizCode(code, sectorResDto.getName());
+            sectorResDto.setName(bizText);
+            int seq = this.bizDictionaryMapper.querySeq(code, bizText);
+            sectorResDto.setSeq(seq);
+        }
+        //对象中所有的状态
+        List<String> nameList = resDto.stream().map(SectorResDto::getName).collect(Collectors.toList());
+        //获取所有订单状态
+        List<TcBizDictionaryEntity> listByBizType = this.bizDictionaryMapper.getListByBizType(code);
+        List<String> list = listByBizType.stream().map(TcBizDictionaryEntity::getBizText).collect(Collectors.toList());
+        for (String text : list) {
+            boolean contains = nameList.contains(text);
+            if (!contains) {
+                SectorResDto sectorResDto = new SectorResDto();
+                sectorResDto.setName(text);
+                sectorResDto.setValue(0);
+                sectorResDto.setSeq(this.bizDictionaryMapper.querySeq(code, text));
+                resDto.add(sectorResDto);
+            }
+        }
     }
 
     /**

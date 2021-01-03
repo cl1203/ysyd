@@ -158,4 +158,6 @@ public interface IOrderService {
     Map<String, List<Integer>> queryCurve(String year);
 
     List<SectorResDto> querySector(String year, String month);
+
+    List<Integer> queryColumnar(String year, String month);
 }
