@@ -80,6 +80,13 @@ public interface TcBizDictionaryMapper extends IBaseMapper<TcBizDictionaryEntity
         return  tcBizDictionaryEntities2.get(SortConstant.ZERO).getBizCode();
     }
 
-
+    default int querySeq(String bizType, String bizText){
+        TcBizDictionaryEntityExample tcBizDictionaryEntityExample = new TcBizDictionaryEntityExample();
+        TcBizDictionaryEntityExample.Criteria criteria = tcBizDictionaryEntityExample.createCriteria();
+        criteria.andBizTypeEqualTo(bizType);
+        criteria.andBizTextEqualTo(bizText);
+        List<TcBizDictionaryEntity> tcBizDictionaryEntities = this.selectByExample(tcBizDictionaryEntityExample);
+        return tcBizDictionaryEntities.get(SortConstant.ZERO).getSeq();
+    }
 
 }

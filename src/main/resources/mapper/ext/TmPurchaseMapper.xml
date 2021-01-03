@@ -41,6 +41,7 @@
         <result column="gram_weight" jdbcType="VARCHAR" property="gramWeight" />
         <result column="width_of_cloth" jdbcType="VARCHAR" property="widthOfCloth" />
         <result column="unit_price" jdbcType="VARCHAR" property="unitPrice" />
+        <result column="total_amount" jdbcType="VARCHAR" property="purchaseTotalMoney" />
         <result column="unit" jdbcType="VARCHAR" property="unit" />
         <result column="supplier" jdbcType="VARCHAR" property="supplier" />
         <result column="purchase_personnel" jdbcType="VARCHAR" property="purchasePersonnel" />
@@ -56,6 +57,7 @@
             tpd.gram_weight gram_weight,
             tpd.width_of_cloth width_of_cloth,
             tpd.unit_price unit_price,
+            tp.total_amount total_amount,
             tpd.unit unit,
             tpd.supplier supplier,
             tp.purchase_personnel purchase_personnel,

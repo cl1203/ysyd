@@ -7,11 +7,15 @@
 package com.cl.ysyd.service.order;
 
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
+import com.cl.ysyd.dto.order.res.NoticeTopResDto;
+import com.cl.ysyd.dto.order.res.SectorResDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.github.pagehelper.PageInfo;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 订单 service接口类
@@ -140,4 +144,18 @@ public interface IOrderService {
      * @return 结果
      */
     void examineOrder(String pkId, String examineStatus);
+
+    /**
+     * 查询首页&看板 上部分内容
+     * @return 查询结果
+     */
+    NoticeTopResDto queryTop();
+
+    /**
+     * 查询首页&看板 曲线部分内容
+     * @return 查询结果
+     */
+    Map<String, List<Integer>> queryCurve(String year);
+
+    List<SectorResDto> querySector(String year, String month);
 }

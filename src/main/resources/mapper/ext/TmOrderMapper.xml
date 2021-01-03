@@ -16,4 +16,90 @@
     </select>
 
 
+    <select id="selectOrderNum" resultType="long">
+        SELECT
+            count(1)
+        FROM
+            tm_order
+        WHERE
+            STATUS = 1
+    </select>
+
+    <select id="selectOrderCompleteNum" resultType="long">
+        SELECT
+            count(1)
+        FROM
+            tm_order
+        WHERE
+            STATUS = 1
+        AND
+            order_status = 'completed'
+    </select>
+
+    <select id="selectOrderAbolishNum" resultType="long">
+        SELECT
+            count(1)
+        FROM
+            tm_order
+        WHERE
+            STATUS = 0
+    </select>
+
+    <select id="selectOrderTotalMoney" resultType="java.math.BigDecimal">
+        SELECT
+            sum( unit_price )
+        FROM
+            tm_order
+        WHERE
+            STATUS = 1
+    </select>
+
+    <select id="selectPuchaseTotalMoney" resultType="java.math.BigDecimal">
+        SELECT
+            sum( tp.total_amount )
+        FROM
+            tm_purchase tp
+            LEFT JOIN tm_order tm ON tp.order_no = tm.order_no
+        WHERE
+            tm.STATUS = 1
+    </select>
+
+    <resultMap id="CurveMap" type="com.cl.ysyd.dto.order.res.CurveResDto">
+        <result column="months" jdbcType="VARCHAR" property="month" />
+        <result column="orderNum" jdbcType="INTEGER" property="number" />
+    </resultMap>
+    <select id="queryCurve" resultMap="CurveMap">
+        SELECT
+            DATE_FORMAT( establish_date, '%m' ) months,
+            count(1) orderNum
+        FROM
+            tm_order
+        WHERE
+            establish_date LIKE CONCAT(CONCAT(#{year}), '%')
+        AND status = 1
+        <if test="completed != null and completed != '' ">
+            AND order_status = #{completed}
+        </if>
+        GROUP BY
+            months
+        ORDER BY
+            months
+    </select>
+
+    <resultMap id="SectorMap" type="com.cl.ysyd.dto.order.res.SectorResDto">
+        <result column="orderNum" jdbcType="VARCHAR" property="value" />
+        <result column="order_status" jdbcType="INTEGER" property="name" />
+    </resultMap>
+    <select id="querySector" resultMap="SectorMap">
+        SELECT
+            order_status order_status,
+            count(1) orderNum
+        FROM
+            tm_order
+        WHERE
+            establish_date LIKE CONCAT(CONCAT(#{ym}), '%')
+        AND status = 1
+        GROUP BY
+            order_status
+    </select>
 </mapper>

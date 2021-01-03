@@ -11,13 +11,14 @@ import com.cl.ysyd.common.enums.AuditStatusEnum;
 import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
-import com.cl.ysyd.common.utils.DateUtil;
-import com.cl.ysyd.common.utils.ExcelUtils;
-import com.cl.ysyd.common.utils.LoginUtil;
-import com.cl.ysyd.common.utils.UuidUtil;
+import com.cl.ysyd.common.utils.*;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
+import com.cl.ysyd.dto.order.res.CurveResDto;
+import com.cl.ysyd.dto.order.res.NoticeTopResDto;
+import com.cl.ysyd.dto.order.res.SectorResDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.sys.TcBizDictionaryEntity;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
 import com.cl.ysyd.mapper.order.TmOrderMapper;
@@ -47,8 +48,8 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 订单service实现类
@@ -87,6 +88,7 @@ public class OrderServiceImpl implements IOrderService {
     private final static int MAXNUMBER = 5;
     private static final String CONTENT_TYPE = "application/octet-stream";
     private static final String ENCODING = "utf-8";
+    private static final String MONTHS = "01,02,03,04,05,06,07,08,09,10,11,12";
 
 
     //订单导出表头 fileName
@@ -255,7 +257,7 @@ public class OrderServiceImpl implements IOrderService {
             throw new BusiException("选择的用户已经被禁用!");
         }
         String auditStatus = userEntity.getAuditStatus();
-        if(auditStatus.equals(AuditStatusEnum.NOT_REVIEWED)){
+        if(auditStatus.equals(AuditStatusEnum.NOT_REVIEWED.getCode())){
             throw new BusiException("选择的用户还未审核!");
         }
         checkEntity.setOrderUser(orderUserId);
@@ -490,6 +492,100 @@ public class OrderServiceImpl implements IOrderService {
         Assert.hasText(examinesStatusText, "审核状态不存在,请重新选择!");
         int i = this.tmOrderMapper.examineOrder(pkId, examineStatus);
         Assert.isTrue(i==SortConstant.ONE, "修改订单审核状态失败!");
+    }
+
+    @Override
+    public NoticeTopResDto queryTop() {
+        NoticeTopResDto resDto = new NoticeTopResDto();
+        //按当前年份查询 用户数量
+        resDto.setUserNum(this.userMapper.selectUserNum());
+        //订单总数
+        resDto.setOrderNum(this.tmOrderMapper.selectOrderNum());
+        //订单完成总数
+        resDto.setOrderCompleteNum(this.tmOrderMapper.selectOrderCompleteNum());
+        //订单作废总数
+        resDto.setOrderAbolishNum(this.tmOrderMapper.selectOrderAbolishNum());
+        //订单总金额
+        resDto.setOrderTotalMoney(this.tmOrderMapper.selectOrderTotalMoney());
+        //采购总金额
+        resDto.setPurchaseTotalMoney(this.tmOrderMapper.selectPuchaseTotalMoney());
+        return resDto;
+    }
+
+    @Override
+    public Map<String, List<Integer>> queryCurve(String year) {
+        Map<String, List<Integer>> map = new HashMap<>();
+        String[] list = MONTHS.split(",");
+        Comparator<CurveResDto> netTypeComparator = Comparator.comparingInt(o -> Integer.parseInt(o.getMonth()));
+        //按月分组查询订单总数量
+        List<CurveResDto> orderNumber = this.tmOrderMapper.queryCurve(year, null);
+        if(CollectionUtils.isNotEmpty(orderNumber)){
+            List<String> monthList = orderNumber.stream().map(CurveResDto::getMonth).collect(Collectors.toList());
+
+            for(String month : list){
+                boolean contains = monthList.contains(month);
+                if(!contains){
+                    CurveResDto curveResDto = new CurveResDto();
+                    curveResDto.setMonth(month);
+                    curveResDto.setNumber(0);
+                    orderNumber.add(curveResDto);
+                }
+            }
+            orderNumber.sort(netTypeComparator);
+            List<Integer> orderList = orderNumber.stream().map(CurveResDto::getNumber).collect(Collectors.toList());
+            map.put("order", orderList);
+        }
+        //按月分组查询完成订单总数量
+        List<CurveResDto> completeNumber = this.tmOrderMapper.queryCurve(year, OrderStatusEnum.COMPLETED.getCode());
+        if(CollectionUtils.isNotEmpty(completeNumber)){
+            List<String> monthList2 = completeNumber.stream().map(CurveResDto::getMonth).collect(Collectors.toList());
+            for(String month : list){
+                boolean contains = monthList2.contains(month);
+                if(!contains){
+                    CurveResDto curveResDto = new CurveResDto();
+                    curveResDto.setMonth(month);
+                    curveResDto.setNumber(0);
+                    completeNumber.add(curveResDto);
+                }
+            }
+            completeNumber.sort(netTypeComparator);
+            List<Integer> completeList = completeNumber.stream().map(CurveResDto::getNumber).collect(Collectors.toList());
+            map.put("complete", completeList);
+        }
+        return map;
+    }
+
+    @Override
+    public List<SectorResDto> querySector(String year, String month) {
+        //按订单状态分组 根据年月条件查询
+        String ym = year + "-" + month;
+        List<SectorResDto> resDto = this.tmOrderMapper.querySector(ym);
+        if(CollectionUtils.isNotEmpty(resDto)){
+            for(SectorResDto sectorResDto : resDto){
+                String bizText = this.bizDictionaryMapper.getTextByBizCode(DictType.ORDER_STATUS.getCode(), sectorResDto.getName());
+                sectorResDto.setName(bizText);
+                int seq = this.bizDictionaryMapper.querySeq(DictType.ORDER_STATUS.getCode(), bizText);
+                sectorResDto.setSeq(seq);
+            }
+            //对象中所有的状态
+            List<String> nameList = resDto.stream().map(SectorResDto::getName).collect(Collectors.toList());
+            //获取所有订单状态
+            List<TcBizDictionaryEntity> listByBizType = this.bizDictionaryMapper.getListByBizType(DictType.ORDER_STATUS.getCode());
+            List<String> list = listByBizType.stream().map(TcBizDictionaryEntity::getBizText).collect(Collectors.toList());
+            for(String orderStatus : list){
+                boolean contains = nameList.contains(orderStatus);
+                if(!contains){
+                    SectorResDto sectorResDto = new SectorResDto();
+                    sectorResDto.setName(orderStatus);
+                    sectorResDto.setValue(0);
+                    sectorResDto.setSeq(this.bizDictionaryMapper.querySeq(DictType.ORDER_STATUS.getCode(), orderStatus));
+                    resDto.add(sectorResDto);
+                }
+            }
+        }
+        Comparator<SectorResDto> netTypeComparator = Comparator.comparingInt(SectorResDto::getSeq);
+        resDto.sort(netTypeComparator);
+        return resDto;
     }
 
     /**

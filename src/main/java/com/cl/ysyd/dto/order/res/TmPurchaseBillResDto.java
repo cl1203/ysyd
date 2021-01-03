@@ -60,6 +60,12 @@ public class TmPurchaseBillResDto {
     private String unitPrice;
 
     /**
+     * 采购单价
+     */
+    @ApiModelProperty(value="采购总金额" )
+    private String purchaseTotalMoney;
+
+    /**
      * 单位
      */
     @ApiModelProperty(value="单位" )

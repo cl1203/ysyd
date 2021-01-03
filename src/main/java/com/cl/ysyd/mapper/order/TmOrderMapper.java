@@ -10,9 +10,12 @@ import com.cl.ysyd.common.base.IBaseMapper;
 import com.cl.ysyd.common.constants.SortConstant;
 import com.cl.ysyd.common.enums.AuditStatusEnum;
 import com.cl.ysyd.common.enums.ExamineStatusEnum;
+import com.cl.ysyd.common.enums.IsValidEnum;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.utils.DateUtil;
 import com.cl.ysyd.common.utils.LoginUtil;
+import com.cl.ysyd.dto.order.res.CurveResDto;
+import com.cl.ysyd.dto.order.res.SectorResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
 import com.cl.ysyd.entity.order.TmOrderEntityExample;
 import com.github.pagehelper.Page;
@@ -22,10 +25,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 订单 mapper类
@@ -162,6 +163,7 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         if(StringUtils.isNotBlank(completeDate)){
             criteria.andCompleteDateEqualTo(DateUtil.getDateToString(completeDate, DateUtil.DATESHOWFORMAT));
         }
+        criteria.andStatusEqualTo(IsValidEnum.VALID.getCode().byteValue());
         return this.selectByExample(orderEntityExample);
     }
 
@@ -244,5 +246,34 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         return this.updateByPrimaryKeySelective(orderEntity);
     }
 
+
+    /**
+     * 按当前年份查询 订单总数
+     */
+    Long selectOrderNum();
+
+    /**
+     * 订单完成总数
+     */
+    Long selectOrderCompleteNum();
+
+    /**
+     * 订单作废总数
+     */
+    Long selectOrderAbolishNum();
+
+    /**
+     * 订单总金额
+     */
+    BigDecimal selectOrderTotalMoney();
+
+    /**
+     * 采购总金额
+     */
+    BigDecimal selectPuchaseTotalMoney();
+
+    List<CurveResDto> queryCurve(@Param("year") String year, @Param("completed") String completed);
+
+    List<SectorResDto> querySector(@Param("ym")String ym);
 
 }

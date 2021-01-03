@@ -299,8 +299,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 if(null != resDto.getPurchaseDate()){
                     resDto.setPurchaseDate(DateUtil.getDateString(resDto.getPurchaseDate(), DateUtil.DATESHOWFORMAT));
                 }
-                if(resDto.getUnitPrice() != null){
-                    totalMoney = totalMoney.add(new BigDecimal(resDto.getUnitPrice())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+                if(StringUtils.isNotBlank(resDto.getPurchaseTotalMoney())){
+                    totalMoney = totalMoney.add(new BigDecimal(resDto.getPurchaseTotalMoney())).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
                 }
             }
             resDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());

@@ -60,4 +60,10 @@ public interface TsUserMapper extends IBaseMapper<TsUserEntity, TsUserEntityExam
         List<TsUserEntity> userEntityList = this.selectByExample(tsUserEntityExample);
         return userEntityList;
     }
+
+    /**
+     * 查询用户总数量
+     * @return 总数量
+     */
+    Long selectUserNum();
 }
