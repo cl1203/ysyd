@@ -139,7 +139,11 @@ public class OrderHelper {
         }
         TmOrderEntity entity = new TmOrderEntity();
         entity.setOrderNo(reqDto.getOrderNo());
-        entity.setImgUrl(reqDto.getImgUrl());
+        if(StringUtils.isNotBlank(reqDto.getImgUrl())){
+            entity.setImgUrl(reqDto.getImgUrl());
+        }else{
+            entity.setImgUrl("http://47.106.34.32/img/微信图片_2021010400192220210104002018.png");
+        }
         entity.setDeliveryDate(DateUtil.getDateToString(reqDto.getDeliveryDate(), DateUtil.DATESHOWFORMAT));
         if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
             throw new BusiException("单价不符合规则, 整数位最多8位, 小数位最多2位!");
