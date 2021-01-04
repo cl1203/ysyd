@@ -142,7 +142,7 @@ public class OrderHelper {
         if(StringUtils.isNotBlank(reqDto.getImgUrl())){
             entity.setImgUrl(reqDto.getImgUrl());
         }else{
-            entity.setImgUrl("http://47.106.34.32/img/微信图片_2021010400192220210104002018.png");
+            entity.setImgUrl("http://47.106.34.32/img/替代图20210104104933.jpg");
         }
         entity.setDeliveryDate(DateUtil.getDateToString(reqDto.getDeliveryDate(), DateUtil.DATESHOWFORMAT));
         if(!CheckMatchAndSpaceUtil.match(SortConstant.REGEXP, reqDto.getUnitPrice())) {
