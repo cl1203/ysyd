@@ -187,8 +187,8 @@ public class UserServiceImpl implements IUserService {
         long l = this.tsUserMapper.countByUserName(userName);
         Assert.isTrue(l== SortConstant.ZERO, "用户名已经存在,请修改!");
         //校验用户名是否符合规则
-        if(userName.length() < 8 || userName.length() > 12){
-            throw new BusiException("用户名长度应该在8-12位之间,请修改!");
+        if(userName.length() < 8 || userName.length() > 16){
+            throw new BusiException("用户名长度应该在8-16位之间,请修改!");
         }
         boolean flag = CheckMatchAndSpaceUtil.checkBlankSpace(userName);
         Assert.isTrue(flag , "用户名不能包含空格!");
