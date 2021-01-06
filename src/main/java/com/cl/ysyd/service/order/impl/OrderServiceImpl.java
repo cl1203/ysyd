@@ -506,9 +506,21 @@ public class OrderServiceImpl implements IOrderService {
         //订单作废总数
         resDto.setOrderAbolishNum(this.tmOrderMapper.selectOrderAbolishNum());
         //订单总金额
-        resDto.setOrderTotalMoney(this.tmOrderMapper.selectOrderTotalMoney());
+        BigDecimal bigDecimal = this.tmOrderMapper.selectOrderTotalMoney();
+        if(null == bigDecimal){
+            resDto.setOrderTotalMoney(new BigDecimal(0));
+        }else {
+            resDto.setOrderTotalMoney(bigDecimal);
+        }
+
         //采购总金额
-        resDto.setPurchaseTotalMoney(this.tmOrderMapper.selectPuchaseTotalMoney());
+        BigDecimal bigDecimal1 = this.tmOrderMapper.selectPuchaseTotalMoney();
+        if(null == bigDecimal1){
+            resDto.setPurchaseTotalMoney(new BigDecimal(0));
+        }else{
+            resDto.setPurchaseTotalMoney(bigDecimal1);
+        }
+
         return resDto;
     }
 
