@@ -34,7 +34,9 @@ public class TokenAdvice {
             "/v1/user/register",   //注册
             "/v1/purchase/app/complete",   //公众号完成采购单
             "/v1/user/bindingWeChat",   //绑定微信
-            "/v1/user/relieveWeChat"   //解绑微信
+            "/v1/user/relieveWeChat",   //解绑微信
+            "/webchat/index",
+            "/webchat/ticket"
     };
 
     @Before("within(com.cl.ysyd.controller..*)")
