@@ -23,7 +23,7 @@ public class WeChatController {
 	
 	private String appSecret = "a838a7881b9a12515a30d2c31d53ef6d";
 	
-	private String token = "test";
+	private String token = "ysydcl";
 
 	/**
 	 * 验证微信服务器端GET请
