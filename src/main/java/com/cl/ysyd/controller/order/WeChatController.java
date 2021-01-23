@@ -19,9 +19,9 @@ import java.io.PrintWriter;
 @Slf4j
 public class WeChatController {
 	
-	private String appId = "wx56abb0fff22137ca";
+	private String appId = "wx0706b4f5bd1fc117";
 	
-	private String appSecret = "a838a7881b9a12515a30d2c31d53ef6d";
+	private String appSecret = "32d4c3bf837f1ca4f68f319046eba37d";
 	
 	private String token = "ysydcl";
 
