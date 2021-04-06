@@ -24,7 +24,7 @@ import java.util.Date;
 @Api(tags = "ftp上传")
 public class FtpFileUploadController {
 
-    private static final String SUFFIXLIST = "jpg,png,pdf,jpeg,zip,7z,rar";
+    //private static final String SUFFIXLIST = "jpg,png,pdf,jpeg,zip,7z,rar";
 
     @PostMapping("/uploadImg")
     @ApiOperation(value = "上传图片")
@@ -43,9 +43,9 @@ public class FtpFileUploadController {
         //获取文件后缀
         Assert.hasText(fileName, "文件名不能为空!");
         String suffix=fileName.substring(fileName.lastIndexOf(".")+1);
-        if(!SUFFIXLIST.contains(suffix.trim().toLowerCase())){
+        /*if(!SUFFIXLIST.contains(suffix.trim().toLowerCase())){
             throw new BusiException("只能上传jpg、png、pdf、jpeg、zip、7z、rar格式的文件！");
-        }
+        }*/
         //重命名图片
         fileName = fileName.substring(SortConstant.ZERO, fileName.lastIndexOf(".")) + DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT5) + "." + suffix;
         if (fileName.indexOf(" ") > 0) {

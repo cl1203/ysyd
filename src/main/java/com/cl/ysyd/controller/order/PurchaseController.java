@@ -150,9 +150,9 @@ public class PurchaseController {
     @PutMapping(value = "/app/complete/{pkId}/{userId}")
     @LoggerManage(description = "公众号完成采购单")
     public ResponseData<Integer> completeByPrimaryKeyApp(@PathVariable String pkId, @PathVariable String userId) {
-        log.info("Controller updateByPrimaryKey start.");
+        log.info("Controller completeByPrimaryKeyApp start.");
         int result = this.iPurchaseService.completeByPrimaryKeyApp(pkId, userId);
-        log.info("Controller updateByPrimaryKey end.");
+        log.info("Controller completeByPrimaryKeyApp end.");
         return new ResponseData<>(result);
     }
 
