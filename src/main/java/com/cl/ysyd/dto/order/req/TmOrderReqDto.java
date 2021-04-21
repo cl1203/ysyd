@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单输出Dto类
@@ -33,6 +34,9 @@ public class TmOrderReqDto {
     @ApiModelProperty(value="图片地址" )
     @Length(max=255,message="图片地址字段过长, 最大长度为255")
     private String imgUrl;
+
+    @ApiModelProperty(value="详情图片集合" )
+    private List<String> imgList;
 
     /**
      * 交货日期

@@ -18,9 +18,12 @@ import com.cl.ysyd.dto.order.res.NoticeTopResDto;
 import com.cl.ysyd.dto.order.res.SectorResDto;
 import com.cl.ysyd.dto.order.res.TmOrderResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
+import com.cl.ysyd.entity.order.TmOrderImgEntity;
+import com.cl.ysyd.entity.order.TmOrderImgEntityExample;
 import com.cl.ysyd.entity.sys.TcBizDictionaryEntity;
 import com.cl.ysyd.entity.sys.TsRoleEntity;
 import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.order.TmOrderImgMapper;
 import com.cl.ysyd.mapper.order.TmOrderMapper;
 import com.cl.ysyd.mapper.sys.TcBizDictionaryMapper;
 import com.cl.ysyd.mapper.sys.TsRoleMapper;
@@ -76,6 +79,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private TsRoleMapper roleMapper;
+
+    @Autowired
+    private TmOrderImgMapper orderImgMapper;
 
     /**
      * 订单Helper
@@ -141,6 +147,12 @@ public class OrderServiceImpl implements IOrderService {
             return null;
         }
         TmOrderResDto resDto = this.orderHelper.editResDto(entity);
+        TmOrderImgEntityExample orderImgEntityExample = new TmOrderImgEntityExample();
+        TmOrderImgEntityExample.Criteria criteria = orderImgEntityExample.createCriteria();
+        criteria.andOrderNoEqualTo(entity.getOrderNo());
+        List<TmOrderImgEntity> tmOrderImgEntities = orderImgMapper.selectByExample(orderImgEntityExample);
+        List<String> list = tmOrderImgEntities.stream().map(TmOrderImgEntity::getImgDetailUrl).collect(Collectors.toList());
+        resDto.setImgList(list);
         log.info("Service selectByPrimaryKey end. res=【{}】",resDto);
         return resDto;
     }
@@ -169,20 +181,52 @@ public class OrderServiceImpl implements IOrderService {
         entity.setEstablishDate(DateUtil.dateToDate(new Date(), DateUtil.DATESHOWFORMAT));
         int ret = this.tmOrderMapper.insertSelective(entity);
         Assert.isTrue(ret==SortConstant.ONE, "新增失败!");
+        List<String> imgList = reqDto.getImgList();
+        //新增明细图片
+        this.insertOrderImgList(orderNo, imgList);
         log.info("Service createOrder end. ret=【{}】",ret);
+    }
+
+    /**
+     * 新增明细图片
+     * @param orderNo
+     * @param imgList
+     */
+    private void insertOrderImgList(String orderNo, List<String> imgList) {
+        if(CollectionUtils.isNotEmpty(imgList)){
+            imgList.forEach(imgUrl -> {
+                TmOrderImgEntity tmOrderImgEntity = new TmOrderImgEntity();
+                tmOrderImgEntity.setCreateTime(new Date());
+                tmOrderImgEntity.setCreateUser(UuidUtil.getUuid());
+                tmOrderImgEntity.setPkId(UuidUtil.getUuid());
+                tmOrderImgEntity.setOrderNo(orderNo);
+                tmOrderImgEntity.setImgDetailUrl(imgUrl);
+                tmOrderImgEntity.setLastUpdateTime(new Date());
+                tmOrderImgEntity.setLastUpdateUser(UuidUtil.getUuid());
+                int i = orderImgMapper.insertSelective(tmOrderImgEntity);
+                Assert.isTrue(i== SortConstant.ONE, "新增图片详情失败!");
+            });
+        }
     }
 
     @Override
     public void updateByPrimaryKey(String pkId, TmOrderReqDto reqDto) {
         log.info("Service updateByPrimaryKey start. pkId=【{}】, reqDto =【{}】",pkId,reqDto);
         //校验主键ID是否存在数据
-        this.getTmOrderEntity(pkId);
+        TmOrderEntity tmOrderEntity = this.getTmOrderEntity(pkId);
         TmOrderEntity entity = this.orderHelper.editEntity(reqDto);
         entity.setPkId(pkId);
         entity.setLastUpdateTime(new Date());
         entity.setLastUpdateUser(LoginUtil.getUserId());
         int ret = this.tmOrderMapper.updateByPrimaryKeySelective(entity);
         Assert.isTrue(ret==SortConstant.ONE, "修改失败!");
+        TmOrderImgEntityExample tmOrderImgEntityExample = new TmOrderImgEntityExample();
+        TmOrderImgEntityExample.Criteria criteria = tmOrderImgEntityExample.createCriteria();
+        criteria.andOrderNoEqualTo(tmOrderEntity.getOrderNo());
+        orderImgMapper.deleteByExample(tmOrderImgEntityExample);
+        List<String> imgList = reqDto.getImgList();
+        //新增明细图片
+        this.insertOrderImgList(tmOrderEntity.getOrderNo(), imgList);
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
     }
 

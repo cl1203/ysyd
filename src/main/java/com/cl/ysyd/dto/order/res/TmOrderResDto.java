@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 订单输出Dto类
  * @author chenlong  2020-11-24
@@ -34,6 +36,9 @@ public class TmOrderResDto {
      */
     @ApiModelProperty(value="图片地址" )
     private String imgUrl;
+
+    @ApiModelProperty(value="详情图片集合" )
+    private List<String> imgList;
 
     /**
      * 交货日期
