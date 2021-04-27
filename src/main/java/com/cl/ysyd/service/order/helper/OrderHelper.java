@@ -20,6 +20,7 @@ import com.cl.ysyd.entity.order.TmOrderEntity;
 import com.cl.ysyd.entity.order.TmPurchaseEntity;
 import com.cl.ysyd.entity.order.TmPurchaseEntityExample;
 import com.cl.ysyd.entity.sys.TsUserEntity;
+import com.cl.ysyd.mapper.order.TmOrderMapper;
 import com.cl.ysyd.mapper.order.TmPurchaseMapper;
 import com.cl.ysyd.mapper.sys.TsUserMapper;
 import com.cl.ysyd.service.sys.IBizDictionaryService;
@@ -49,6 +50,9 @@ public class OrderHelper {
 
     @Autowired
     private TmPurchaseMapper purchaseMapper;
+
+    @Autowired
+    private TmOrderMapper tmOrderMapper;
 
     /**
      * entity转resDto
@@ -134,7 +138,7 @@ public class OrderHelper {
      * @param reqDto 请求dto
      * @return TmOrderEntity
      */
-    public TmOrderEntity editEntity(TmOrderReqDto reqDto) {
+    public TmOrderEntity editEntity(TmOrderReqDto reqDto, TmOrderEntity tmOrderEntity) {
         if (reqDto == null) {
             return null;
         }
@@ -158,9 +162,17 @@ public class OrderHelper {
         if(StringUtils.isNotBlank(reqDto.getOrderUser())){
             TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(reqDto.getOrderUser());
             Assert.notNull(userEntity, "接单人不存在!");
-            entity.setOrderStatus(OrderStatusEnum.ORDERING.getCode());
+            if(null != tmOrderEntity){
+                if(tmOrderEntity.getOrderStatus().equals(OrderStatusEnum.WAITING.getCode())){
+                    entity.setOrderStatus(OrderStatusEnum.ORDERING.getCode());
+                }
+            }else{
+                entity.setOrderStatus(OrderStatusEnum.ORDERING.getCode());
+            }
         }else{
-            entity.setOrderStatus(OrderStatusEnum.WAITING.getCode());
+            if(null == tmOrderEntity){
+                entity.setOrderStatus(OrderStatusEnum.WAITING.getCode());
+            }
         }
         entity.setFolderUrl(reqDto.getFolderUrl());
         entity.setSku(reqDto.getSku());
@@ -205,7 +217,7 @@ public class OrderHelper {
             return entityList;
         }
         reqDtoList.forEach(reqDto -> {
-            entityList.add(this.editEntity(reqDto));
+            entityList.add(this.editEntity(reqDto, null));
         });
         return entityList;
     }

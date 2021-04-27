@@ -160,7 +160,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public void createOrder(TmOrderReqDto reqDto) {
         log.info("Service createOrder start. reqDto=【{}】",reqDto);
-        TmOrderEntity entity = this.orderHelper.editEntity(reqDto);
+        TmOrderEntity entity = this.orderHelper.editEntity(reqDto, null);
         //当前年月日
         String dateString = DateUtil.getDateString(new Date(), DateUtil.DATETIMESHOWFORMAT4);
         //获取当前流水号
@@ -214,7 +214,7 @@ public class OrderServiceImpl implements IOrderService {
         log.info("Service updateByPrimaryKey start. pkId=【{}】, reqDto =【{}】",pkId,reqDto);
         //校验主键ID是否存在数据
         TmOrderEntity tmOrderEntity = this.getTmOrderEntity(pkId);
-        TmOrderEntity entity = this.orderHelper.editEntity(reqDto);
+        TmOrderEntity entity = this.orderHelper.editEntity(reqDto, tmOrderEntity);
         entity.setPkId(pkId);
         entity.setLastUpdateTime(new Date());
         entity.setLastUpdateUser(LoginUtil.getUserId());
