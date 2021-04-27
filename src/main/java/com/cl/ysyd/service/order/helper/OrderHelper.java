@@ -109,6 +109,7 @@ public class OrderHelper {
         }else{
             resDto.setIsPurchase(SortConstant.ONE.byteValue());
         }
+        resDto.setOrderColour(TmOrder.getOrderColour());
         return resDto;
     }
 
@@ -174,6 +175,7 @@ public class OrderHelper {
             Assert.hasText(orderTypeText, "订单类型不存在");
             entity.setOrderType(reqDto.getOrderType());
         }
+        entity.setOrderColour(reqDto.getOrderColour());
         /*if(StringUtils.isNotBlank(reqDto.getExamineStatus())){
             String examinesStatusText = this.iTcDictService.getTextByBizCode(DictType.EXAMINE_STATUS.getCode(), reqDto.getExamineStatus());
             Assert.hasText(examinesStatusText, "订单审核状态不存在");

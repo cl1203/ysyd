@@ -1,6 +1,6 @@
 /**
  * TmOrderEntity.java
- * Created at 2020-12-10
+ * Created at 2021-04-27
  * Created by chenlong
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
@@ -35,6 +35,11 @@ public class TmOrderEntity implements Serializable {
     private String imgUrl;
 
     /**
+     * 交货日期
+     */
+    private Date deliveryDate;
+
+    /**
      * 订单所属用户
      */
     private String orderUser;
@@ -43,11 +48,6 @@ public class TmOrderEntity implements Serializable {
      * 单价
      */
     private BigDecimal unitPrice;
-
-    /**
-     * 交货日期
-     */
-    private Date deliveryDate;
 
     /**
      * 订单创建日期
@@ -90,12 +90,17 @@ public class TmOrderEntity implements Serializable {
     private String orderType;
 
     /**
+     * 颜色
+     */
+    private String orderColour;
+
+    /**
      * 审核状态
      */
     private String examineStatus;
 
     /**
-     * 状态 0:禁用 1:可用 
+     * 状态 0:作废 1:可用 
      * 默认值:1
      */
     private Byte status;
@@ -170,6 +175,20 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
+     * 返回字段:交货日期
+     */
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    /**
+     * 设置字段值:交货日期
+     */
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    /**
      * 返回字段:订单所属用户
      */
     public String getOrderUser() {
@@ -195,20 +214,6 @@ public class TmOrderEntity implements Serializable {
      */
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
-    }
-
-    /**
-     * 返回字段:交货日期
-     */
-    public Date getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    /**
-     * 设置字段值:交货日期
-     */
-    public void setDeliveryDate(Date deliveryDate) {
-        this.deliveryDate = deliveryDate;
     }
 
     /**
@@ -324,6 +329,20 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
+     * 返回字段:订单颜色
+     */
+    public String getOrderColour() {
+        return orderColour;
+    }
+
+    /**
+     * 设置字段值:订单颜色
+     */
+    public void setOrderColour(String orderColour) {
+        this.orderColour = orderColour == null ? null : orderColour.trim();
+    }
+
+    /**
      * 返回字段:审核状态
      */
     public String getExamineStatus() {
@@ -338,7 +357,7 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
-     * 返回字段:状态 0:禁用 1:可用 
+     * 返回字段:状态 0:作废 1:可用 
      * 默认值:1
      */
     public Byte getStatus() {
@@ -346,7 +365,7 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
-     * 设置字段值:状态 0:禁用 1:可用 
+     * 设置字段值:状态 0:作废 1:可用 
      * 默认值:1
      */
     public void setStatus(Byte status) {

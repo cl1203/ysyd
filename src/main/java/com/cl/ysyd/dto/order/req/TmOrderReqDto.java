@@ -160,4 +160,6 @@ public class TmOrderReqDto {
     @ApiModelProperty(value="最后修改人" )
     @Length(max=32,message="最后修改人字段过长, 最大长度为32")
     private String lastUpdateUser;
+
+    private String orderColour;
 }

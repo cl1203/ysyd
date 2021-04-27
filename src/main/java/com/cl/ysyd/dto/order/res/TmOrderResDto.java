@@ -177,4 +177,6 @@ public class TmOrderResDto {
 
     @ApiModelProperty(value = "单价合计")
     private String totalMoney;
+
+    private String orderColour;
 }
