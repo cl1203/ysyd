@@ -9,7 +9,7 @@
         FROM
             tm_order t
         WHERE
-            t.establish_date = #{date}
+            t.create_time &gt; #{date}
         ORDER BY
             t.order_no DESC
         limit 1
