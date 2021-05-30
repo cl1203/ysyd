@@ -47,9 +47,9 @@ public class OrderController {
     @PutMapping(value = "/cancel/{pkId}")
     @LoggerManage(description = "作废订单")
     public ResponseData<String> cancelByPrimaryKey(@PathVariable String pkId) {
-        log.info("Controller deleteByPrimaryKey start.");
+        log.info("Controller cancelByPrimaryKey start.");
         this.iOrderService.cancelByPrimaryKey(pkId);
-        log.info("Controller deleteByPrimaryKey end.");
+        log.info("Controller cancelByPrimaryKey end.");
         return new ResponseData<>("作废成功!");
     }
 
@@ -77,9 +77,9 @@ public class OrderController {
     @PostMapping(value = "")
     @LoggerManage(description = "新增订单")
     public ResponseData<String> createOrder(@RequestBody @Valid TmOrderReqDto reqDto) {
-        log.info("Controller queryByPrimaryKey start.");
+        log.info("Controller createOrder start.");
         this.iOrderService.createOrder(reqDto);
-        log.info("Controller queryByPrimaryKey end.");
+        log.info("Controller createOrder end.");
         return new ResponseData<>("新增成功!");
     }
 

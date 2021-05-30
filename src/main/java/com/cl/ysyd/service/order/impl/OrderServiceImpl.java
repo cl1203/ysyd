@@ -110,7 +110,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public void cancelByPrimaryKey(String pkId) {
-        log.info("Service deleteByPrimaryKey start. primaryKey=【{}】",pkId);
+        log.info("Service cancelByPrimaryKey start. primaryKey=【{}】",pkId);
         Assert.hasText(pkId, "主键ID不能为空!");
         //根据主键查询  校验数据是否存在
         TmOrderEntity checkEntity = this.getTmOrderEntity(pkId);
@@ -120,7 +120,7 @@ public class OrderServiceImpl implements IOrderService {
         checkEntity.setLastUpdateUser(LoginUtil.getUserId());
         int ret = this.tmOrderMapper.updateByPrimaryKeySelective(checkEntity);
         Assert.isTrue(ret==SortConstant.ONE, "作废失败!");
-        log.info("Service deleteByPrimaryKey end. ret=【{}】",ret);
+        log.info("Service cancelByPrimaryKey end. ret=【{}】",ret);
     }
 
     /**
@@ -140,7 +140,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public TmOrderResDto queryByPrimaryKey(String pkId) {
-        log.info("Service selectByPrimaryKey start. primaryKey=【{}】",pkId);
+        log.info("Service queryByPrimaryKey start. primaryKey=【{}】",pkId);
         Assert.hasText(pkId, "主键ID不能为空!");
         TmOrderEntity entity = this.tmOrderMapper.selectByPrimaryKey(pkId);
         if(null == entity){
@@ -153,7 +153,7 @@ public class OrderServiceImpl implements IOrderService {
         List<TmOrderImgEntity> tmOrderImgEntities = orderImgMapper.selectByExample(orderImgEntityExample);
         List<String> list = tmOrderImgEntities.stream().map(TmOrderImgEntity::getImgDetailUrl).collect(Collectors.toList());
         resDto.setImgList(list);
-        log.info("Service selectByPrimaryKey end. res=【{}】",resDto);
+        log.info("Service queryByPrimaryKey end. res=【{}】",resDto);
         return resDto;
     }
 
