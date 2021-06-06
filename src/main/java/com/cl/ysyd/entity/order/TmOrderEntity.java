@@ -1,7 +1,7 @@
 /**
  * TmOrderEntity.java
- * Created at 2021-04-27
- * Created by chenlong
+ * Created at 2021-06-06
+ * Created by 陈龙
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
 package com.cl.ysyd.entity.order;
@@ -68,6 +68,16 @@ public class TmOrderEntity implements Serializable {
      * 文件夹地址
      */
     private String folderUrl;
+
+    /**
+     * 文件夹地址2
+     */
+    private String folderUrl2;
+
+    /**
+     * 件数
+     */
+    private Integer orderNumber;
 
     /**
      * 订单sku
@@ -273,6 +283,34 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
+     * 返回字段:文件夹地址2
+     */
+    public String getFolderUrl2() {
+        return folderUrl2;
+    }
+
+    /**
+     * 设置字段值:文件夹地址2
+     */
+    public void setFolderUrl2(String folderUrl2) {
+        this.folderUrl2 = folderUrl2 == null ? null : folderUrl2.trim();
+    }
+
+    /**
+     * 返回字段:件数
+     */
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    /**
+     * 设置字段值:件数
+     */
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    /**
      * 返回字段:订单sku
      */
     public String getSku() {
@@ -329,14 +367,14 @@ public class TmOrderEntity implements Serializable {
     }
 
     /**
-     * 返回字段:订单颜色
+     * 返回字段:颜色
      */
     public String getOrderColour() {
         return orderColour;
     }
 
     /**
-     * 设置字段值:订单颜色
+     * 设置字段值:颜色
      */
     public void setOrderColour(String orderColour) {
         this.orderColour = orderColour == null ? null : orderColour.trim();

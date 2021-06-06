@@ -85,6 +85,20 @@ public class TmOrderReqDto {
     private String folderUrl;
 
     /**
+     * 文件夹地址
+     */
+    @ApiModelProperty(value="文件夹地址" )
+    @Length(max=255,message="文件夹地址字段过长, 最大长度为255")
+    private String folderUrl2;
+
+    /**
+     * 订单件数
+     */
+    @ApiModelProperty(value="订单件数" )
+    @Length(max=11,message="订单件数字段过长, 最大长度为11")
+    private String orderNumber;
+
+    /**
      * 订单sku
      */
     @ApiModelProperty(value="订单sku" )

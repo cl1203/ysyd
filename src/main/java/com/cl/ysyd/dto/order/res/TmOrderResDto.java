@@ -9,6 +9,7 @@ package com.cl.ysyd.dto.order.res;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -68,6 +69,12 @@ public class TmOrderResDto {
     private String unitPrice;
 
     /**
+     * 单价
+     */
+    @ApiModelProperty(value="订单总价" )
+    private String totalPrice;
+
+    /**
      * 订单创建日期
      */
     @ApiModelProperty(value="订单创建日期" )
@@ -93,6 +100,18 @@ public class TmOrderResDto {
      */
     @ApiModelProperty(value="文件夹地址" )
     private String folderUrl;
+
+    /**
+     * 文件夹地址
+     */
+    @ApiModelProperty(value="文件夹地址" )
+    private String folderUrl2;
+
+    /**
+     * 订单件数
+     */
+    @ApiModelProperty(value="订单件数" )
+    private String orderNumber;
 
     /**
      * 订单sku

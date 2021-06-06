@@ -372,8 +372,9 @@ public class ExcelUtils {
             fileName = fileName + ".xlsx";
         }
         String suffix = fileName.substring(fileName.indexOf("."));
-        if (".xls".equalsIgnoreCase(suffix)) wb = new HSSFWorkbook();
-        else {
+        if (".xls".equalsIgnoreCase(suffix)) {
+            wb = new HSSFWorkbook();
+        } else {
             wb = new SXSSFWorkbook(1000);
         }
         Sheet sheet = wb.createSheet(fileName.substring(0, fileName.indexOf(".")));

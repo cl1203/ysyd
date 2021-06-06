@@ -12,6 +12,8 @@
     <result column="complete_date" jdbcType="TIMESTAMP" property="completeDate" />
     <result column="order_status" jdbcType="VARCHAR" property="orderStatus" />
     <result column="folder_url" jdbcType="VARCHAR" property="folderUrl" />
+    <result column="folder_url2" jdbcType="VARCHAR" property="folderUrl2" />
+    <result column="order_number" jdbcType="INTEGER" property="orderNumber" />
     <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="order_people" jdbcType="VARCHAR" property="orderPeople" />
     <result column="order_size" jdbcType="VARCHAR" property="orderSize" />
@@ -85,9 +87,9 @@
   </sql>
   <sql id="Base_Column_List">
     pk_id, order_no, img_url, delivery_date, order_user, unit_price, establish_date, 
-    complete_date, order_status, folder_url, sku, order_people, order_size, order_type, 
-    order_colour, examine_status, status, remarks, create_time, create_user, last_update_time, 
-    last_update_user
+    complete_date, order_status, folder_url, folder_url2, order_number, sku, order_people, 
+    order_size, order_type, order_colour, examine_status, status, remarks, create_time, 
+    create_user, last_update_time, last_update_user
   </sql>
   <select id="selectByExample" parameterType="com.cl.ysyd.entity.order.TmOrderEntityExample" resultMap="BaseResultMap">
     select
@@ -123,19 +125,21 @@
     insert into tm_order (pk_id, order_no, img_url, 
       delivery_date, order_user, unit_price, 
       establish_date, complete_date, order_status, 
-      folder_url, sku, order_people, 
-      order_size, order_type, order_colour, 
-      examine_status, status, remarks, 
-      create_time, create_user, last_update_time, 
-      last_update_user)
+      folder_url, folder_url2, order_number, 
+      sku, order_people, order_size, 
+      order_type, order_colour, examine_status, 
+      status, remarks, create_time, 
+      create_user, last_update_time, last_update_user
+      )
     values (#{pkId,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       #{deliveryDate,jdbcType=TIMESTAMP}, #{orderUser,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, 
       #{establishDate,jdbcType=TIMESTAMP}, #{completeDate,jdbcType=TIMESTAMP}, #{orderStatus,jdbcType=VARCHAR}, 
-      #{folderUrl,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{orderPeople,jdbcType=VARCHAR}, 
-      #{orderSize,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{orderColour,jdbcType=VARCHAR}, 
-      #{examineStatus,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=TIMESTAMP}, 
-      #{lastUpdateUser,jdbcType=VARCHAR})
+      #{folderUrl,jdbcType=VARCHAR}, #{folderUrl2,jdbcType=VARCHAR}, #{orderNumber,jdbcType=INTEGER}, 
+      #{sku,jdbcType=VARCHAR}, #{orderPeople,jdbcType=VARCHAR}, #{orderSize,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{orderColour,jdbcType=VARCHAR}, #{examineStatus,jdbcType=VARCHAR}, 
+      #{status,jdbcType=TINYINT}, #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=TIMESTAMP}, #{lastUpdateUser,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.cl.ysyd.entity.order.TmOrderEntity">
     insert into tm_order
@@ -169,6 +173,12 @@
       </if>
       <if test="folderUrl != null">
         folder_url,
+      </if>
+      <if test="folderUrl2 != null">
+        folder_url2,
+      </if>
+      <if test="orderNumber != null">
+        order_number,
       </if>
       <if test="sku != null">
         sku,
@@ -237,6 +247,12 @@
       </if>
       <if test="folderUrl != null">
         #{folderUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="folderUrl2 != null">
+        #{folderUrl2,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=INTEGER},
       </if>
       <if test="sku != null">
         #{sku,jdbcType=VARCHAR},
@@ -315,6 +331,12 @@
       <if test="record.folderUrl != null">
         folder_url = #{record.folderUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.folderUrl2 != null">
+        folder_url2 = #{record.folderUrl2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderNumber != null">
+        order_number = #{record.orderNumber,jdbcType=INTEGER},
+      </if>
       <if test="record.sku != null">
         sku = #{record.sku,jdbcType=VARCHAR},
       </if>
@@ -368,6 +390,8 @@
       complete_date = #{record.completeDate,jdbcType=TIMESTAMP},
       order_status = #{record.orderStatus,jdbcType=VARCHAR},
       folder_url = #{record.folderUrl,jdbcType=VARCHAR},
+      folder_url2 = #{record.folderUrl2,jdbcType=VARCHAR},
+      order_number = #{record.orderNumber,jdbcType=INTEGER},
       sku = #{record.sku,jdbcType=VARCHAR},
       order_people = #{record.orderPeople,jdbcType=VARCHAR},
       order_size = #{record.orderSize,jdbcType=VARCHAR},
@@ -413,6 +437,12 @@
       </if>
       <if test="folderUrl != null">
         folder_url = #{folderUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="folderUrl2 != null">
+        folder_url2 = #{folderUrl2,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber,jdbcType=INTEGER},
       </if>
       <if test="sku != null">
         sku = #{sku,jdbcType=VARCHAR},
@@ -464,6 +494,8 @@
       complete_date = #{completeDate,jdbcType=TIMESTAMP},
       order_status = #{orderStatus,jdbcType=VARCHAR},
       folder_url = #{folderUrl,jdbcType=VARCHAR},
+      folder_url2 = #{folderUrl2,jdbcType=VARCHAR},
+      order_number = #{orderNumber,jdbcType=INTEGER},
       sku = #{sku,jdbcType=VARCHAR},
       order_people = #{orderPeople,jdbcType=VARCHAR},
       order_size = #{orderSize,jdbcType=VARCHAR},

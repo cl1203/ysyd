@@ -34,6 +34,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 订单帮助类
@@ -89,6 +91,10 @@ public class OrderHelper {
         String orderStatusText = this.iTcDictService.getTextByBizCode(DictType.ORDER_STATUS.getCode(), TmOrder.getOrderStatus());
         resDto.setOrderStatusText(orderStatusText);
         resDto.setFolderUrl(TmOrder.getFolderUrl());
+        resDto.setFolderUrl2(TmOrder.getFolderUrl2());
+        if(null != TmOrder.getOrderNumber()){
+            resDto.setOrderNumber(TmOrder.getOrderNumber().toString());
+        }
         resDto.setImgUrl(TmOrder.getImgUrl());
         resDto.setEstablishDate(DateUtil.getDateString(TmOrder.getEstablishDate(), DateUtil.DATESHOWFORMAT));
         resDto.setUnitPrice(String.valueOf(TmOrder.getUnitPrice()));
@@ -175,6 +181,14 @@ public class OrderHelper {
             }
         }
         entity.setFolderUrl(reqDto.getFolderUrl());
+        entity.setFolderUrl2(reqDto.getFolderUrl2());
+        if(StringUtils.isNotBlank(reqDto.getOrderNumber())){
+            String regex="^[1-9]+[0-9]*$";
+            Pattern p = Pattern.compile(regex);
+            Matcher matcher = p.matcher(reqDto.getOrderNumber());
+            Assert.isTrue(matcher.find(), "订单件数必须为正整数!");
+            entity.setOrderNumber(Integer.valueOf(reqDto.getOrderNumber()));
+        }
         entity.setSku(reqDto.getSku());
         entity.setOrderPeople(reqDto.getOrderPeople());
         if(StringUtils.isNotBlank(reqDto.getOrderSize())){
@@ -205,6 +219,7 @@ public class OrderHelper {
         entity.setLastUpdateUser(LoginUtil.getUserId());
         return entity;
     }
+
 
     /**
      * reqDto集合转entity集合

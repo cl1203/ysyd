@@ -1,7 +1,7 @@
 /**
  * TmOrderEntityExample.java
- * Created at 2021-04-27
- * Created by chenlong
+ * Created at 2021-06-06
+ * Created by 陈龙
  * Copyright (C) 2020 ANJI LOGISTICS, All rights reserved.
  **/
 package com.cl.ysyd.entity.order;
@@ -140,7 +140,7 @@ public class TmOrderEntityExample {
      * Example标准条件内部类
      * 订单
      * table:tm_order
-     * @author chenlong  2021-04-27
+     * @author 陈龙  2021-06-06
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -840,6 +840,136 @@ public class TmOrderEntityExample {
 
         public Criteria andFolderUrlNotBetween(String value1, String value2) {
             addCriterion("folder_url not between", value1, value2, "folderUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2IsNull() {
+            addCriterion("folder_url2 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2IsNotNull() {
+            addCriterion("folder_url2 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2EqualTo(String value) {
+            addCriterion("folder_url2 =", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2NotEqualTo(String value) {
+            addCriterion("folder_url2 <>", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2GreaterThan(String value) {
+            addCriterion("folder_url2 >", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2GreaterThanOrEqualTo(String value) {
+            addCriterion("folder_url2 >=", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2LessThan(String value) {
+            addCriterion("folder_url2 <", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2LessThanOrEqualTo(String value) {
+            addCriterion("folder_url2 <=", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2Like(String value) {
+            addCriterion("folder_url2 like", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2NotLike(String value) {
+            addCriterion("folder_url2 not like", value, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2In(List<String> values) {
+            addCriterion("folder_url2 in", values, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2NotIn(List<String> values) {
+            addCriterion("folder_url2 not in", values, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2Between(String value1, String value2) {
+            addCriterion("folder_url2 between", value1, value2, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andFolderUrl2NotBetween(String value1, String value2) {
+            addCriterion("folder_url2 not between", value1, value2, "folderUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberIsNull() {
+            addCriterion("order_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberIsNotNull() {
+            addCriterion("order_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberEqualTo(Integer value) {
+            addCriterion("order_number =", value, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberNotEqualTo(Integer value) {
+            addCriterion("order_number <>", value, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberGreaterThan(Integer value) {
+            addCriterion("order_number >", value, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("order_number >=", value, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberLessThan(Integer value) {
+            addCriterion("order_number <", value, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberLessThanOrEqualTo(Integer value) {
+            addCriterion("order_number <=", value, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberIn(List<Integer> values) {
+            addCriterion("order_number in", values, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberNotIn(List<Integer> values) {
+            addCriterion("order_number not in", values, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberBetween(Integer value1, Integer value2) {
+            addCriterion("order_number between", value1, value2, "orderNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrderNumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("order_number not between", value1, value2, "orderNumber");
             return (Criteria) this;
         }
 
@@ -1658,7 +1788,7 @@ public class TmOrderEntityExample {
      * Example内部类Criteria
      * 订单
      * table:tm_order
-     * @author chenlong  2021-04-27
+     * @author 陈龙  2021-06-06
      */
     public static class Criteria extends GeneratedCriteria {
 
@@ -1671,7 +1801,7 @@ public class TmOrderEntityExample {
      * Example标准条件内部类
      * 订单
      * table:tm_order
-     * @author chenlong  2021-04-27
+     * @author 陈龙  2021-06-06
      */
     public static class Criterion {
         private String condition;
