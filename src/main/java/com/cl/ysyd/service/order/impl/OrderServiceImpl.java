@@ -269,19 +269,13 @@ public class OrderServiceImpl implements IOrderService {
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
         if(CollectionUtils.isNotEmpty(orderEntityList)){
-            for(TmOrderEntity orderEntity : orderEntityList){
-                BigDecimal unitPrice = orderEntity.getUnitPrice();
-
-                totalMoney = totalMoney.add(unitPrice).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
-            }
             List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
-            if(CollectionUtils.isNotEmpty(orderResDtoList)){
-                for(TmOrderResDto tmOrderResDto : orderResDtoList){
-                    BigDecimal unitPrice = new BigDecimal(tmOrderResDto.getUnitPrice());
-                    BigDecimal bigDecimal = new BigDecimal(tmOrderResDto.getOrderNumber());
-                    BigDecimal multiply = unitPrice.multiply(bigDecimal).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
-                    tmOrderResDto.setTotalPrice(multiply.toString());
-                }
+            for(TmOrderResDto tmOrderResDto : orderResDtoList){
+                BigDecimal unitPrice = new BigDecimal(tmOrderResDto.getUnitPrice());
+                BigDecimal bigDecimal = new BigDecimal(tmOrderResDto.getOrderNumber());
+                BigDecimal totalPrice = unitPrice.multiply(bigDecimal).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
+                tmOrderResDto.setTotalPrice(totalPrice.toString());
+                totalMoney = totalMoney.add(totalPrice).setScale(SortConstant.TWO, BigDecimal.ROUND_HALF_UP);
             }
             orderResDtoList.get(SortConstant.ZERO).setTotalMoney(totalMoney.toString());
             pageInfo.setList(orderResDtoList);
