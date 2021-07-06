@@ -18,13 +18,15 @@
             and (order_user = #{userId} or order_people = #{userId} )
         </if>
         <if test="orderUserList != null and orderUserList.size() &gt; 0 ">
+            and order_user in
             <foreach collection="orderUserList" item="orderUser" separator="," open="(" close=")">
-                and order_user in #{orderUser , jdbcType=VARCHAR}
+              #{orderUser , jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="orderStatusList != null and orderStatusList.size() &gt; 0 ">
+            and order_status in
             <foreach collection="orderStatusList" item="orderStatus" separator="," open="(" close=")">
-                and order_status in #{orderStatus , jdbcType=VARCHAR}
+                 #{orderStatus , jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="deliveryDateStart !=null and deliveryDateStart !=''">

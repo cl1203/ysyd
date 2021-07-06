@@ -262,26 +262,26 @@ public class OrderServiceImpl implements IOrderService {
         if(StringUtils.isNotBlank(orderStatus)){
             orderStatusList = Arrays.asList(orderStatus.split(","));
         }
-        Date deliveryDateStart = null;
-        Date deliveryDateEnd = null;
+        String deliveryDateStart = null;
+        String deliveryDateEnd = null;
         if(StringUtils.isNotBlank(deliveryDate)){
             List<String> deliveryDateList = Arrays.asList(deliveryDate.split(","));
-            deliveryDateStart = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
-            deliveryDateEnd = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+            deliveryDateStart = deliveryDateList.get(SortConstant.ZERO);
+            deliveryDateEnd = deliveryDateList.get(SortConstant.ONE);
         }
-        Date establishDateStart = null;
-        Date establishDateEnd = null;
+        String establishDateStart = null;
+        String establishDateEnd = null;
         if(StringUtils.isNotBlank(establishDate)){
             List<String> establishDateList = Arrays.asList(establishDate.split(","));
-            establishDateStart = DateUtil.getDateToString(establishDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
-            establishDateEnd = DateUtil.getDateToString(establishDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+            establishDateStart = establishDateList.get(SortConstant.ZERO);
+            establishDateEnd = establishDateList.get(SortConstant.ONE);
         }
-        Date completeDateStart = null;
-        Date completeDateEnd = null;
+        String completeDateStart = null;
+        String completeDateEnd = null;
         if(StringUtils.isNotBlank(completeDate)){
             List<String> completeDateList = Arrays.asList(completeDate.split(","));
-            completeDateStart = DateUtil.getDateToString(completeDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
-            completeDateEnd = DateUtil.getDateToString(completeDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+            completeDateStart = completeDateList.get(SortConstant.ZERO);
+            completeDateEnd =completeDateList.get(SortConstant.ONE);
         }
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryList(orderUserList, orderStatusList, deliveryDateStart, deliveryDateEnd,
@@ -316,26 +316,26 @@ public class OrderServiceImpl implements IOrderService {
         String isAll = this.getIsAll();
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
-        Date deliveryDateStart = null;
-        Date deliveryDateEnd = null;
+        String deliveryDateStart = null;
+        String deliveryDateEnd = null;
         if(StringUtils.isNotBlank(deliveryDate)){
             List<String> deliveryDateList = Arrays.asList(deliveryDate.split(","));
-            deliveryDateStart = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
-            deliveryDateEnd = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+            deliveryDateStart = deliveryDateList.get(SortConstant.ZERO);
+            deliveryDateEnd = deliveryDateList.get(SortConstant.ONE);
         }
-        Date establishDateStart = null;
-        Date establishDateEnd = null;
+        String establishDateStart = null;
+        String establishDateEnd = null;
         if(StringUtils.isNotBlank(establishDate)){
             List<String> establishDateList = Arrays.asList(establishDate.split(","));
-            establishDateStart = DateUtil.getDateToString(establishDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
-            establishDateEnd = DateUtil.getDateToString(establishDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+            establishDateStart = establishDateList.get(SortConstant.ZERO);
+            establishDateEnd = establishDateList.get(SortConstant.ONE);
         }
-        Date completeDateStart = null;
-        Date completeDateEnd = null;
+        String completeDateStart = null;
+        String completeDateEnd = null;
         if(StringUtils.isNotBlank(completeDate)){
             List<String> completeDateList = Arrays.asList(completeDate.split(","));
-            completeDateStart = DateUtil.getDateToString(completeDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
-            completeDateEnd = DateUtil.getDateToString(completeDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+            completeDateStart = completeDateList.get(SortConstant.ZERO);
+            completeDateEnd =completeDateList.get(SortConstant.ONE);
         }
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryBillList(orderUser, isAll, userId, deliveryDateStart, deliveryDateEnd,
                                                                 establishDateStart, establishDateEnd, completeDateStart, completeDateEnd);

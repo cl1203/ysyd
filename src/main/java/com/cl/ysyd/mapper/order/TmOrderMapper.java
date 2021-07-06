@@ -39,9 +39,9 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
     String querySerialNumber(@Param("date") String date);
 
     List<TmOrderEntity> queryList(@Param("orderUserList") List<String > orderUserList, @Param("orderStatusList") List<String> orderStatusList,
-                                  @Param("deliveryDateStart") Date deliveryDateStart, @Param("deliveryDateEnd") Date deliveryDateEnd,
-                                  @Param("establishDateStart") Date establishDateStart, @Param("establishDateEnd") Date establishDateEnd,
-                                  @Param("completeDateStart") Date completeDateStart, @Param("completeDateEnd") Date completeDateEnd,
+                                  @Param("deliveryDateStart") String deliveryDateStart, @Param("deliveryDateEnd") String deliveryDateEnd,
+                                  @Param("establishDateStart") String establishDateStart, @Param("establishDateEnd") String establishDateEnd,
+                                  @Param("completeDateStart") String completeDateStart, @Param("completeDateEnd") String completeDateEnd,
                                   @Param("examineStatus") String examineStatus, @Param("isAll") String isAll,
                                   @Param("status") String status, @Param("orderNo") String orderNo, @Param("userId") String userId);
 
@@ -144,9 +144,9 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
 
 
     List<TmOrderEntity> queryBillList(@Param("orderUser") String orderUser, @Param("isAll") String isAll, @Param("userId") String userId,
-                                  @Param("deliveryDateStart") Date deliveryDateStart, @Param("deliveryDateEnd") Date deliveryDateEnd,
-                                  @Param("establishDateStart") Date establishDateStart, @Param("establishDateEnd") Date establishDateEnd,
-                                  @Param("completeDateStart") Date completeDateStart, @Param("completeDateEnd") Date completeDateEnd);
+                                      @Param("deliveryDateStart") String deliveryDateStart, @Param("deliveryDateEnd") String deliveryDateEnd,
+                                      @Param("establishDateStart") String establishDateStart, @Param("establishDateEnd") String establishDateEnd,
+                                      @Param("completeDateStart") String completeDateStart, @Param("completeDateEnd") String completeDateEnd);
 
     /**
      * 对账单分页查询
