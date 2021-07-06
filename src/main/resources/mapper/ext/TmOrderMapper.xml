@@ -69,23 +69,14 @@
         <if test="orderUser != null and orderUser !='' ">
             and order_user = #{orderUser}
         </if>
-        <if test="deliveryDateStart !=null and deliveryDateStart !=''">
-            and delivery_date &gt;= #{deliveryDateStart}
+        <if test="deliveryDate !=null and deliveryDate !=''">
+            and delivery_date = #{deliveryDate}
         </if>
-        <if test="deliveryDateEnd !=null and deliveryDateEnd !=''">
-            and delivery_date &lt;= #{deliveryDateEnd}
+        <if test="establishDate !=null and establishDate !=''">
+            and establish_date= #{establishDate}
         </if>
-        <if test="establishDateStart !=null and establishDateStart !=''">
-            and establish_date &gt;= #{establishDateStart}
-        </if>
-        <if test="establishDateEnd !=null and establishDateEnd !=''">
-            and establish_date &lt;= #{establishDateEnd}
-        </if>
-        <if test="completeDateStart !=null and completeDateStart !=''">
-            and complete_date &gt;= #{completeDateStart}
-        </if>
-        <if test="completeDateEnd !=null and completeDateEnd !=''">
-            and complete_date &lt;= #{completeDateEnd}
+        <if test="completeDate !=null and completeDate !=''">
+            and complete_date = #{completeDate}
         </if>
     </select>
 

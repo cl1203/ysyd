@@ -144,9 +144,9 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
 
 
     List<TmOrderEntity> queryBillList(@Param("orderUser") String orderUser, @Param("isAll") String isAll, @Param("userId") String userId,
-                                      @Param("deliveryDateStart") String deliveryDateStart, @Param("deliveryDateEnd") String deliveryDateEnd,
-                                      @Param("establishDateStart") String establishDateStart, @Param("establishDateEnd") String establishDateEnd,
-                                      @Param("completeDateStart") String completeDateStart, @Param("completeDateEnd") String completeDateEnd);
+                                      @Param("deliveryDate") String deliveryDate,
+                                      @Param("establishDate") String establishDate,
+                                      @Param("completeDate") String completeDate);
 
     /**
      * 对账单分页查询

@@ -316,29 +316,9 @@ public class OrderServiceImpl implements IOrderService {
         String isAll = this.getIsAll();
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
-        String deliveryDateStart = null;
-        String deliveryDateEnd = null;
-        if(StringUtils.isNotBlank(deliveryDate)){
-            List<String> deliveryDateList = Arrays.asList(deliveryDate.split(","));
-            deliveryDateStart = deliveryDateList.get(SortConstant.ZERO);
-            deliveryDateEnd = deliveryDateList.get(SortConstant.ONE);
-        }
-        String establishDateStart = null;
-        String establishDateEnd = null;
-        if(StringUtils.isNotBlank(establishDate)){
-            List<String> establishDateList = Arrays.asList(establishDate.split(","));
-            establishDateStart = establishDateList.get(SortConstant.ZERO);
-            establishDateEnd = establishDateList.get(SortConstant.ONE);
-        }
-        String completeDateStart = null;
-        String completeDateEnd = null;
-        if(StringUtils.isNotBlank(completeDate)){
-            List<String> completeDateList = Arrays.asList(completeDate.split(","));
-            completeDateStart = completeDateList.get(SortConstant.ZERO);
-            completeDateEnd =completeDateList.get(SortConstant.ONE);
-        }
-        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryBillList(orderUser, isAll, userId, deliveryDateStart, deliveryDateEnd,
-                                                                establishDateStart, establishDateEnd, completeDateStart, completeDateEnd);
+
+
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryBillList(orderUser, isAll, userId, deliveryDate, establishDate,completeDate);
 
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
