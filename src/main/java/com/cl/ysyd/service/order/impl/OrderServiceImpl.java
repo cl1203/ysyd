@@ -11,7 +11,10 @@ import com.cl.ysyd.common.enums.AuditStatusEnum;
 import com.cl.ysyd.common.enums.DictType;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.exception.BusiException;
-import com.cl.ysyd.common.utils.*;
+import com.cl.ysyd.common.utils.DateUtil;
+import com.cl.ysyd.common.utils.ExcelUtils;
+import com.cl.ysyd.common.utils.LoginUtil;
+import com.cl.ysyd.common.utils.UuidUtil;
 import com.cl.ysyd.dto.order.req.TmOrderReqDto;
 import com.cl.ysyd.dto.order.res.CurveResDto;
 import com.cl.ysyd.dto.order.res.NoticeTopResDto;
@@ -238,7 +241,16 @@ public class OrderServiceImpl implements IOrderService {
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll ,status, orderNo);
-        List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
+        List<TmOrderEntity> tmOrderEntityList = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(orderEntityList)){
+            if(isAll.equals(AuditStatusEnum.NOT_REVIEWED.getCode())){
+                List<TmOrderEntity> listByOrderUser = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderUser().equals(LoginUtil.getUserId())).collect(Collectors.toList());
+                List<TmOrderEntity> listByOrderPeople = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderPeople().equals(LoginUtil.getUserId())).collect(Collectors.toList());
+                tmOrderEntityList.addAll(listByOrderUser);
+                tmOrderEntityList.addAll(listByOrderPeople);
+            }
+        }
+        List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(tmOrderEntityList);
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(orderResDtoList);
         return pageInfo;
@@ -266,10 +278,19 @@ public class OrderServiceImpl implements IOrderService {
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
         List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser,  deliveryDate, establishDate, completeDate, isAll);
+        List<TmOrderEntity> tmOrderEntityList = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(orderEntityList)){
+            if(isAll.equals(AuditStatusEnum.NOT_REVIEWED.getCode())){
+                List<TmOrderEntity> listByOrderUser = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderUser().equals(LoginUtil.getUserId())).collect(Collectors.toList());
+                List<TmOrderEntity> listByOrderPeople = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderPeople().equals(LoginUtil.getUserId())).collect(Collectors.toList());
+                tmOrderEntityList.addAll(listByOrderUser);
+                tmOrderEntityList.addAll(listByOrderPeople);
+            }
+        }
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
-        if(CollectionUtils.isNotEmpty(orderEntityList)){
-            List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
+        if(CollectionUtils.isNotEmpty(tmOrderEntityList)){
+            List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(tmOrderEntityList);
             for(TmOrderResDto tmOrderResDto : orderResDtoList){
                 BigDecimal unitPrice = new BigDecimal(tmOrderResDto.getUnitPrice());
                 BigDecimal bigDecimal = new BigDecimal(tmOrderResDto.getOrderNumber());

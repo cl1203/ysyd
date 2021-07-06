@@ -13,7 +13,6 @@ import com.cl.ysyd.common.enums.ExamineStatusEnum;
 import com.cl.ysyd.common.enums.IsValidEnum;
 import com.cl.ysyd.common.enums.OrderStatusEnum;
 import com.cl.ysyd.common.utils.DateUtil;
-import com.cl.ysyd.common.utils.LoginUtil;
 import com.cl.ysyd.dto.order.res.CurveResDto;
 import com.cl.ysyd.dto.order.res.SectorResDto;
 import com.cl.ysyd.entity.order.TmOrderEntity;
@@ -26,7 +25,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 订单 mapper类
@@ -79,9 +81,9 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
                     criteria.andOrderUserEqualTo(orderUser);
                 }
             }
-        }else{
+        }/*else{
             criteria.andOrderUserEqualTo(LoginUtil.getUserId());
-        }
+        }*/
         if(StringUtils.isNotBlank(orderStatus)){
             if(orderStatus.contains(",")){
                 List<String> orderStatusList = Arrays.asList(orderStatus.split(","));
@@ -151,9 +153,9 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
             if(StringUtils.isNotBlank(orderUser)){
                 criteria.andOrderUserEqualTo(orderUser);
             }
-        }else{
+        }/*else{
             criteria.andOrderUserEqualTo(LoginUtil.getUserId());
-        }
+        }*/
         if(StringUtils.isNotBlank(deliveryDate)){
             criteria.andDeliveryDateEqualTo(DateUtil.getDateToString(deliveryDate, DateUtil.DATESHOWFORMAT));
         }
