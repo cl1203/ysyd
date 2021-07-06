@@ -3,6 +3,90 @@
 <mapper namespace="com.cl.ysyd.mapper.order.TmOrderMapper" >
 
 
+    <select id="queryList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tm_order
+        where 1 = 1
+        <if test="orderNo != null and orderNo != '' ">
+            and order_no = #{orderNo}
+        </if>
+        <if test="status != null and status != '' ">
+            and status = #{status}
+        </if>
+        <if test='isAll != "Y" '>
+            and (order_user = #{userId} or order_people = #{userId} )
+        </if>
+        <if test="orderUserList != null and orderUserList.size() &gt; 0 ">
+            <foreach collection="orderUserList" item="orderUser" separator="," open="(" close=")">
+                and order_user in #{orderUser , jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="orderStatusList != null and orderStatusList.size() &gt; 0 ">
+            <foreach collection="orderStatusList" item="orderStatus" separator="," open="(" close=")">
+                and order_status in #{orderStatus , jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="deliveryDateStart !=null and deliveryDateStart !=''">
+            and delivery_date &gt;= #{deliveryDateStart}
+        </if>
+        <if test="deliveryDateEnd !=null and deliveryDateEnd !=''">
+            and delivery_date &lt;= #{deliveryDateEnd}
+        </if>
+        <if test="establishDateStart !=null and establishDateStart !=''">
+            and establish_date &gt;= #{establishDateStart}
+        </if>
+        <if test="establishDateEnd !=null and establishDateEnd !=''">
+            and establish_date &lt;= #{establishDateEnd}
+        </if>
+        <if test="completeDateStart !=null and completeDateStart !=''">
+            and complete_date &gt;= #{completeDateStart}
+        </if>
+        <if test="completeDateEnd !=null and completeDateEnd !=''">
+            and complete_date &lt;= #{completeDateEnd}
+        </if>
+        <choose>
+            <when test="examineStatus != null and examineStatus !=''">
+                and examine_status = #{examineStatus}
+            </when>
+            <otherwise>
+                and examine_status in ('adopt', 'not')
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="queryBillList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from tm_order
+        where status = 1
+        <if test='isAll != "Y" '>
+            and (order_user = #{userId} or order_people = #{userId} )
+        </if>
+        <if test="orderUser != null and orderUser !='' ">
+            and order_user = #{orderUser}
+        </if>
+        <if test="deliveryDateStart !=null and deliveryDateStart !=''">
+            and delivery_date &gt;= #{deliveryDateStart}
+        </if>
+        <if test="deliveryDateEnd !=null and deliveryDateEnd !=''">
+            and delivery_date &lt;= #{deliveryDateEnd}
+        </if>
+        <if test="establishDateStart !=null and establishDateStart !=''">
+            and establish_date &gt;= #{establishDateStart}
+        </if>
+        <if test="establishDateEnd !=null and establishDateEnd !=''">
+            and establish_date &lt;= #{establishDateEnd}
+        </if>
+        <if test="completeDateStart !=null and completeDateStart !=''">
+            and complete_date &gt;= #{completeDateStart}
+        </if>
+        <if test="completeDateEnd !=null and completeDateEnd !=''">
+            and complete_date &lt;= #{completeDateEnd}
+        </if>
+    </select>
+
     <select id="querySerialNumber" resultType="string" parameterType="string">
         SELECT
             t.order_no

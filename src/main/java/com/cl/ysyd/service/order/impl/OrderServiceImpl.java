@@ -233,24 +233,61 @@ public class OrderServiceImpl implements IOrderService {
         log.info("Service updateByPrimaryKey end. ret=【{}】",ret);
     }
 
+    /**
+     * 获取用户名
+     * @return 用户id
+     */
+    private String getUserId() {
+        String userId = LoginUtil.getUserId();
+        Assert.hasText(userId, "用户ID为空!");
+        TsUserEntity userEntity = this.userMapper.selectByPrimaryKey(userId);
+        Assert.notNull(userEntity, "userId对应的用户不存在!");
+        return userId;
+    }
+
+
     @Override
     public PageInfo<TmOrderResDto> queryOrderByPage(Integer pageNum, Integer pageSize, String orderUser, String orderStatus, String deliveryDate,
                                                     String establishDate, String completeDate, String examineStatus,String status,String orderNo) {
         //查询当前用户是否拥有全部权限
         String isAll = this.getIsAll();
+        //获取用户名
+        String userId = this.getUserId();
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
-        Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
-        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser, orderStatus, deliveryDate, establishDate, completeDate, examineStatus, isAll ,status, orderNo);
-        List<TmOrderEntity> tmOrderEntityList = new ArrayList<>();
-        if(CollectionUtils.isNotEmpty(orderEntityList)){
-            if(isAll.equals(AuditStatusEnum.NOT_REVIEWED.getCode())){
-                List<TmOrderEntity> listByOrderUser = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderUser().equals(LoginUtil.getUserId())).collect(Collectors.toList());
-                List<TmOrderEntity> listByOrderPeople = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderPeople().equals(LoginUtil.getUserId())).collect(Collectors.toList());
-                tmOrderEntityList.addAll(listByOrderUser);
-                tmOrderEntityList.addAll(listByOrderPeople);
-            }
+        List<String> orderUserList = null;
+        if(StringUtils.isNotBlank(orderUser)){
+            orderUserList = Arrays.asList(orderUser.split(","));
         }
-        List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(tmOrderEntityList);
+        List<String> orderStatusList = null;
+        if(StringUtils.isNotBlank(orderStatus)){
+            orderStatusList = Arrays.asList(orderStatus.split(","));
+        }
+        Date deliveryDateStart = null;
+        Date deliveryDateEnd = null;
+        if(StringUtils.isNotBlank(deliveryDate)){
+            List<String> deliveryDateList = Arrays.asList(deliveryDate.split(","));
+            deliveryDateStart = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+            deliveryDateEnd = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+        }
+        Date establishDateStart = null;
+        Date establishDateEnd = null;
+        if(StringUtils.isNotBlank(establishDate)){
+            List<String> establishDateList = Arrays.asList(establishDate.split(","));
+            establishDateStart = DateUtil.getDateToString(establishDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+            establishDateEnd = DateUtil.getDateToString(establishDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+        }
+        Date completeDateStart = null;
+        Date completeDateEnd = null;
+        if(StringUtils.isNotBlank(completeDate)){
+            List<String> completeDateList = Arrays.asList(completeDate.split(","));
+            completeDateStart = DateUtil.getDateToString(completeDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+            completeDateEnd = DateUtil.getDateToString(completeDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+        }
+        Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryList(orderUserList, orderStatusList, deliveryDateStart, deliveryDateEnd,
+                establishDateStart, establishDateEnd, completeDateStart, completeDateEnd, examineStatus, isAll ,status, orderNo, userId);
+
+        List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         pageInfo.setList(orderResDtoList);
         return pageInfo;
@@ -274,23 +311,39 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public PageInfo<TmOrderResDto> queryOrderBillByPage(Integer pageNum, Integer pageSize, String orderUser, String deliveryDate, String establishDate, String completeDate) {
+        //获取用户名
+        String userId = this.getUserId();
         String isAll = this.getIsAll();
         PageHelper.orderBy("STATUS DESC, CREATE_TIME DESC");
         Page<TmOrderResDto> startPage = PageHelper.startPage(pageNum, pageSize);
-        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryOrderList(orderUser,  deliveryDate, establishDate, completeDate, isAll);
-        List<TmOrderEntity> tmOrderEntityList = new ArrayList<>();
-        if(CollectionUtils.isNotEmpty(orderEntityList)){
-            if(isAll.equals(AuditStatusEnum.NOT_REVIEWED.getCode())){
-                List<TmOrderEntity> listByOrderUser = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderUser().equals(LoginUtil.getUserId())).collect(Collectors.toList());
-                List<TmOrderEntity> listByOrderPeople = orderEntityList.stream().filter(tmOrderEntity -> tmOrderEntity.getOrderPeople().equals(LoginUtil.getUserId())).collect(Collectors.toList());
-                tmOrderEntityList.addAll(listByOrderUser);
-                tmOrderEntityList.addAll(listByOrderPeople);
-            }
+        Date deliveryDateStart = null;
+        Date deliveryDateEnd = null;
+        if(StringUtils.isNotBlank(deliveryDate)){
+            List<String> deliveryDateList = Arrays.asList(deliveryDate.split(","));
+            deliveryDateStart = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+            deliveryDateEnd = DateUtil.getDateToString(deliveryDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
         }
+        Date establishDateStart = null;
+        Date establishDateEnd = null;
+        if(StringUtils.isNotBlank(establishDate)){
+            List<String> establishDateList = Arrays.asList(establishDate.split(","));
+            establishDateStart = DateUtil.getDateToString(establishDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+            establishDateEnd = DateUtil.getDateToString(establishDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+        }
+        Date completeDateStart = null;
+        Date completeDateEnd = null;
+        if(StringUtils.isNotBlank(completeDate)){
+            List<String> completeDateList = Arrays.asList(completeDate.split(","));
+            completeDateStart = DateUtil.getDateToString(completeDateList.get(SortConstant.ZERO), DateUtil.DATESHOWFORMAT);
+            completeDateEnd = DateUtil.getDateToString(completeDateList.get(SortConstant.ONE), DateUtil.DATESHOWFORMAT);
+        }
+        List<TmOrderEntity> orderEntityList = this.tmOrderMapper.queryBillList(orderUser, isAll, userId, deliveryDateStart, deliveryDateEnd,
+                                                                establishDateStart, establishDateEnd, completeDateStart, completeDateEnd);
+
         PageInfo<TmOrderResDto> pageInfo = new PageInfo<>(startPage);
         BigDecimal totalMoney = new BigDecimal(SortConstant.ZERO);
-        if(CollectionUtils.isNotEmpty(tmOrderEntityList)){
-            List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(tmOrderEntityList);
+        if(CollectionUtils.isNotEmpty(orderEntityList)){
+            List<TmOrderResDto> orderResDtoList = this.orderHelper.editResDtoList(orderEntityList);
             for(TmOrderResDto tmOrderResDto : orderResDtoList){
                 BigDecimal unitPrice = new BigDecimal(tmOrderResDto.getUnitPrice());
                 BigDecimal bigDecimal = new BigDecimal(tmOrderResDto.getOrderNumber());

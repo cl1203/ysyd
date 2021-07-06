@@ -38,20 +38,12 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
 
     String querySerialNumber(@Param("date") String date);
 
-    /**
-     * 根据订单号查询订单
-     * @param orderNo 订单号
-     * @return 订单对象
-     */
-    default TmOrderEntity queryByOrderNo(String orderNo){
-        //查询
-        TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
-        TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
-        criteria.andStatusEqualTo(SortConstant.ONE.byteValue());
-        criteria.andOrderNoEqualTo(orderNo);
-        List<TmOrderEntity> orderEntityList = this.selectByExample(orderEntityExample);
-        return CollectionUtils.isNotEmpty(orderEntityList) ? orderEntityList.get(SortConstant.ZERO) : null;
-    }
+    List<TmOrderEntity> queryList(@Param("orderUserList") List<String > orderUserList, @Param("orderStatusList") List<String> orderStatusList,
+                                  @Param("deliveryDateStart") Date deliveryDateStart, @Param("deliveryDateEnd") Date deliveryDateEnd,
+                                  @Param("establishDateStart") Date establishDateStart, @Param("establishDateEnd") Date establishDateEnd,
+                                  @Param("completeDateStart") Date completeDateStart, @Param("completeDateEnd") Date completeDateEnd,
+                                  @Param("examineStatus") String examineStatus, @Param("isAll") String isAll,
+                                  @Param("status") String status, @Param("orderNo") String orderNo, @Param("userId") String userId);
 
     /**
      * 分页查询
@@ -134,6 +126,27 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
         return this.selectByExample(orderEntityExample);
     }
 
+
+    /**
+     * 根据订单号查询订单
+     * @param orderNo 订单号
+     * @return 订单对象
+     */
+    default TmOrderEntity queryByOrderNo(String orderNo){
+        //查询
+        TmOrderEntityExample orderEntityExample = new TmOrderEntityExample();
+        TmOrderEntityExample.Criteria criteria = orderEntityExample.createCriteria();
+        criteria.andStatusEqualTo(SortConstant.ONE.byteValue());
+        criteria.andOrderNoEqualTo(orderNo);
+        List<TmOrderEntity> orderEntityList = this.selectByExample(orderEntityExample);
+        return CollectionUtils.isNotEmpty(orderEntityList) ? orderEntityList.get(SortConstant.ZERO) : null;
+    }
+
+
+    List<TmOrderEntity> queryBillList(@Param("orderUser") String orderUser, @Param("isAll") String isAll, @Param("userId") String userId,
+                                  @Param("deliveryDateStart") Date deliveryDateStart, @Param("deliveryDateEnd") Date deliveryDateEnd,
+                                  @Param("establishDateStart") Date establishDateStart, @Param("establishDateEnd") Date establishDateEnd,
+                                  @Param("completeDateStart") Date completeDateStart, @Param("completeDateEnd") Date completeDateEnd);
 
     /**
      * 对账单分页查询
@@ -279,5 +292,7 @@ public interface TmOrderMapper extends IBaseMapper<TmOrderEntity, TmOrderEntityE
     List<SectorResDto> querySector(@Param("ym")String ym);
 
     List<SectorResDto> queryColumnar(@Param("ym")String ym);
+
+
 
 }
