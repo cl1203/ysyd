@@ -87,6 +87,8 @@ public class OrderHelper {
         resDto.setPkId(TmOrder.getPkId());
         resDto.setSku(TmOrder.getSku());
         resDto.setOrderPeople(TmOrder.getOrderPeople());
+        TsUserEntity userEntityPeople = this.userMapper.selectByPrimaryKey(TmOrder.getOrderPeople());
+        resDto.setOrderPeopleName(null != userEntityPeople ? userEntityPeople.getRealName() : "");
         resDto.setOrderStatus(TmOrder.getOrderStatus());
         String orderStatusText = this.iTcDictService.getTextByBizCode(DictType.ORDER_STATUS.getCode(), TmOrder.getOrderStatus());
         resDto.setOrderStatusText(orderStatusText);
@@ -190,7 +192,7 @@ public class OrderHelper {
             entity.setOrderNumber(Integer.valueOf(reqDto.getOrderNumber()));
         }
         entity.setSku(reqDto.getSku());
-        entity.setOrderPeople(reqDto.getOrderPeople());
+        entity.setOrderPeople(StringUtils.isNotBlank(reqDto.getOrderPeople()) ? reqDto.getOrderPeople() : LoginUtil.getUserId());
         if(StringUtils.isNotBlank(reqDto.getOrderSize())){
             String orderSizeText = this.iTcDictService.getTextByBizCode(DictType.ORDER_SIZE.getCode(), reqDto.getOrderSize());
             Assert.hasText(orderSizeText, "订单尺码不存在");

@@ -9,7 +9,6 @@ package com.cl.ysyd.dto.order.res;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -124,6 +123,9 @@ public class TmOrderResDto {
      */
     @ApiModelProperty(value="下单人" )
     private String orderPeople;
+
+    @ApiModelProperty(value="下单人姓名" )
+    private String orderPeopleName;
 
     /**
      * 尺码
