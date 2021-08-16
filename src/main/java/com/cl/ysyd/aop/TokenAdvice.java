@@ -42,7 +42,7 @@ public class TokenAdvice {
     @Before("within(com.cl.ysyd.controller..*)")
     public void preHandle() {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
         }
         //获取RequestAttributes
