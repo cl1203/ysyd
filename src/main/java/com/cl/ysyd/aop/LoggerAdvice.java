@@ -50,7 +50,7 @@ public class LoggerAdvice {
     @Before("within(com.cl..*) && @annotation(loggerManage)")
     public void addBeforeLogger(JoinPoint joinPoint, LoggerManage loggerManage) {
         try {
-            Thread.sleep(4000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class LoggerAdvice {
     @AfterReturning(pointcut = "within(com.cl..*) && @annotation(loggerManage)", returning = "result")
     public void addAfterReturningLogger(JoinPoint joinPoint, LoggerManage loggerManage, Object result) {
         try {
-            Thread.sleep(4000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -82,7 +82,7 @@ public class LoggerAdvice {
     @AfterThrowing(pointcut = "within(com.cl..*) && @annotation(loggerManage)", throwing = "e")
     public void addAfterThrowingLogger(JoinPoint joinPoint, LoggerManage loggerManage, Exception e) {
         try {
-            Thread.sleep(4000);
+            Thread.sleep(5000);
         } catch (InterruptedException e1) {
             e1.printStackTrace();
         }
