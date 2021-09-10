@@ -41,10 +41,10 @@ public class TokenAdvice {
 
     @Before("within(com.cl.ysyd.controller..*)")
     public void preHandle() {
-        /*try {
+        try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-        }*/
+        }
         //获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         //从获取RequestAttributes中获取HttpServletRequest的信息
