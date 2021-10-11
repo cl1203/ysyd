@@ -50,7 +50,7 @@ public class LoggerAdvice {
     @Before("within(com.cl..*) && @annotation(loggerManage)")
     public void addBeforeLogger(JoinPoint joinPoint, LoggerManage loggerManage) {
         try {
-            Thread.sleep(8000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -68,11 +68,11 @@ public class LoggerAdvice {
 
     @AfterReturning(pointcut = "within(com.cl..*) && @annotation(loggerManage)", returning = "result")
     public void addAfterReturningLogger(JoinPoint joinPoint, LoggerManage loggerManage, Object result) {
-        /*try {
+        try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
         this.getUserName();
         LOGGER.info("执行--" + loggerManage.description() + "--结束");
         LOGGER.debug("执行结果为:\n{}", JSON.toJSONString(result, CommonConstants.FEATURES));
@@ -81,11 +81,11 @@ public class LoggerAdvice {
 
     @AfterThrowing(pointcut = "within(com.cl..*) && @annotation(loggerManage)", throwing = "e")
     public void addAfterThrowingLogger(JoinPoint joinPoint, LoggerManage loggerManage, Exception e) {
-        /*try {
+        try {
             Thread.sleep(5000);
         } catch (InterruptedException e1) {
             e1.printStackTrace();
-        }*/
+        }
         this.getUserName();
         LOGGER.error("执行:[{}]发生异常:{}", loggerManage.description(), e.getMessage());
     }

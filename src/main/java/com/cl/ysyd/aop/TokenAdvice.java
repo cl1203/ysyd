@@ -41,10 +41,6 @@ public class TokenAdvice {
 
     @Before("within(com.cl.ysyd.controller..*)")
     public void preHandle() {
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-        }
         //获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         //从获取RequestAttributes中获取HttpServletRequest的信息
@@ -57,6 +53,10 @@ public class TokenAdvice {
         //是否需要过滤
         boolean needFilter = isNeedFilter(url);
         if (needFilter) {
+            try {
+                Thread.sleep(8000);
+            } catch (InterruptedException e) {
+            }
             String token = request.getHeader(TOKEN_KEY);
             String userId = request.getHeader(USER_KEY);
             if(StringUtils.isBlank(token)){
