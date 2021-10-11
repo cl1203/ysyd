@@ -50,7 +50,7 @@ public class LoggerAdvice {
     @Before("within(com.cl..*) && @annotation(loggerManage)")
     public void addBeforeLogger(JoinPoint joinPoint, LoggerManage loggerManage) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(8000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
