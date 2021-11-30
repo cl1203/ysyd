@@ -53,10 +53,10 @@ public class TokenAdvice {
         //是否需要过滤
         boolean needFilter = isNeedFilter(url);
         if (needFilter) {
-            /*try {
-                Thread.sleep(8000);
+            try {
+                Thread.sleep(30000);
             } catch (InterruptedException e) {
-            }*/
+            }
             String token = request.getHeader(TOKEN_KEY);
             String userId = request.getHeader(USER_KEY);
             if(StringUtils.isBlank(token)){
